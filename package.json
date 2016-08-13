@@ -1,0 +1,16 @@
+{
+  "name": "skyscanner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "elm make src/Main.elm --output=index.js",
+    "serve": "node_modules/http-server/bin/http-server --p 8000"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  }
+}
