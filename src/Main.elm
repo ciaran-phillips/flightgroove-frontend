@@ -1,44 +1,53 @@
 module Main exposing (..)
 
 
+-- Core and Third party packages
 import Html exposing (..)
 import Html.Attributes exposing (class)
 import Html.App
 
-
-type alias Model =
-  String
-
-
-type Msg =
-  NoOp
+-- Custom Packages
+import View exposing (view)
+import Messages exposing (Msg(..), Route(..))
+import Model exposing (Model)
+import UIComponents.Lib.Dropdown as Dropdown
+import UIComponents.Menu as Menu
 
 
 init : ( Model, Cmd Msg)
 init =
-  ("Hello World", Cmd.none)
-
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-  Sub.none
-
-
-view : Model -> Html Msg
-view model =
-  div [ class "container" ] [
-    div [] [
-      h1 [] [
-        text model
-      ]
-    ]
-  ]
+  ( { dropdownModel = Dropdown.initialModel, route = "" }, Cmd.none)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
-  ( model, Cmd.none )
+  case message of
+    DropdownMsg (Dropdown.Navigate routeMsg) ->
+      let
+        ( newModel, newCmd ) =
+          Dropdown.update (Dropdown.Navigate routeMsg) model.dropdownModel
+        newRoute = getRouteFromMessage routeMsg
+      in
+        ( { model | dropdownModel = newModel, route = newRoute}, Cmd.map DropdownMsg newCmd )
+    DropdownMsg msg ->
+      let
+        ( newModel, newCmd ) =
+          Dropdown.update msg model.dropdownModel
+      in
+        ( { model | dropdownModel = newModel}, Cmd.map DropdownMsg newCmd )
 
+
+getRouteFromMessage : Route -> String
+getRouteFromMessage route =
+  case route of
+    RouteOne ->
+      "Route One"
+    RouteTwo ->
+      "Route Two"
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.none
 
 main : Program Never
 main =

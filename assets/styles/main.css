@@ -1,0 +1,19 @@
+* {
+  line-height: 1.5em;
+}
+
+.header {
+  background-color: #ff6e64;
+  color: #fbfbfb;
+  padding: 12px;
+}
+.logo-holder {
+  font-size: 21px;
+}
+.filterbar {
+  background-color: #ff6e64;
+  opacity: 0.8;
+  color: #fbfbfb;
+  padding: 8px;
+
+}
