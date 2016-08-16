@@ -1,6 +1,6 @@
 module Model exposing (..)
 
-import UIComponents.Lib.Dropdown as Dropdown
+import UIComponents.Menu as Menu
 
 type alias Model =
-  { dropdownModel : Dropdown.Model, route : String }
+  { menuModel : Menu.Model, route : String }

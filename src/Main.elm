@@ -10,44 +10,28 @@ import Html.App
 import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
-import UIComponents.Lib.Dropdown as Dropdown
 import UIComponents.Menu as Menu
 
 
 init : ( Model, Cmd Msg)
 init =
-  ( { dropdownModel = Dropdown.initialModel, route = "" }, Cmd.none)
+  ( { menuModel = Menu.initialModel, route = "" }, Cmd.none)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
   case message of
-    DropdownMsg (Dropdown.Navigate routeMsg) ->
+    MenuMsg msg ->
       let
         ( newModel, newCmd ) =
-          Dropdown.update (Dropdown.Navigate routeMsg) model.dropdownModel
-        newRoute = getRouteFromMessage routeMsg
+          Menu.update msg model.menuModel
       in
-        ( { model | dropdownModel = newModel, route = newRoute}, Cmd.map DropdownMsg newCmd )
-    DropdownMsg msg ->
-      let
-        ( newModel, newCmd ) =
-          Dropdown.update msg model.dropdownModel
-      in
-        ( { model | dropdownModel = newModel}, Cmd.map DropdownMsg newCmd )
+        ( { model | menuModel = newModel}, Cmd.map MenuMsg newCmd )
 
-
-getRouteFromMessage : Route -> String
-getRouteFromMessage route =
-  case route of
-    RouteOne ->
-      "Route One"
-    RouteTwo ->
-      "Route Two"
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  Sub.map MenuMsg (Menu.subscriptions model.menuModel)
 
 main : Program Never
 main =

@@ -1,10 +1,11 @@
 module Messages exposing (..)
 
 
-import UIComponents.Lib.Dropdown as Dropdown
+import UIComponents.Menu as Menu
+
 
 type Msg =
-  DropdownMsg (Dropdown.Msg Route)
+  MenuMsg Menu.Msg 
 
 type Route =
   RouteOne
