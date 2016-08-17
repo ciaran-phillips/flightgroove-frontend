@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "elm make src/Main.elm --output=index.js",
+    "build": "elm make src/Main.elm --output=index.js; mv npm-debug.log.* ./logs/",
     "serve": "node_modules/http-server/bin/http-server --p 8000"
   },
   "author": "",

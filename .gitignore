@@ -3,3 +3,4 @@ elm-stuff/
 dist/
 npm-debug.*
 index.js
+logs/
