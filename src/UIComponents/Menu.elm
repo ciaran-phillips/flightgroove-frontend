@@ -23,9 +23,7 @@ type SizeFilter =
 
 
 type Msg =
-  CategoryUpdate (Dropdown.Msg Mouse.Position)
-  | SizeUpdate (Dropdown.Msg Mouse.Position)
-  | CategoryMsg (Dropdown.Msg CategoryFilter)
+  CategoryMsg (Dropdown.Msg CategoryFilter)
   | SizeMsg (Dropdown.Msg SizeFilter)
 
 
@@ -59,16 +57,6 @@ update msg model =
         newSize = getSize sizeMsg
       in
         ( { model | sizeDropdown = newModel, currentSize = newSize}, Cmd.none )
-    CategoryUpdate msg ->
-      let
-        (newModel, newCmd ) = Dropdown.update msg model.categoryDropdown
-      in
-        ( { model | categoryDropdown = newModel }, Cmd.none )
-    SizeUpdate msg ->
-      let
-        ( newModel, newCmd ) = Dropdown.update msg model.sizeDropdown
-      in
-        ( { model | sizeDropdown = newModel }, Cmd.none )
     CategoryMsg dropdownMsg ->
       let
         ( newModel, newCmd ) = Dropdown.update dropdownMsg model.categoryDropdown
@@ -100,9 +88,9 @@ view model =
 subscriptions : Model -> Sub (Msg)
 subscriptions model =
   Sub.batch
-    [ Sub.map CategoryUpdate
+    [ Sub.map CategoryMsg
       <| Dropdown.subscriptions model.categoryDropdown
-    , Sub.map SizeUpdate
+    , Sub.map SizeMsg
       <| Dropdown.subscriptions model.sizeDropdown
     ]
 
