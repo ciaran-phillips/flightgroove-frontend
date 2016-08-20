@@ -13,11 +13,17 @@ import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
 import UIComponents.Menu as Menu
+import UIComponents.Map as Map
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { menuModel = Menu.initialModel, route = "" }, Cmd.none )
+    ( { menuModel = Menu.initialModel
+      , route = ""
+      , mapModel = Map.initialModel
+      }
+    , Cmd.map MapMsg Map.initialCmd
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -30,10 +36,20 @@ update message model =
             in
                 ( { model | menuModel = newModel }, Cmd.map MenuMsg newCmd )
 
+        MapMsg msg ->
+            let
+                ( newModel, newCmd ) =
+                    Map.update msg model.mapModel
+            in
+                ( { model | mapModel = newModel }, Cmd.map MapMsg newCmd )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.map MenuMsg (Menu.subscriptions model.menuModel)
+    Sub.batch
+        [ Sub.map MenuMsg (Menu.subscriptions model.menuModel)
+        , Sub.map MapMsg (Map.subscriptions model.mapModel)
+        ]
 
 
 main : Program Never

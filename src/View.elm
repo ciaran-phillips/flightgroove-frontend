@@ -13,6 +13,7 @@ import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Model exposing (Model)
 import UIComponents.Menu as Menu
+import UIComponents.Map as Map
 
 
 view : Model -> Html Msg
@@ -23,12 +24,11 @@ view model =
 basePage : Model -> Html Msg
 basePage model =
     div [ class "wrapper" ]
-        [ h1 [] [ text model.route ]
-        , div [ class "container-fluid" ]
+        [ div [ class "container-fluid" ]
             [ div [ class "row header" ] topBarRows
             , div [ class "row filterbar" ] <| filterRows model
-            , div [ class "row" ] [ mapContainer ]
             ]
+        , mapContainer model
         ]
 
 
@@ -64,6 +64,7 @@ filterWrapper labelText filterHtml =
         ]
 
 
-mapContainer : Html Msg
-mapContainer =
-    div [] []
+mapContainer : Model -> Html Msg
+mapContainer model =
+    Map.view model.mapModel
+        |> Html.App.map MapMsg
