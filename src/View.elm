@@ -34,7 +34,13 @@ basePage model =
 
 topBarRows : List (Html Msg)
 topBarRows =
-    [ div [ class "col-xs-3 logo-holder" ] [ text "your trip, your way" ]
+    [ div [ class "col-xs-3 logo" ]
+        [ div [ class "logo--part" ] [ img [ src "assets/img/logo.png" ] [] ]
+        , div [ class "logo--part" ]
+            [ div [ class "logo--heading" ] [ text "flightgroove" ]
+            , div [ class "logo--tagline" ] [ text "your trip, your way" ]
+            ]
+        ]
     , div [ class "col-xs-3" ] [ searchBox ]
     , div [ class "col-xs-3" ] []
     , div [ class "col-xs-3" ] []

@@ -7,13 +7,38 @@
   color: #fbfbfb;
   padding: 12px;
 }
-.logo-holder {
+.logo {
   font-size: 21px;
+}
+.logo--part {
+  float: left;
+  padding: 10px;
+}
+.logo--part img {
+  width: 70px;
+}
+.logo--headline {
+  border-bottom: 1px solid #fff;
+}
+.logo--tagline {
+  font-size: 0.8em;
 }
 .filterbar {
   background-color: #ff6e64;
   opacity: 0.8;
   color: #fbfbfb;
   padding: 8px;
+
+}
+.dropdowns div {
+  display:none;
+}
+
+body, .wrapper, .map-wrapper {
+  height: 100%;
+}
+#map { position:absolute; top:0; bottom:0; width:100%; }
+.map-wrapper {
+  position: relative;
 
 }
