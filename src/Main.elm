@@ -14,6 +14,7 @@ import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
 import UIComponents.Menu as Menu
 import UIComponents.Map as Map
+import UIComponents.Filters as Filters
 
 
 init : ( Model, Cmd Msg )
@@ -21,6 +22,7 @@ init =
     ( { menuModel = Menu.initialModel
       , route = ""
       , mapModel = Map.initialModel
+      , filtersModel = Filters.model
       }
     , Cmd.map MapMsg Map.initialCmd
     )
@@ -42,6 +44,13 @@ update message model =
                     Map.update msg model.mapModel
             in
                 ( { model | mapModel = newModel }, Cmd.map MapMsg newCmd )
+
+        FilterMsg msg ->
+            let
+                ( newModel, newCmd ) =
+                    Filters.update msg model.filtersModel
+            in
+                ( { model | filtersModel = newModel }, Cmd.map FilterMsg newCmd )
 
 
 subscriptions : Model -> Sub Msg

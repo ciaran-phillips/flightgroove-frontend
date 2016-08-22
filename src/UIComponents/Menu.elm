@@ -6,6 +6,7 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (class)
 import UIComponents.Lib.Dropdown as Dropdown
 import Mouse
+import UIComponents.Filters as Filters
 
 
 type CategoryFilter
