@@ -13,6 +13,7 @@ import API.Response as Response
 type Msg
     = SetupMap
     | MapResponse Bool
+    | PopupResponse Bool
     | FetchData
     | FetchSuccess Response.RoutesResponse
     | FetchFail Http.Error
@@ -22,6 +23,10 @@ type alias Model =
     { mapActive : Bool
     , mapData : Response.RoutesResponse
     }
+
+
+type alias PopupDefinition =
+    ( Float, Float, String )
 
 
 initialModel : Model
@@ -44,6 +49,9 @@ initialCmd =
 port map : String -> Cmd msg
 
 
+port popup : PopupDefinition -> Cmd msg
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -52,6 +60,13 @@ update msg model =
 
         MapResponse response ->
             ( { model | mapActive = response }, Cmd.none )
+
+        PopupResponse response ->
+            let
+                x =
+                    Debug.log "successfully added popup" response
+            in
+                ( model, Cmd.none )
 
         FetchData ->
             ( model, getApiData )
@@ -64,16 +79,14 @@ update msg model =
                 ( model, Cmd.none )
 
         FetchSuccess response ->
-            ( { model | mapData = Debug.log "response" response }, Cmd.none )
+            ( { model | mapData = response }, createPopups response )
 
 
 view : Model -> Html Msg
 view model =
     div []
         [ div []
-            [ button [ onClick FetchData ] [ text "fetch data" ]
-            , text <| toString model.mapData
-            ]
+            [ button [ onClick FetchData ] [ text "fetch data" ] ]
         , div [ class "map-wrapper" ] [ div [ id "map" ] [] ]
         ]
 
@@ -88,6 +101,22 @@ getApiData =
     Task.perform FetchFail FetchSuccess API.callApi
 
 
+createPopups : Response.RoutesResponse -> Cmd Msg
+createPopups routes =
+    List.map popupFromDestination routes.destinationList
+        |> Debug.log "list of popups"
+        |> Cmd.batch
+
+
+popupFromDestination : Response.Destination -> Cmd Msg
+popupFromDestination dest =
+    popup
+        ( dest.location.lon
+        , dest.location.lat
+        , dest.priceDisplay
+        )
+
+
 
 -- subscriptions
 
@@ -95,6 +124,12 @@ getApiData =
 port mapCallback : (Bool -> msg) -> Sub msg
 
 
+port popupCallback : (Bool -> msg) -> Sub msg
+
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    mapCallback MapResponse
+    Sub.batch
+        [ mapCallback MapResponse
+        , popupCallback PopupResponse
+        ]
