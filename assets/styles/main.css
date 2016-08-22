@@ -1,31 +1,34 @@
 * {
   line-height: 1.5em;
+  font-weight: bold;
 }
 
 .header {
-  background-color: #ff6e64;
+  background-color: #de392e;
   color: #fbfbfb;
   padding: 12px;
 }
 .logo {
-  font-size: 21px;
+  font-size: 18px;
 }
 .logo--part {
   float: left;
-  padding: 10px;
+  padding: 5px;
 }
 .logo--part img {
-  width: 70px;
+  width: 50px;
 }
-.logo--headline {
+.logo--heading {
+  text-align: center;
   border-bottom: 1px solid #fff;
+  padding-bottom:2px;
+  margin-bottom:2px;
 }
 .logo--tagline {
-  font-size: 0.8em;
+  font-size: 14px;
 }
 .filterbar {
-  background-color: #ff6e64;
-  opacity: 0.8;
+  background-color: #ca3329;
   color: #fbfbfb;
   padding: 8px;
 
@@ -41,4 +44,16 @@ body, .wrapper, .map-wrapper {
 .map-wrapper {
   position: relative;
 
+}
+
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: #526b98;
+}
+.mapboxgl-popup-content {
+  background: #526b98;
+  padding: 6px 8px;
+  color: #fff;
+}
+.mapboxgl-popup-close-button {
+  display: none;
 }

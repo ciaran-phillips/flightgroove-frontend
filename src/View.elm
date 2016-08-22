@@ -58,7 +58,7 @@ filterRows model =
 
 searchBox : Html Msg
 searchBox =
-    filterWrapper "flying from" <|
+    filterWrapper "" <|
         input [ placeholder "Dublin, Ireland (DUB)", class "form-control" ] []
 
 
