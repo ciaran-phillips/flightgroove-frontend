@@ -61,7 +61,7 @@ searchBox : Model -> Html Msg
 searchBox model =
     filterWrapper "" <|
         Html.App.map FilterMsg <|
-            Filters.view model.filtersModel
+            Filters.viewAutocomplete model.filtersModel
 
 
 filterWrapper : String -> Html Msg -> Html Msg

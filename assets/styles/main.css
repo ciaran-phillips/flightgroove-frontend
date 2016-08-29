@@ -33,6 +33,9 @@
   padding: 8px;
 
 }
+.dropdown-container {
+  position: relative;
+}
 .dropdowns div {
   display:none;
 }

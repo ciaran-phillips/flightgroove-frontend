@@ -3,11 +3,15 @@ module UIComponents.Filters exposing (..)
 import Material exposing (..)
 import Material.Textfield as Textfield
 import Html exposing (..)
+import Html.App
+import Html.Attributes exposing (class)
+import Autocomplete
 
 
 type alias Model =
     { mdl : Material.Model
     , airport : String
+    , autocomplete : Autocomplete.Autocomplete
     }
 
 
@@ -20,12 +24,14 @@ model : Model
 model =
     { mdl = Material.model
     , airport = ""
+    , autocomplete = Autocomplete.init [ "Dublin", "Paris", "Dubrovnik", "Poznan", "Rome", "Rennes", "London", "Lyon", "Liverpool" ]
     }
 
 
 type Msg
     = Mdl (Material.Msg Msg)
     | ChangeAirport String
+    | AutocompleteMsg Autocomplete.Msg
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -37,9 +43,16 @@ update msg model =
         Mdl msg' ->
             Material.update msg' model
 
+        AutocompleteMsg msg ->
+            let
+                ( newModel, status ) =
+                    Autocomplete.update msg model.autocomplete
+            in
+                ( { model | autocomplete = newModel }, Cmd.none )
 
-view : Model -> Html Msg
-view model =
+
+viewAirportSelector : Model -> Html Msg
+viewAirportSelector model =
     div []
         [ Textfield.render Mdl
             [ 8 ]
@@ -52,3 +65,10 @@ view model =
             ]
         , div [] [ text model.airport ]
         ]
+
+
+viewAutocomplete : Model -> Html Msg
+viewAutocomplete model =
+    Html.App.map AutocompleteMsg <|
+        div [ class "dropdown-container" ]
+            [ Autocomplete.view model.autocomplete ]
