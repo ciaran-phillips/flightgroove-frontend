@@ -58,6 +58,7 @@ subscriptions model =
     Sub.batch
         [ Sub.map MenuMsg (Menu.subscriptions model.menuModel)
         , Sub.map MapMsg (Map.subscriptions model.mapModel)
+        , Sub.map FilterMsg (Filters.subscriptions model.filtersModel)
         ]
 
 

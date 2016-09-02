@@ -60,3 +60,24 @@ body, .wrapper, .map-wrapper {
 .mapboxgl-popup-close-button {
   display: none;
 }
+
+
+.autocomplete-item {
+    list-style: none;
+    padding: 6px;
+}
+
+.autocomplete-list {
+    margin: 0;
+    background: #e0534a;
+    color: #fbfbfb;
+    padding: 0;
+}
+
+.dropdown-container .mdl-textfield {
+}
+
+.autocomplete-item--key, .autocomplete-item--mouse {
+    background-color: #f79a94;
+    cursor: pointer;
+}
