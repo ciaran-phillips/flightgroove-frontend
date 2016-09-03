@@ -42,25 +42,25 @@ type alias BrowseRouteParams =
     }
 
 
-callRoutes : BrowseRouteParams -> Task.Task Http.Error Response.Routes
+callRoutes : BrowseRouteParams -> Task.Task Http.Error Response.Response
 callRoutes request =
-    callApi ResponseDecoder.routesDecoder <| BrowseRoutesRequest request
+    callApi <| BrowseRoutesRequest request
 
 
-callLocations : LocationParams -> Task.Task Http.Error Response.Locations
+callLocations : LocationParams -> Task.Task Http.Error Response.Response
 callLocations request =
-    callApi ResponseDecoder.locationsDecoder <| LocationsRequest request
+    callApi <| LocationsRequest request
 
 
-callApi : Request -> Task.Task Http.Error response
+callApi : Request -> Task.Task Http.Error Response.Response
 callApi request =
     sendRequest request
 
 
-sendRequest : Request -> Decoder response -> Task.Task Http.Error response
-sendRequest decoder request =
+sendRequest : Request -> Task.Task Http.Error Response.Response
+sendRequest request =
     Http.get
-        decoder
+        (getDecoder request)
         (urlConstructor request)
 
 
@@ -85,3 +85,13 @@ buildArgs request =
                 ++ params.outboundDate
                 ++ "/"
                 ++ params.inboundDate
+
+
+getDecoder : Request -> Decoder Response.Response
+getDecoder request =
+    case request of
+        LocationsRequest params ->
+            ResponseDecoder.locationsDecoder
+
+        BrowseRoutesRequest params ->
+            ResponseDecoder.routesDecoder

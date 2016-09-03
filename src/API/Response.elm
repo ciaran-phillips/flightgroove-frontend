@@ -24,8 +24,6 @@ type alias Airport =
     { placeName : String
     , countryName : String
     , airportCode : String
-    , priceDisplay : String
-    , priceCredits : Int
     , latitude : Float
     , longitude : Float
     }

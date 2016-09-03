@@ -1,6 +1,6 @@
 module API.ResponseDecoder exposing (..)
 
-import Json.Decode exposing (Decoder, int, string, float, list, object1, object6, object7, object5, (:=))
+import Json.Decode exposing (Decoder, int, string, float, list, object1, object6, object5, object7, (:=))
 import API.Response as Response
 
 
@@ -23,12 +23,10 @@ routeDecoder =
 
 airportDecoder : Decoder Response.Airport
 airportDecoder =
-    object7 Response.Airport
+    object5 Response.Airport
         ("name" := string)
         ("country" := string)
-        ("airport" := string)
-        ("priceDisplay" := string)
-        ("priceCredits" := int)
+        ("code" := string)
         ("latitude" := float)
         ("longitude" := float)
 

@@ -15,7 +15,7 @@ type Msg
     | MapResponse Bool
     | PopupResponse Bool
     | FetchData
-    | FetchSuccess Response.Routes
+    | FetchSuccess Response.Response
     | FetchFail Http.Error
 
 
@@ -79,11 +79,12 @@ update msg model =
                 ( model, Cmd.none )
 
         FetchSuccess response ->
-            let
-                (Response.RoutesResponse routes) =
-                    response
-            in
-                ( { model | mapData = routes }, createPopups routes )
+            case response of
+                Response.RoutesResponse routes ->
+                    ( { model | mapData = routes }, createPopups routes )
+
+                Response.LocationsResponse locations ->
+                    ( model, Cmd.none )
 
 
 view : Model -> Html Msg
@@ -112,11 +113,11 @@ createPopups routes =
         |> Cmd.batch
 
 
-popupFromRoute : Response.Route -> Cmd Msg
+popupFromRoute : Response.Route -> Cmd msg
 popupFromRoute route =
     popup
-        ( route.longitude
-        , route.latitude
+        ( route.destination.longitude
+        , route.destination.latitude
         , route.priceDisplay
         )
 
@@ -125,7 +126,7 @@ getRoutes : Task.Task Http.Error Response.Response
 getRoutes =
     API.callRoutes
         { origin = "DUB-sky"
-        , destination = "de-sky"
+        , destination = "anywhere"
         , outboundDate = "2016-09"
         , inboundDate = "2016-09"
         }
