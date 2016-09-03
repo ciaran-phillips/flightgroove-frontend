@@ -1,23 +1,45 @@
-module API.Response exposing (..)
+module API.Response exposing (Response(..), Routes, Route, Airport, Locations, LocationSuggestion)
 
 
-type alias RoutesResponse =
-    { ageOfData : String
-    , destinationList : List (Destination)
+type Response
+    = RoutesResponse Routes
+    | LocationsResponse Locations
+
+
+type alias Routes =
+    List (Route)
+
+
+type alias Route =
+    { departureDate : String
+    , returnDate : String
+    , priceCredits : Int
+    , priceDisplay : String
+    , origin : Airport
+    , destination : Airport
     }
 
 
-type alias Destination =
-    { name : String
-    , country : String
-    , airport : String
+type alias Airport =
+    { placeName : String
+    , countryName : String
+    , airportCode : String
     , priceDisplay : String
     , priceCredits : Int
-    , location : Location
+    , latitude : Float
+    , longitude : Float
     }
 
 
-type alias Location =
-    { lat : Float
-    , lon : Float
+type alias Locations =
+    List (LocationSuggestion)
+
+
+type alias LocationSuggestion =
+    { cityId : String
+    , countryId : String
+    , countryName : String
+    , placeId : String
+    , placeName : String
+    , regionId : String
     }

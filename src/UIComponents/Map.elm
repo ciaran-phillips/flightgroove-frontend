@@ -15,13 +15,13 @@ type Msg
     | MapResponse Bool
     | PopupResponse Bool
     | FetchData
-    | FetchSuccess Response.RoutesResponse
+    | FetchSuccess Response.Routes
     | FetchFail Http.Error
 
 
 type alias Model =
     { mapActive : Bool
-    , mapData : Response.RoutesResponse
+    , mapData : Response.Routes
     }
 
 
@@ -36,9 +36,9 @@ initialModel =
     }
 
 
-defaultMapData : Response.RoutesResponse
+defaultMapData : Response.Routes
 defaultMapData =
-    Response.RoutesResponse "" []
+    []
 
 
 initialCmd : Cmd Msg
@@ -79,7 +79,11 @@ update msg model =
                 ( model, Cmd.none )
 
         FetchSuccess response ->
-            ( { model | mapData = response }, createPopups response )
+            let
+                (Response.RoutesResponse routes) =
+                    response
+            in
+                ( { model | mapData = routes }, createPopups routes )
 
 
 view : Model -> Html Msg
@@ -98,23 +102,33 @@ mapId =
 
 getApiData : Cmd Msg
 getApiData =
-    Task.perform FetchFail FetchSuccess API.callApi
+    Task.perform FetchFail FetchSuccess getRoutes
 
 
-createPopups : Response.RoutesResponse -> Cmd Msg
+createPopups : Response.Routes -> Cmd Msg
 createPopups routes =
-    List.map popupFromDestination routes.destinationList
+    List.map popupFromRoute routes
         |> Debug.log "list of popups"
         |> Cmd.batch
 
 
-popupFromDestination : Response.Destination -> Cmd Msg
-popupFromDestination dest =
+popupFromRoute : Response.Route -> Cmd Msg
+popupFromRoute route =
     popup
-        ( dest.location.lon
-        , dest.location.lat
-        , dest.priceDisplay
+        ( route.longitude
+        , route.latitude
+        , route.priceDisplay
         )
+
+
+getRoutes : Task.Task Http.Error Response.Response
+getRoutes =
+    API.callRoutes
+        { origin = "DUB-sky"
+        , destination = "de-sky"
+        , outboundDate = "2016-09"
+        , inboundDate = "2016-09"
+        }
 
 
 

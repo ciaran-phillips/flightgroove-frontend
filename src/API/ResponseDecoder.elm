@@ -1,29 +1,50 @@
 module API.ResponseDecoder exposing (..)
 
-import Json.Decode exposing (Decoder, int, string, float, list, object6, object2, (:=))
-import API.Response exposing (RoutesResponse, Destination, Location)
+import Json.Decode exposing (Decoder, int, string, float, list, object1, object6, object7, object5, (:=))
+import API.Response as Response
 
 
-getDecoder : Decoder RoutesResponse
-getDecoder =
-    object2 RoutesResponse
-        ("ageOfData" := string)
-        ("destinations" := list destinationDecoder)
+routesDecoder : Decoder Response.Response
+routesDecoder =
+    object1 Response.RoutesResponse
+        (list routeDecoder)
 
 
-destinationDecoder : Decoder Destination
-destinationDecoder =
-    object6 Destination
+routeDecoder : Decoder Response.Route
+routeDecoder =
+    object6 Response.Route
+        ("departureDate" := string)
+        ("returnDate" := string)
+        ("priceCredits" := int)
+        ("priceDisplay" := string)
+        ("origin" := airportDecoder)
+        ("destination" := airportDecoder)
+
+
+airportDecoder : Decoder Response.Airport
+airportDecoder =
+    object7 Response.Airport
         ("name" := string)
         ("country" := string)
         ("airport" := string)
         ("priceDisplay" := string)
         ("priceCredits" := int)
-        ("location" := locationDecoder)
+        ("latitude" := float)
+        ("longitude" := float)
 
 
-locationDecoder : Decoder Location
-locationDecoder =
-    object2 Location
-        ("lat" := float)
-        ("lon" := float)
+suggestionDecoder : Decoder Response.LocationSuggestion
+suggestionDecoder =
+    object6 Response.LocationSuggestion
+        ("cityId" := string)
+        ("countryId" := string)
+        ("countryName" := string)
+        ("placeId" := string)
+        ("placeName" := string)
+        ("regionId" := string)
+
+
+locationsDecoder : Decoder Response.Response
+locationsDecoder =
+    object1 Response.LocationsResponse <|
+        ("Place" := list suggestionDecoder)

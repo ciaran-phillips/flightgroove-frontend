@@ -4,12 +4,13 @@ module API.Skyscanner exposing (..)
 
 import Http
 import Task
+import Json.Decode exposing (Decoder)
 
 
 -- Custom Imports
 
 import API.ResponseDecoder as ResponseDecoder
-import API.Response exposing (RoutesResponse)
+import API.Response as Response
 
 
 -- Module constants
@@ -17,61 +18,70 @@ import API.Response exposing (RoutesResponse)
 
 baseUrl : String
 baseUrl =
-    "http://localhost:4000/mockapi/"
+    "http://localhost:4000/"
 
 
 
 -- Module types
 
 
-type Service
-    = BrowseRoutes
-    | BrowseDates
+type Request
+    = LocationsRequest LocationParams
+    | BrowseRoutesRequest BrowseRouteParams
 
 
-type alias APIRequest =
-    { service : Service
-    , origin : String
-    , numberPeople : Int
-    , roundTrip : Bool
-    , month : String
+type alias LocationParams =
+    { query : String }
+
+
+type alias BrowseRouteParams =
+    { origin : String
+    , destination : String
+    , outboundDate : String
+    , inboundDate : String
     }
 
 
-callApi : Task.Task Http.Error RoutesResponse
-callApi =
-    sendRequest "http://localhost:4000/mockapi/city-to-anywhere.json"
+callRoutes : BrowseRouteParams -> Task.Task Http.Error Response.Routes
+callRoutes request =
+    callApi ResponseDecoder.routesDecoder <| BrowseRoutesRequest request
 
 
-sendRequest : String -> Task.Task Http.Error RoutesResponse
-sendRequest url =
-    Http.get ResponseDecoder.getDecoder url
+callLocations : LocationParams -> Task.Task Http.Error Response.Locations
+callLocations request =
+    callApi ResponseDecoder.locationsDecoder <| LocationsRequest request
 
 
-urlConstructor : APIRequest -> String
+callApi : Request -> Task.Task Http.Error response
+callApi request =
+    sendRequest request
+
+
+sendRequest : Request -> Decoder response -> Task.Task Http.Error response
+sendRequest decoder request =
+    Http.get
+        decoder
+        (urlConstructor request)
+
+
+urlConstructor : Request -> String
 urlConstructor request =
     baseUrl
-        ++ serviceToEndpoint request.service
         ++ buildArgs request
 
 
-buildArgs : APIRequest -> String
+buildArgs : Request -> String
 buildArgs request =
-    "origin="
-        ++ request.origin
-        ++ "&number="
-        ++ toString request.numberPeople
-        ++ "&roundTrip="
-        ++ toString request.roundTrip
-        ++ "&month"
-        ++ request.month
+    case request of
+        LocationsRequest params ->
+            "origin/" ++ params.query
 
-
-serviceToEndpoint : Service -> String
-serviceToEndpoint service =
-    case service of
-        BrowseRoutes ->
-            "city-to-anywhere.json"
-
-        BrowseDates ->
-            "browsedates"
+        BrowseRoutesRequest params ->
+            "routes/"
+                ++ params.origin
+                ++ "/"
+                ++ params.destination
+                ++ "/"
+                ++ params.outboundDate
+                ++ "/"
+                ++ params.inboundDate
