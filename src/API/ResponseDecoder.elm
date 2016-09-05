@@ -34,15 +34,15 @@ airportDecoder =
 suggestionDecoder : Decoder Response.LocationSuggestion
 suggestionDecoder =
     object6 Response.LocationSuggestion
-        ("cityId" := string)
-        ("countryId" := string)
-        ("countryName" := string)
-        ("placeId" := string)
-        ("placeName" := string)
-        ("regionId" := string)
+        ("CityId" := string)
+        ("CountryId" := string)
+        ("CountryName" := string)
+        ("PlaceId" := string)
+        ("PlaceName" := string)
+        ("RegionId" := string)
 
 
 locationsDecoder : Decoder Response.Response
 locationsDecoder =
     object1 Response.LocationsResponse <|
-        ("Place" := list suggestionDecoder)
+        ("Places" := list suggestionDecoder)
