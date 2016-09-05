@@ -100,10 +100,7 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ div []
-            [ button [ onClick FetchData ] [ text "fetch data" ] ]
-        , div [ class "map-wrapper" ] [ div [ id "map" ] [] ]
-        ]
+        [ div [ class "map-wrapper" ] [ div [ id "map" ] [] ] ]
 
 
 mapId : String

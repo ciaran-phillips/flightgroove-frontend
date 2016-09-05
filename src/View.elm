@@ -52,8 +52,8 @@ filterRows : Model -> List (Html Msg)
 filterRows model =
     [ div [ class "mdl-cell mdl-cell--3-col" ] []
     , div [ class "mdl-cell mdl-cell--2-col" ] [ Html.App.map MenuMsg (Menu.view model.menuModel) ]
-    , div [ class "mdl-cell mdl-cell--2-col" ] [ text "stopovers" ]
-    , div [ class "mdl-cell mdl-cell--2-col" ] [ text "pricing" ]
+    , div [ class "mdl-cell mdl-cell--2-col" ] []
+    , div [ class "mdl-cell mdl-cell--2-col" ] []
     ]
 
 
