@@ -6,6 +6,7 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (id, class)
 import Http
 import Task
+import String
 import API.Skyscanner as API
 import API.Response as Response
 
@@ -17,11 +18,13 @@ type Msg
     | FetchData
     | FetchSuccess Response.Response
     | FetchFail Http.Error
+    | ChangeCriteria String
 
 
 type alias Model =
     { mapActive : Bool
     , mapData : Response.Routes
+    , criteria : String
     }
 
 
@@ -33,6 +36,7 @@ initialModel : Model
 initialModel =
     { mapActive = False
     , mapData = defaultMapData
+    , criteria = ""
     }
 
 
@@ -68,8 +72,14 @@ update msg model =
             in
                 ( model, Cmd.none )
 
+        ChangeCriteria newCriteria ->
+            if newCriteria == model.criteria then
+                ( model, Cmd.none )
+            else
+                ( { model | criteria = newCriteria }, getApiData newCriteria )
+
         FetchData ->
-            ( model, getApiData )
+            ( model, getApiData "DUB-sky" )
 
         FetchFail error ->
             let
@@ -101,9 +111,13 @@ mapId =
     "map"
 
 
-getApiData : Cmd Msg
-getApiData =
-    Task.perform FetchFail FetchSuccess getRoutes
+getApiData : String -> Cmd Msg
+getApiData location =
+    Task.perform FetchFail FetchSuccess <|
+        if String.isEmpty location then
+            getRoutes "DUB-sky"
+        else
+            getRoutes location
 
 
 createPopups : Response.Routes -> Cmd Msg
@@ -122,10 +136,10 @@ popupFromRoute route =
         )
 
 
-getRoutes : Task.Task Http.Error Response.Response
-getRoutes =
+getRoutes : String -> Task.Task Http.Error Response.Response
+getRoutes location =
     API.callRoutes
-        { origin = "DUB-sky"
+        { origin = location
         , destination = "anywhere"
         , outboundDate = "2016-09"
         , inboundDate = "2016-09"

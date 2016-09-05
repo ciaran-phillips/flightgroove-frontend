@@ -47,10 +47,21 @@ update message model =
 
         FilterMsg msg ->
             let
-                ( newModel, newCmd ) =
+                ( newFiltersModel, newFiltersCmd ) =
                     Filters.update msg model.filtersModel
+
+                filterCriteria =
+                    Filters.getCriteria newFiltersModel
+
+                ( newMapModel, newMapCmd ) =
+                    Map.update (Map.ChangeCriteria filterCriteria) model.mapModel
             in
-                ( { model | filtersModel = newModel }, Cmd.map FilterMsg newCmd )
+                ( { model | filtersModel = newFiltersModel, mapModel = newMapModel }
+                , Cmd.batch
+                    [ Cmd.map MapMsg newMapCmd
+                    , Cmd.map FilterMsg newFiltersCmd
+                    ]
+                )
 
 
 subscriptions : Model -> Sub Msg
