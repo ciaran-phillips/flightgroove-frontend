@@ -7,6 +7,11 @@ import Html.App
 import Html.Attributes exposing (class)
 import Autocomplete
 import String
+import API.Response as Response
+import API.Skyscanner as API
+import Http
+import Task
+import Debug
 
 
 type alias Model =
@@ -14,15 +19,9 @@ type alias Model =
     , locationId : String
     , airport : String
     , autoState : Autocomplete.State
-    , airportList : List Location
+    , airportList : Response.Locations
     , numOptionsDisplayed : Int
     , showMenu : Bool
-    }
-
-
-type alias Location =
-    { airportId : String
-    , name : String
     }
 
 
@@ -36,7 +35,7 @@ model =
     { mdl = Material.model
     , locationId = ""
     , airport = ""
-    , airportList = getAirportList
+    , airportList = []
     , autoState = Autocomplete.empty
     , numOptionsDisplayed = 10
     , showMenu = False
@@ -48,19 +47,39 @@ type Msg
     | ChangeAirport String
     | AutocompleteMsg Autocomplete.Msg
     | SelectAirport String
+    | FetchFail Http.Error
+    | FetchSuccess Response.Response
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ChangeAirport txt ->
-            ( { model | airport = txt, showMenu = True }, Cmd.none )
+            if String.isEmpty txt then
+                ( { model | airport = txt, showMenu = False, airportList = [] }, Cmd.none )
+            else
+                ( { model | airport = txt, showMenu = True }, updateAirportList txt )
 
-        SelectAirport airport ->
-            ( { model | locationId = airport, showMenu = False, airport = displayText airport }, Cmd.none )
+        SelectAirport placeId ->
+            ( { model | locationId = placeId, showMenu = False, airport = formattedLocationNameFromId model.airportList placeId }, Cmd.none )
 
         Mdl msg' ->
             Material.update msg' model
+
+        FetchFail error ->
+            let
+                x =
+                    Debug.log "error is " error
+            in
+                ( model, Cmd.none )
+
+        FetchSuccess response ->
+            case response of
+                Response.LocationsResponse locations ->
+                    ( { model | airportList = locations }, Cmd.none )
+
+                Response.RoutesResponse routes ->
+                    model ! []
 
         AutocompleteMsg msg ->
             let
@@ -78,18 +97,37 @@ update msg model =
                         update outMsg newModel
 
 
-displayText airport =
+updateAirportList : String -> Cmd Msg
+updateAirportList query =
+    Task.perform FetchFail FetchSuccess <|
+        API.callLocations { query = query }
+
+
+formattedLocationNameFromId airportList chosenId =
     let
-        selectedAirport =
-            List.filter (\n -> n.airportId == airport) model.airportList
+        chosenLocation =
+            List.filter (\n -> n.placeId == chosenId) airportList
                 |> List.head
     in
-        case selectedAirport of
+        case chosenLocation of
             Nothing ->
-                ""
+                "not found - "
 
-            Just selectedAirport ->
-                selectedAirport.name
+            Just chosenLocation ->
+                formatLocationName chosenLocation
+
+
+formatLocationName location =
+    location.placeName
+        ++ ", "
+        ++ location.countryName
+        ++ " ("
+        ++ location.placeId
+        ++ ")"
+
+
+getCriteria model =
+    model.locationId
 
 
 view : Model -> Html Msg
@@ -116,20 +154,6 @@ viewAirportSelector model =
         ]
 
 
-getAirportList : List Location
-getAirportList =
-    [ { airportId = "dub"
-      , name = "Dublin"
-      }
-    , { airportId = "dubr"
-      , name = "Dubrovnik"
-      }
-    , { airportId = "Dusseldorf"
-      , name = "Dusseldorf"
-      }
-    ]
-
-
 viewAutocomplete : Model -> Html Msg
 viewAutocomplete model =
     let
@@ -143,7 +167,7 @@ viewAutocomplete model =
             div [] []
 
 
-filterLocations : String -> List Location -> List Location
+filterLocations : String -> Response.Locations -> Response.Locations
 filterLocations query locations =
     let
         transformedQuery =
@@ -155,13 +179,13 @@ filterLocations query locations =
         List.filter filterFunction locations
 
 
-matchesLocation : String -> Location -> Bool
+matchesLocation : String -> Response.LocationSuggestion -> Bool
 matchesLocation lowercaseQuery location =
-    String.toLower location.name
+    String.toLower location.placeName
         |> String.contains lowercaseQuery
 
 
-updateConfig : Autocomplete.UpdateConfig Msg Location
+updateConfig : Autocomplete.UpdateConfig Msg Response.LocationSuggestion
 updateConfig =
     Autocomplete.updateConfig
         { onKeyDown =
@@ -177,15 +201,15 @@ updateConfig =
         , onMouseEnter = \_ -> Nothing
         , onMouseLeave = \_ -> Nothing
         , onMouseClick = \id -> Just <| SelectAirport id
-        , toId = .airportId
+        , toId = .placeId
         , separateSelections = True
         }
 
 
-viewConfig : Autocomplete.ViewConfig Location
+viewConfig : Autocomplete.ViewConfig Response.LocationSuggestion
 viewConfig =
     Autocomplete.viewConfig
-        { toId = \airport -> airport.airportId
+        { toId = \airport -> airport.placeId
         , ul = [ class "autocomplete-list" ]
         , li = listItem
         }
@@ -194,20 +218,20 @@ viewConfig =
 listItem :
     Autocomplete.KeySelected
     -> Autocomplete.MouseSelected
-    -> Location
+    -> Response.LocationSuggestion
     -> Autocomplete.HtmlDetails Never
 listItem keySelected mouseSelected location =
     if keySelected then
         { attributes = [ class "autocomplete-item autocomplete-item--key" ]
-        , children = [ Html.text location.name ]
+        , children = [ Html.text <| formatLocationName location ]
         }
     else if mouseSelected then
         { attributes = [ class "autocomplete-item autocomplete-item--mouse" ]
-        , children = [ Html.text location.name ]
+        , children = [ Html.text <| formatLocationName location ]
         }
     else
         { attributes = [ class "autocomplete-item" ]
-        , children = [ Html.text location.name ]
+        , children = [ Html.text <| formatLocationName location ]
         }
 
 
