@@ -76,7 +76,13 @@ body, .wrapper, .map-wrapper {
 
 .dropdown-container .mdl-textfield {
 }
-
+.dropdown-container {
+  height:73px;
+  z-index:1;
+}
+.autocomplete-list {
+  margin-top: -20px;
+}
 .autocomplete-item--key, .autocomplete-item--mouse {
     background-color: #f79a94;
     cursor: pointer;
