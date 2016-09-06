@@ -1,28 +1,34 @@
 module UIComponents.Filters exposing (..)
 
 import UIComponents.Filters.Location as Location
+import UIComponents.Filters.DateField as DateField
+import UIComponents.Types exposing (FilterCriteria)
 import Html.App
-import Html exposing (Html)
+import Html exposing (Html, div)
 
 
 type alias Model =
     { origin : Location.Model
+    , dateField : DateField.Model
     }
 
 
 type Msg
     = OriginMsg Location.Msg
+    | DateFieldMsg DateField.Msg
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( model, Cmd.none )
-
-
-model : Model
-model =
-    { origin = Location.model
-    }
+    let
+        ( dateFieldModel, dateFieldCmd ) =
+            DateField.init
+    in
+        ( { origin = Location.model
+          , dateField = dateFieldModel
+          }
+        , Cmd.map DateFieldMsg dateFieldCmd
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -35,19 +41,49 @@ update msg model =
             in
                 ( { model | origin = newModel }, Cmd.map OriginMsg newCmd )
 
+        DateFieldMsg msg ->
+            let
+                ( newModel, newCmd ) =
+                    DateField.update msg model.dateField
+            in
+                ( { model | dateField = newModel }
+                , Cmd.map DateFieldMsg newCmd
+                )
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.map OriginMsg <|
-        Location.subscriptions model.origin
+    Sub.batch
+        [ Sub.map OriginMsg <|
+            Location.subscriptions model.origin
+        , Sub.map DateFieldMsg <|
+            DateField.subscriptions model.dateField
+        ]
 
 
-getCriteria : Model -> String
+getCriteria : Model -> FilterCriteria
 getCriteria model =
-    Location.getSelectedLocation model.origin
+    FilterCriteria
+        (Location.getSelectedLocation model.origin)
+        (DateField.getInboundDate model.dateField)
+        (DateField.getOutboundDate model.dateField)
 
 
-view : Model -> Html Msg
-view model =
-    Html.App.map OriginMsg <|
-        Location.view model.origin
+viewOriginSearch : Model -> Html Msg
+viewOriginSearch model =
+    div []
+        [ Html.App.map OriginMsg <|
+            Location.view model.origin
+        ]
+
+
+viewOutboundDate : Model -> Html Msg
+viewOutboundDate model =
+    Html.App.map DateFieldMsg <|
+        DateField.viewOutbound model.dateField
+
+
+viewInboundDate : Model -> Html Msg
+viewInboundDate model =
+    Html.App.map DateFieldMsg <|
+        DateField.viewInbound model.dateField

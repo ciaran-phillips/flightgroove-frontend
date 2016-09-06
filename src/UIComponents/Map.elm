@@ -9,6 +9,8 @@ import Task
 import String
 import API.Skyscanner as API
 import API.Response as Response
+import UIComponents.Types exposing (FilterCriteria)
+import Date exposing (Date, Month(..))
 
 
 type Msg
@@ -18,13 +20,13 @@ type Msg
     | FetchData
     | FetchSuccess Response.Response
     | FetchFail Http.Error
-    | ChangeCriteria String
+    | ChangeCriteria FilterCriteria
 
 
 type alias Model =
     { mapActive : Bool
     , mapData : Response.Routes
-    , criteria : String
+    , criteria : FilterCriteria
     }
 
 
@@ -36,7 +38,7 @@ initialModel : Model
 initialModel =
     { mapActive = False
     , mapData = defaultMapData
-    , criteria = ""
+    , criteria = defaultCriteria
     }
 
 
@@ -79,7 +81,7 @@ update msg model =
                 ( { model | criteria = newCriteria }, getApiData newCriteria )
 
         FetchData ->
-            ( model, getApiData "DUB-sky" )
+            ( model, getApiData defaultCriteria )
 
         FetchFail error ->
             let
@@ -108,13 +110,21 @@ mapId =
     "map"
 
 
-getApiData : String -> Cmd Msg
-getApiData location =
+getApiData : FilterCriteria -> Cmd Msg
+getApiData criteria =
     Task.perform FetchFail FetchSuccess <|
-        if String.isEmpty location then
-            getRoutes "DUB-sky"
+        if String.isEmpty criteria.locationId then
+            getRoutes criteria
         else
-            getRoutes location
+            getRoutes criteria
+
+
+defaultCriteria : FilterCriteria
+defaultCriteria =
+    { locationId = "DUB-sky"
+    , inboundDate = Nothing
+    , outboundDate = Nothing
+    }
 
 
 createPopups : Response.Routes -> Cmd Msg
@@ -133,14 +143,70 @@ popupFromRoute route =
         )
 
 
-getRoutes : String -> Task.Task Http.Error Response.Response
-getRoutes location =
+getRoutes : FilterCriteria -> Task.Task Http.Error Response.Response
+getRoutes criteria =
     API.callRoutes
-        { origin = location
+        { origin = criteria.locationId
         , destination = "anywhere"
-        , outboundDate = "2016-09"
-        , inboundDate = "2016-09"
+        , outboundDate = formatDate criteria.outboundDate
+        , inboundDate = formatDate criteria.inboundDate
         }
+
+
+formatDate : Maybe Date -> String
+formatDate date =
+    case date of
+        Nothing ->
+            "2016-09"
+
+        Just date ->
+            (toString <| Date.year date)
+                ++ "-"
+                ++ (toString <| getMonthNumber <| Date.month date)
+                ++ "-"
+                ++ (toString <| Date.day date)
+
+
+getMonthNumber : Date.Month -> Int
+getMonthNumber month =
+    let
+        monthTuple =
+            getMonth month
+    in
+        case monthTuple of
+            Nothing ->
+                1
+
+            Just ( index, month ) ->
+                index
+
+
+getMonth : Date.Month -> Maybe ( Int, Date.Month )
+getMonth month =
+    let
+        filterFunc =
+            \n ->
+                let
+                    ( i, m ) =
+                        n
+                in
+                    m == month
+    in
+        List.head <|
+            List.filter filterFunc
+                [ ( 1, Jan )
+                , ( 2, Feb )
+                , ( 3, Mar )
+                , ( 4, Apr )
+                , ( 5, May )
+                , ( 6, Jun )
+                , ( 7, Jul )
+                , ( 8, Aug )
+                , ( 9, Sep )
+                , ( 10, Oct )
+                , ( 11, Nov )
+                , ( 12, Dec )
+                ]
 
 
 

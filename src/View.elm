@@ -43,8 +43,8 @@ topBarRows model =
             ]
         ]
     , div [ class "mdl-cell mdl-cell--3-col" ] [ searchBox model ]
-    , div [ class "mdl-cell mdl-cell--3-col" ] []
-    , div [ class "mdl-cell mdl-cell--3-col" ] []
+    , div [ class "mdl-cell mdl-cell--3-col" ] [ outboundDate model ]
+    , div [ class "mdl-cell mdl-cell--3-col" ] [ inboundDate model ]
     ]
 
 
@@ -61,7 +61,21 @@ searchBox : Model -> Html Msg
 searchBox model =
     filterWrapper "" <|
         Html.App.map FilterMsg <|
-            Filters.view model.filtersModel
+            Filters.viewOriginSearch model.filtersModel
+
+
+outboundDate : Model -> Html Msg
+outboundDate model =
+    filterWrapper "" <|
+        Html.App.map FilterMsg <|
+            Filters.viewOutboundDate model.filtersModel
+
+
+inboundDate : Model -> Html Msg
+inboundDate model =
+    filterWrapper "" <|
+        Html.App.map FilterMsg <|
+            Filters.viewInboundDate model.filtersModel
 
 
 filterWrapper : String -> Html Msg -> Html Msg

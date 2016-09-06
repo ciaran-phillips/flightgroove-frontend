@@ -19,13 +19,20 @@ import UIComponents.Filters as Filters
 
 init : ( Model, Cmd Msg )
 init =
-    ( { menuModel = Menu.initialModel
-      , route = ""
-      , mapModel = Map.initialModel
-      , filtersModel = Filters.model
-      }
-    , Cmd.map MapMsg Map.initialCmd
-    )
+    let
+        ( filtersModel, filtersCmd ) =
+            Filters.init
+    in
+        ( { menuModel = Menu.initialModel
+          , route = ""
+          , mapModel = Map.initialModel
+          , filtersModel = filtersModel
+          }
+        , Cmd.batch
+            [ Cmd.map MapMsg Map.initialCmd
+            , Cmd.map FilterMsg filtersCmd
+            ]
+        )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

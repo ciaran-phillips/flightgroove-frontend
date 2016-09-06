@@ -8,9 +8,10 @@
         "src",
         "vendor/elm-autocomplete/src"
     ],
-    "native-modules": true,
     "exposed-modules": [],
+    "native-modules": true,
     "dependencies": {
+        "Bogdanp/elm-datepicker": "3.0.1 <= v < 4.0.0",
         "debois/elm-mdl": "7.5.0 <= v < 8.0.0",
         "elm-lang/core": "4.0.5 <= v < 5.0.0",
         "elm-lang/html": "1.1.0 <= v < 2.0.0",
