@@ -74,8 +74,6 @@ body, .wrapper, .map-wrapper {
     padding: 0;
 }
 
-.dropdown-container .mdl-textfield {
-}
 .dropdown-container {
   height:73px;
   z-index:1;
@@ -86,4 +84,34 @@ body, .wrapper, .map-wrapper {
 .autocomplete-item--key, .autocomplete-item--mouse {
     background-color: #f79a94;
     cursor: pointer;
+}
+
+
+@keyframes slidein {
+  from {
+    left: -25%;
+  }
+
+  to {
+    left: 0;
+  }
+}
+
+.sidebar {
+    position: absolute;
+    background: #fff;
+    height: 100%;
+    z-index: 1;
+    left: -25%;
+    width: 25%;
+    animation: slidein 0.25s forwards;
+    animation-delay: 0s;
+}
+
+.sidebar--block {
+    padding: 20px;
+}
+
+.sidebar--block:first-child {
+    background: #fbfbfb;
 }

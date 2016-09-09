@@ -13,7 +13,8 @@ import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
 import UIComponents.Menu as Menu
-import UIComponents.Map as Map
+import UIComponents.Map.Map as Map
+import UIComponents.Map.Messages as MapMessages
 import UIComponents.Filters as Filters
 
 
@@ -61,7 +62,7 @@ update message model =
                     Filters.getCriteria newFiltersModel
 
                 ( newMapModel, newMapCmd ) =
-                    Map.update (Map.ChangeCriteria filterCriteria) model.mapModel
+                    Map.update (MapMessages.ChangeCriteria filterCriteria) model.mapModel
             in
                 ( { model | filtersModel = newFiltersModel, mapModel = newMapModel }
                 , Cmd.batch

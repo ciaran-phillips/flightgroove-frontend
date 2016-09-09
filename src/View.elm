@@ -13,7 +13,7 @@ import Html.Events exposing (onClick)
 import Messages exposing (Msg(..))
 import Model exposing (Model)
 import UIComponents.Menu as Menu
-import UIComponents.Map as Map
+import UIComponents.Map.Map as Map
 import UIComponents.Filters as Filters
 
 

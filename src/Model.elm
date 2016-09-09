@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import UIComponents.Menu as Menu
-import UIComponents.Map as Map
+import UIComponents.Map.Map as Map
 import UIComponents.Filters as Filters
 
 
