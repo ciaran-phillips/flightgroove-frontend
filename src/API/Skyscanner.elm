@@ -18,7 +18,7 @@ import API.Response as Response
 
 baseUrl : String
 baseUrl =
-    "http://localhost:4000/"
+    "http://192.168.0.29:4000/"
 
 
 
