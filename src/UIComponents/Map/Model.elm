@@ -2,6 +2,7 @@ module UIComponents.Map.Model exposing (..)
 
 import UIComponents.Types exposing (FilterCriteria)
 import API.Response as Response
+import Material
 
 
 type alias Model =
@@ -9,6 +10,8 @@ type alias Model =
     , mapData : Response.Routes
     , criteria : FilterCriteria
     , selectedDestination : Maybe String
+    , activeTab : Int
+    , mdl : Material.Model
     }
 
 
@@ -22,6 +25,8 @@ initialModel =
     , mapData = defaultMapData
     , criteria = defaultCriteria
     , selectedDestination = Nothing
+    , mdl = Material.model
+    , activeTab = 0
     }
 
 

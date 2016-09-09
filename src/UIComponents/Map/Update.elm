@@ -9,11 +9,16 @@ import API.Skyscanner as API
 import Http
 import Task
 import String
+import Material
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        -- MDL Boilerplate
+        Mdl msg' ->
+            Material.update msg' model
+
         MapResponse response ->
             ( { model | mapActive = response }, Cmd.none )
 
@@ -50,6 +55,9 @@ update msg model =
 
                 Response.LocationsResponse locations ->
                     ( model, Cmd.none )
+
+        SelectTab tab ->
+            ( { model | activeTab = tab }, Cmd.none )
 
 
 getApiData : FilterCriteria -> Cmd Msg
