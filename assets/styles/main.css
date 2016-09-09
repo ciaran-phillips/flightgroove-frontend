@@ -89,7 +89,7 @@ body, .wrapper, .map-wrapper {
 
 @keyframes slidein {
   from {
-    left: -25%;
+    left: -350px;
   }
 
   to {
@@ -102,8 +102,8 @@ body, .wrapper, .map-wrapper {
     background: #fff;
     height: 100%;
     z-index: 1;
-    left: -25%;
-    width: 25%;
+    left: -350px;
+    width: 350px;
     animation: slidein 0.25s forwards;
     animation-delay: 0s;
 }
