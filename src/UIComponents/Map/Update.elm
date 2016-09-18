@@ -34,7 +34,7 @@ update msg model =
                 x =
                     Debug.log ("setting destination to " ++ dest) <| Just dest
             in
-                ( { model | selectedDestination = x }, Cmd.none )
+                ( { model | selectedDestination = x }, getFullMonthData model )
 
         ChangeCriteria newCriteria ->
             if newCriteria == model.criteria then
@@ -46,18 +46,47 @@ update msg model =
             ( model, getApiData model.criteria )
 
         FetchFail error ->
-            ( model, Cmd.none )
+            let
+                r =
+                    Debug.log "error is: " error
+            in
+                ( always model r, Cmd.none )
 
         FetchSuccess response ->
             case response of
                 Response.RoutesResponse routes ->
                     ( { model | mapData = routes }, createPopups routes )
 
+                Response.BrowseDatesResponse result ->
+                    ( { model | quotes = result.quotes, dateOptions = result.dateOptions }
+                    , Cmd.none
+                    )
+
                 Response.LocationsResponse locations ->
                     ( model, Cmd.none )
 
         SelectTab tab ->
             ( { model | activeTab = tab }, Cmd.none )
+
+
+getFullMonthData : Model -> Cmd Msg
+getFullMonthData model =
+    let
+        dest =
+            case model.selectedDestination of
+                Nothing ->
+                    "PRG-sky"
+
+                Just dest ->
+                    dest
+    in
+        Task.perform FetchFail FetchSuccess <|
+            API.callDates
+                { origin = model.criteria.locationId
+                , destination = dest
+                , outboundDate = "2016-09"
+                , inboundDate = "2016-09"
+                }
 
 
 getApiData : FilterCriteria -> Cmd Msg

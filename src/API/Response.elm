@@ -1,9 +1,10 @@
-module API.Response exposing (Response(..), Routes, Route, Airport, Locations, LocationSuggestion)
+module API.Response exposing (..)
 
 
 type Response
     = RoutesResponse Routes
     | LocationsResponse Locations
+    | BrowseDatesResponse BrowseDates
 
 
 type alias Routes =
@@ -40,4 +41,48 @@ type alias LocationSuggestion =
     , placeId : String
     , placeName : String
     , regionId : String
+    }
+
+
+type alias BrowseDates =
+    { quotes : Quotes
+    , dateOptions : DateOptions
+    }
+
+
+type alias QuoteId =
+    Int
+
+
+type alias DateOptions =
+    List (DateOption)
+
+
+type alias DateOption =
+    { partialDate : String
+    , price : Int
+    , quoteIds : List (QuoteId)
+    , quoteDateTime : String
+    }
+
+
+type alias Quotes =
+    List (Quote)
+
+
+type alias Quote =
+    { direct : Bool
+    , inboundLeg : JourneyLeg
+    , minPrice : Int
+    , outboundLeg : JourneyLeg
+    , quoteDateTime : String
+    , quoteId : QuoteId
+    }
+
+
+type alias JourneyLeg =
+    { carrierIds : List (Int)
+    , departureDate : String
+    , destinationNumericId : Int
+    , originNumericId : Int
     }

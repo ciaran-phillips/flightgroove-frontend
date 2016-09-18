@@ -42,6 +42,25 @@ type alias BrowseRouteParams =
     }
 
 
+callDates : BrowseRouteParams -> Task.Task Http.Error Response.Response
+callDates request =
+    Http.get ResponseDecoder.browseDatesDecoder <|
+        browseDatesUrl request
+
+
+browseDatesUrl : BrowseRouteParams -> String
+browseDatesUrl params =
+    baseUrl
+        ++ "dates/"
+        ++ params.origin
+        ++ "/"
+        ++ params.destination
+        ++ "/"
+        ++ params.outboundDate
+        ++ "/"
+        ++ params.inboundDate
+
+
 callRoutes : BrowseRouteParams -> Task.Task Http.Error Response.Response
 callRoutes request =
     callApi <| BrowseRoutesRequest request
