@@ -127,7 +127,7 @@ updateAutocomplete : Autocomplete.Msg -> Model -> ( Model, Cmd Msg )
 updateAutocomplete msg model =
     let
         ( newAutoState, maybeMsg ) =
-            Autocomplete.update updateConfig msg model.autocompleteState model.locationList model.maxLocationsDisplayed
+            Autocomplete.update updateConfig msg model.maxLocationsDisplayed model.autocompleteState model.locationList
 
         newModel =
             { model | autocompleteState = newAutoState }
