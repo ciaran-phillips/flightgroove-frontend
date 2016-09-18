@@ -4,3 +4,4 @@ dist/
 npm-debug.*
 index.js
 logs/
+.vscode/
