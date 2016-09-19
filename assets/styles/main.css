@@ -115,3 +115,34 @@ body, .wrapper, .map-wrapper {
 .sidebar--block:first-child {
     background: #fbfbfb;
 }
+
+
+.grid__container {
+  position: relative;
+}
+.grid__table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.grid__cell {
+  border: 1px solid #ccc;
+  border-spacing:0;
+  margin:0;
+  padding:2px;
+  font-size:12px;
+  text-align:right;
+  height: 40px;
+  background-color: #bcd;
+  width: 50px;
+}
+
+.grid__cell--header {
+  font-weight: bold;
+  background-color: transparent;
+  border: 0;
+}
+
+.grid__cell--empty {
+  background-color: #ddd;
+}

@@ -8,7 +8,7 @@ import Material
 type alias Model =
     { mapActive : Bool
     , mapData : Response.Routes
-    , dateOptions : Response.DateOptions
+    , dateGrid : Maybe Response.DateGrid
     , quotes : Response.Quotes
     , criteria : FilterCriteria
     , selectedDestination : Maybe String
@@ -26,7 +26,7 @@ initialModel =
     { mapActive = False
     , mapData = defaultMapData
     , criteria = defaultCriteria
-    , dateOptions = []
+    , dateGrid = Nothing
     , quotes = []
     , selectedDestination = Nothing
     , mdl = Material.model

@@ -94,7 +94,7 @@ update msg model =
                 Response.RoutesResponse routes ->
                     model ! []
 
-                Response.BrowseDatesResponse result ->
+                Response.DateGridResponse result ->
                     model ! []
 
         FetchFail error ->

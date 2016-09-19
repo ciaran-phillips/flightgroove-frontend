@@ -1,6 +1,6 @@
 module API.ResponseDecoder exposing (..)
 
-import Json.Decode exposing (Decoder, int, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
+import Json.Decode exposing (Decoder, maybe, int, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
 import API.Response as Response
 
 
@@ -48,48 +48,27 @@ locationsDecoder =
         ("Places" := list suggestionDecoder)
 
 
-browseDatesDecoder : Decoder Response.Response
-browseDatesDecoder =
-    object1 Response.BrowseDatesResponse <|
-        object2 Response.BrowseDates
-            ("Quotes" := quotesDecoder)
-            ("Dates" := dateOptionsDecoder)
+
+-- DateGrid
 
 
-quotesDecoder : Decoder Response.Quotes
-quotesDecoder =
-    list quoteDecoder
+dateGridDecoder : Decoder Response.Response
+dateGridDecoder =
+    object1 Response.DateGridResponse <|
+        object2 Response.DateGrid
+            ("columnHeaders" := list (maybe string))
+            ("rows" := list dateGridRowDecoder)
 
 
-quoteDecoder : Decoder Response.Quote
-quoteDecoder =
-    object6 Response.Quote
-        ("Direct" := bool)
-        ("InboundLeg" := journeyLegDecoder)
-        ("MinPrice" := int)
-        ("OutboundLeg" := journeyLegDecoder)
-        ("QuoteDateTime" := string)
-        ("QuoteId" := int)
+dateGridRowDecoder : Decoder Response.DateGridRow
+dateGridRowDecoder =
+    object2 Response.DateGridRow
+        ("rowHeader" := string)
+        ("cells" := list (maybe dateGridCellDecoder))
 
 
-journeyLegDecoder : Decoder Response.JourneyLeg
-journeyLegDecoder =
-    object4 Response.JourneyLeg
-        ("CarrierIds" := list int)
-        ("DepartureDate" := string)
-        ("DestinationId" := int)
-        ("OriginId" := int)
-
-
-dateOptionsDecoder : Decoder Response.DateOptions
-dateOptionsDecoder =
-    ("OutboundDates" := list dateOptionDecoder)
-
-
-dateOptionDecoder : Decoder Response.DateOption
-dateOptionDecoder =
-    object4 Response.DateOption
-        ("PartialDate" := string)
-        ("Price" := int)
-        ("QuoteIds" := list int)
-        ("QuoteDateTime" := string)
+dateGridCellDecoder : Decoder Response.DateGridCell
+dateGridCellDecoder =
+    object2 Response.DateGridCell
+        ("priceCredits" := int)
+        ("priceDisplay" := string)

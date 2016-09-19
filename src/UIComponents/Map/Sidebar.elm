@@ -1,7 +1,7 @@
 module UIComponents.Map.Sidebar exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, style)
+import Html.Attributes exposing (class, style, src)
 import UIComponents.Map.Messages exposing (Msg(..))
 import UIComponents.Map.Model exposing (Model)
 import API.Response as Response
@@ -57,24 +57,55 @@ flightsTab model =
                 Just dest ->
                     dest
     in
-        [ div [] <| routesList <| getRoutesForLocation destination model.mapData
-        , div [] [ dateGrid <| Debug.log "date options list: " model.dateOptions ]
+        [ img [ src "/assets/img/city-default-sml.jpg" ] []
+        , div [] <| routesList <| getRoutesForLocation destination model.mapData
+        , div [ class "grid__container" ]
+            [ dateGrid <| Debug.log "date options list: " model.dateGrid ]
         ]
 
 
-dateGrid : Response.DateOptions -> Html Msg
-dateGrid options =
-    div [ class "date-grid--row" ] <|
-        List.map dateGridItem options
+dateGrid : Maybe Response.DateGrid -> Html Msg
+dateGrid grid =
+    case grid of
+        Nothing ->
+            text ""
+
+        Just grid ->
+            table [ class "grid__table" ]
+                [ thead [] <|
+                    List.map
+                        (displayHeaderCell)
+                        grid.columnHeaders
+                , tbody [] <|
+                    List.map dateGridRow grid.rows
+                ]
 
 
-dateGridItem : Response.DateOption -> Html Msg
-dateGridItem option =
-    let
-        getHeight =
-            \n -> toString <| (n.price * 100) // 1000
-    in
-        div [ class "date-grid--column", style [ ( "height", (getHeight option) ++ "px" ) ] ] []
+displayHeaderCell : Maybe String -> Html Msg
+displayHeaderCell content =
+    case content of
+        Nothing ->
+            th [] []
+
+        Just content ->
+            th [ class "grid__cell grid__cell--header" ] [ text content ]
+
+
+dateGridRow : Response.DateGridRow -> Html Msg
+dateGridRow row =
+    tr [] <|
+        [ td [ class "grid__cell grid__cell--header" ] [ text row.rowHeader ] ]
+            ++ List.map displayCell row.cells
+
+
+displayCell : Maybe Response.DateGridCell -> Html Msg
+displayCell cell =
+    case cell of
+        Nothing ->
+            td [ class "grid__cell grid__cell--empty" ] []
+
+        Just cell ->
+            td [] [ text cell.priceDisplay ]
 
 
 routesList : Response.Routes -> List (Html Msg)

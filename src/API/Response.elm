@@ -4,7 +4,7 @@ module API.Response exposing (..)
 type Response
     = RoutesResponse Routes
     | LocationsResponse Locations
-    | BrowseDatesResponse BrowseDates
+    | DateGridResponse DateGrid
 
 
 type alias Routes =
@@ -85,4 +85,22 @@ type alias JourneyLeg =
     , departureDate : String
     , destinationNumericId : Int
     , originNumericId : Int
+    }
+
+
+type alias DateGrid =
+    { columnHeaders : List (Maybe String)
+    , rows : List (DateGridRow)
+    }
+
+
+type alias DateGridRow =
+    { rowHeader : String
+    , cells : List (Maybe DateGridCell)
+    }
+
+
+type alias DateGridCell =
+    { priceCredits : Int
+    , priceDisplay : String
     }

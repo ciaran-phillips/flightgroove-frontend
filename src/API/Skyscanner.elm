@@ -44,14 +44,14 @@ type alias BrowseRouteParams =
 
 callDates : BrowseRouteParams -> Task.Task Http.Error Response.Response
 callDates request =
-    Http.get ResponseDecoder.browseDatesDecoder <|
-        browseDatesUrl request
+    Http.get ResponseDecoder.dateGridDecoder <|
+        dateGridUrl request
 
 
-browseDatesUrl : BrowseRouteParams -> String
-browseDatesUrl params =
+dateGridUrl : BrowseRouteParams -> String
+dateGridUrl params =
     baseUrl
-        ++ "dates/"
+        ++ "dategrid/"
         ++ params.origin
         ++ "/"
         ++ params.destination

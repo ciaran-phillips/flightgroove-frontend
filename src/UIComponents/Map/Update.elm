@@ -57,8 +57,8 @@ update msg model =
                 Response.RoutesResponse routes ->
                     ( { model | mapData = routes }, createPopups routes )
 
-                Response.BrowseDatesResponse result ->
-                    ( { model | quotes = result.quotes, dateOptions = result.dateOptions }
+                Response.DateGridResponse result ->
+                    ( { model | dateGrid = Just result }
                     , Cmd.none
                     )
 
