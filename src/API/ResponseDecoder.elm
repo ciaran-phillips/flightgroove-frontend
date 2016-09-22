@@ -69,6 +69,8 @@ dateGridRowDecoder =
 
 dateGridCellDecoder : Decoder Response.DateGridCell
 dateGridCellDecoder =
-    object2 Response.DateGridCell
+    object4 Response.DateGridCell
         ("priceCredits" := int)
         ("priceDisplay" := string)
+        ("outboundDate" := string)
+        ("inboundDate" := string)

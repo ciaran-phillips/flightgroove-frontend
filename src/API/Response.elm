@@ -103,4 +103,22 @@ type alias DateGridRow =
 type alias DateGridCell =
     { priceCredits : Int
     , priceDisplay : String
+    , outboundDate : String
+    , inboundDate : String
     }
+
+
+getRoutesForLocation : Routes -> String -> Routes
+getRoutesForLocation routes locationId =
+    let
+        filterFunc =
+            \n -> n.destination.airportCode == locationId
+    in
+        List.filter filterFunc routes
+
+
+getCheapestRouteForDestination : Routes -> String -> Maybe Route
+getCheapestRouteForDestination routes destination =
+    getRoutesForLocation routes destination
+        |> List.sortBy .priceCredits
+        |> List.head
