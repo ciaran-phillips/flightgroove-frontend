@@ -2,9 +2,12 @@ module UIComponents.Map.Sidebar exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style, src)
-import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.Model exposing (Model)
+import Html.Events exposing (onClick)
+import UIComponents.Map.Messages exposing (Msg(..), GridMsg(..))
+import UIComponents.Map.Model exposing (Model, GridPosition)
 import API.Response as Response
+import Array
+import Maybe exposing (withDefault)
 
 
 -- THird party packages
@@ -57,55 +60,118 @@ flightsTab model =
                 Just dest ->
                     dest
     in
-        [ img [ src "/assets/img/city-default-sml.jpg" ] []
-        , div [] <| routesList <| getRoutesForLocation destination model.mapData
-        , div [ class "grid__container" ]
-            [ dateGrid <| Debug.log "date options list: " model.dateGrid ]
+        [ div [] <| routesList <| getRoutesForLocation destination model.mapData
+        , div []
+            [ dateGrid model.dateGrid model.gridPosition ]
         ]
 
 
-dateGrid : Maybe Response.DateGrid -> Html Msg
-dateGrid grid =
+dateGrid : Maybe Response.DateGrid -> GridPosition -> Html Msg
+dateGrid grid position =
     case grid of
         Nothing ->
             text ""
 
         Just grid ->
-            table [ class "grid__table" ]
-                [ thead [] <|
-                    List.map
-                        (displayHeaderCell)
-                        grid.columnHeaders
-                , tbody [] <|
-                    List.map dateGridRow grid.rows
+            div [ class "grid__container" ]
+                [ div [ class "grid__controls grid__controls--top" ] <|
+                    gridControlButtonsTop
+                , div [ class "clearfix" ] []
+                , div [ class "grid__controls grid__controls--side" ] <|
+                    gridControlButtonsSide
+                , div [ class "grid__overflow-wrapper" ]
+                    [ div [ class "grid" ]
+                        [ div [ class "grid__sticky-header hide-overflow" ]
+                            [ div [ class "grid__slider", style <| [ gridRowOffset position ] ] <|
+                                List.map
+                                    (displayHeaderCell)
+                                    grid.columnHeaders
+                            ]
+                        , div [ class "grid__sticky-column hide-overflow" ]
+                            [ div [ class "grid__slider", style <| [ gridColOffset position ] ] <|
+                                List.map (displayHeaderCell << Just << (.rowHeader)) grid.rows
+                            ]
+                        , div [ class "hide-overflow" ]
+                            [ table [ class "grid__table grid__slider", style <| gridTableOffset position ]
+                                [ tbody [] <|
+                                    List.indexedMap (dateGridRow) grid.rows
+                                ]
+                            ]
+                        ]
+                    ]
                 ]
+
+
+gridTableOffset : GridPosition -> List ( String, String )
+gridTableOffset pos =
+    [ gridRowOffset pos, gridColOffset pos ]
+
+
+gridRowOffset : GridPosition -> ( String, String )
+gridRowOffset pos =
+    let
+        pixelOffset =
+            pos.x * 55
+    in
+        ( "left", "-" ++ toString pixelOffset ++ "px" )
+
+
+gridColOffset : GridPosition -> ( String, String )
+gridColOffset pos =
+    let
+        pixelOffset =
+            pos.y * 40
+    in
+        ( "top", "-" ++ toString pixelOffset ++ "px" )
+
+
+gridControlButtonsTop : List (Html Msg)
+gridControlButtonsTop =
+    [ button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridLeft ]
+        [ i [ class "material-icons" ] [ text "chevron_left" ] ]
+    , button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridRight ]
+        [ i [ class "material-icons" ] [ text "chevron_right" ] ]
+    ]
+
+
+gridControlButtonsSide : List (Html Msg)
+gridControlButtonsSide =
+    [ button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridUp ]
+        [ i [ class "material-icons" ] [ text "expand_less" ] ]
+    , button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridDown ]
+        [ i [ class "material-icons" ] [ text "expand_more" ] ]
+    ]
+
+
+gridControlButtonClass : String
+gridControlButtonClass =
+    "mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
 
 
 displayHeaderCell : Maybe String -> Html Msg
 displayHeaderCell content =
     case content of
         Nothing ->
-            th [] []
+            text ""
 
         Just content ->
-            th [ class "grid__cell grid__cell--header" ] [ text content ]
+            div [ class "grid__cell grid__cell--header" ] [ text content ]
 
 
-dateGridRow : Response.DateGridRow -> Html Msg
-dateGridRow row =
+dateGridRow : Int -> Response.DateGridRow -> Html Msg
+dateGridRow rowIndex row =
     tr [] <|
-        [ td [ class "grid__cell grid__cell--header" ] [ text row.rowHeader ] ]
-            ++ List.map displayCell row.cells
+        List.indexedMap (displayCell rowIndex) row.cells
 
 
-displayCell : Maybe Response.DateGridCell -> Html Msg
-displayCell cell =
+displayCell : Int -> Int -> Maybe Response.DateGridCell -> Html Msg
+displayCell rowIndex cellIndex cell =
     case cell of
         Nothing ->
-            td [ class "grid__cell grid__cell--empty" ] []
+            td [ class "grid__cell" ] []
 
         Just cell ->
-            td [] [ text cell.priceDisplay ]
+            td [ class "grid__cell grid__cell--selectable", onClick <| SelectGridItem ( rowIndex, cellIndex ) ] [ text cell.priceDisplay ]
 
 
 routesList : Response.Routes -> List (Html Msg)
@@ -122,6 +188,38 @@ routeItem route =
         ]
 
 
+getTripDatesFromGrid : Int -> Int -> Response.DateGrid -> ( Maybe String, Maybe String )
+getTripDatesFromGrid row col grid =
+    let
+        outboundDate =
+            getOutboundDateFromGrid col grid
+
+        inboundDate =
+            getInboundDateFromGrid row grid
+    in
+        ( outboundDate, inboundDate )
+
+
+getInboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
+getInboundDateFromGrid rowIndex grid =
+    let
+        inboundRow =
+            (Array.get rowIndex (Array.fromList grid.rows))
+    in
+        case inboundRow of
+            Nothing ->
+                Nothing
+
+            Just row ->
+                Just row.rowHeader
+
+
+getOutboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
+getOutboundDateFromGrid colIndex grid =
+    withDefault Nothing <|
+        Array.get colIndex (Array.fromList grid.columnHeaders)
+
+
 getRoutesForLocation : String -> Response.Routes -> Response.Routes
 getRoutesForLocation locationId routes =
     let
@@ -129,3 +227,42 @@ getRoutesForLocation locationId routes =
             \n -> n.destination.airportCode == locationId
     in
         List.filter filterFunc routes
+
+
+updateGridPosition : GridMsg -> GridPosition -> Response.DateGrid -> GridPosition
+updateGridPosition msg position grid =
+    let
+        maxPosX =
+            List.length grid.columnHeaders - 6
+
+        maxPosY =
+            List.length grid.rows - 6
+    in
+        case msg of
+            MoveGridUp ->
+                { position | y = decrease 4 position.y 0 }
+
+            MoveGridDown ->
+                { position | y = increase 4 position.y maxPosY }
+
+            MoveGridLeft ->
+                { position | x = decrease 4 position.x 0 }
+
+            MoveGridRight ->
+                { position | x = increase 4 position.x maxPosX }
+
+
+decrease : Int -> Int -> Int -> Int
+decrease stepAmount current minimum =
+    if (current - stepAmount) < minimum then
+        minimum
+    else
+        current - stepAmount
+
+
+increase : Int -> Int -> Int -> Int
+increase stepAmount current maximum =
+    if (current + stepAmount) > maximum then
+        maximum
+    else
+        current + stepAmount

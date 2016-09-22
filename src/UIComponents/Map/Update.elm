@@ -1,9 +1,10 @@
 module UIComponents.Map.Update exposing (update)
 
-import UIComponents.Map.Messages exposing (Msg(..))
+import UIComponents.Map.Messages exposing (Msg(..), GridMsg)
 import UIComponents.Map.Model exposing (Model)
 import UIComponents.Types exposing (FilterCriteria)
 import UIComponents.Map.Ports as Ports
+import UIComponents.Map.Sidebar as Sidebar
 import API.Response as Response
 import API.Skyscanner as API
 import Http
@@ -67,6 +68,33 @@ update msg model =
 
         SelectTab tab ->
             ( { model | activeTab = tab }, Cmd.none )
+
+        MoveGrid msg ->
+            updateGridPosition msg model
+
+        SelectGridItem ( row, col ) ->
+            case model.dateGrid of
+                Nothing ->
+                    model ! []
+
+                Just grid ->
+                    let
+                        ( outbound, inbound ) =
+                            Debug.log "selected dates" Sidebar.getTripDatesFromGrid row col grid
+                    in
+                        { model | selectedOutboundDate = outbound, selectedInboundDate = inbound } ! []
+
+
+updateGridPosition : GridMsg -> Model -> ( Model, Cmd Msg )
+updateGridPosition msg model =
+    case model.dateGrid of
+        Nothing ->
+            ( model, Cmd.none )
+
+        Just grid ->
+            ( { model | gridPosition = Sidebar.updateGridPosition msg model.gridPosition grid }
+            , Cmd.none
+            )
 
 
 getFullMonthData : Model -> Cmd Msg

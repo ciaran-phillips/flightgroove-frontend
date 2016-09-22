@@ -102,13 +102,13 @@ body, .wrapper, .map-wrapper {
     background: #fff;
     height: 100%;
     z-index: 1;
-    left: -350px;
-    width: 350px;
+    left: -430px;
+    width: 430px;
     animation: slidein 0.25s forwards;
     animation-delay: 0s;
 }
 
-.sidebar--block {
+.sidebar--block > div {
     padding: 20px;
 }
 
@@ -116,33 +116,94 @@ body, .wrapper, .map-wrapper {
     background: #fbfbfb;
 }
 
+.hide-overflow {
+  overflow: hidden;
+}
 
-.grid__container {
+
+.grid__overflow-wrapper {
   position: relative;
+  width: 330px;
+  height: 240px;
+  margin: 0;
+  padding: 0!important;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  float: left;
+  overflow: hidden;
+}
+.grid {
+  width: 2000px;
+  height: 2000px;
+}
+.grid__sticky-header {
+  width: 2000px;
+  height: 40px;
+  margin-left: 55px;
+  overflow: hidden;
+  position: relative;
+ }
+.grid__sticky-column {
+  float: left;
+  width: 55px;
+  height:1000px;
+  clear: left;
+  overflow:hidden;
 }
 .grid__table {
   border-spacing: 0;
-  border-collapse: collapse;
 }
 
 .grid__cell {
-  border: 1px solid #ccc;
+  border-top: 1px solid #ccc;
   border-spacing:0;
   margin:0;
   padding:2px;
   font-size:12px;
   text-align:right;
   height: 40px;
-  background-color: #bcd;
   width: 50px;
+  text-align: center;
+  border-left: 1px solid #ccc;
+  background-color: #fcfcfc;
 }
-
+.grid__cell--selectable {
+  background-color: #fff;
+}
+.grid__cell--selectable:hover {
+  cursor: pointer;
+  background-color: #f7c6c3;
+}
 .grid__cell--header {
   font-weight: bold;
   background-color: transparent;
   border: 0;
+  float: left;
+  box-sizing: border-box;
+  line-height: 36px;
+  border-left: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  width: 55px;
+  background-color: #fbfbfb;
 }
 
+.grid__slider {
+  position:relative;
+  transition: 0.4s;
+}
 .grid__cell--empty {
-  background-color: #ddd;
+  background-color: #fcfcfc;
+}
+.grid__controls > button {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.grid__controls--top {
+  float: right;
+}
+.grid__controls--side {
+  float: left;
+  width: 40px;
+  position: relative;
+  top: 160px;
 }

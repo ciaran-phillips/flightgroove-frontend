@@ -1,4 +1,4 @@
-module UIComponents.Map.Messages exposing (Msg(..))
+module UIComponents.Map.Messages exposing (Msg(..), GridMsg(..))
 
 import API.Response as Response
 import Http
@@ -16,3 +16,12 @@ type Msg
     | SelectDestination String
     | SelectTab Int
     | Mdl (Material.Msg Msg)
+    | MoveGrid GridMsg
+    | SelectGridItem ( Int, Int )
+
+
+type GridMsg
+    = MoveGridUp
+    | MoveGridDown
+    | MoveGridLeft
+    | MoveGridRight
