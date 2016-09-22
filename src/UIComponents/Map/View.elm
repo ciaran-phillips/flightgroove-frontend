@@ -11,12 +11,12 @@ view : Model -> Html Msg
 view model =
     let
         sidebar =
-            case model.selectedDestination of
+            case model.sidebar of
                 Nothing ->
-                    Debug.log "no selected destination" <| text ""
+                    text ""
 
-                Just dest ->
-                    Sidebar.view model
+                Just sidebarModel ->
+                    Sidebar.view model.mdl sidebarModel
     in
         div [ class "map-wrapper" ]
             [ sidebar

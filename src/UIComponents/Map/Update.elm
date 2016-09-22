@@ -1,7 +1,8 @@
 module UIComponents.Map.Update exposing (update)
 
 import UIComponents.Map.Messages exposing (Msg(..), GridMsg)
-import UIComponents.Map.Model exposing (Model)
+import UIComponents.Map.Model as Model exposing (Model, SidebarModel)
+import UIComponents.Map.Types exposing (..)
 import UIComponents.Types exposing (FilterCriteria)
 import UIComponents.Map.Ports as Ports
 import UIComponents.Map.Sidebar as Sidebar
@@ -35,7 +36,7 @@ update msg model =
                 x =
                     Debug.log ("setting destination to " ++ dest) <| Just dest
             in
-                ( { model | selectedDestination = x }, getFullMonthData model )
+                ( { model | selectedDestination = x, sidebar = Just (newSidebar dest model) }, getFullMonthData model )
 
         ChangeCriteria newCriteria ->
             if newCriteria == model.criteria then
@@ -59,7 +60,7 @@ update msg model =
                     ( { model | mapData = routes }, createPopups routes )
 
                 Response.DateGridResponse result ->
-                    ( { model | dateGrid = Just result }
+                    ( { model | sidebar = updateSidebarGrid model.sidebar result }
                     , Cmd.none
                     )
 
@@ -67,34 +68,66 @@ update msg model =
                     ( model, Cmd.none )
 
         SelectTab tab ->
-            ( { model | activeTab = tab }, Cmd.none )
+            { model | sidebar = updateSidebarTab model.sidebar tab } ! []
 
         MoveGrid msg ->
-            updateGridPosition msg model
+            let
+                updatedSidebar =
+                    updateGridPosition msg model.sidebar
+            in
+                { model | sidebar = updatedSidebar } ! []
 
-        SelectGridItem ( row, col ) ->
-            case model.dateGrid of
+        SelectGridItem ( outbound, inbound ) ->
+            case model.sidebar of
                 Nothing ->
                     model ! []
 
-                Just grid ->
-                    let
-                        ( outbound, inbound ) =
-                            Debug.log "selected dates" Sidebar.getTripDatesFromGrid row col grid
-                    in
-                        { model | selectedOutboundDate = outbound, selectedInboundDate = inbound } ! []
+                Just sidebar ->
+                    { model | sidebar = Just { sidebar | selectedOutboundDate = outbound, selectedInboundDate = inbound } } ! []
 
 
-updateGridPosition : GridMsg -> Model -> ( Model, Cmd Msg )
-updateGridPosition msg model =
-    case model.dateGrid of
+updateSidebarGrid : Maybe SidebarModel -> Response.DateGrid -> Maybe SidebarModel
+updateSidebarGrid sidebar grid =
+    case sidebar of
         Nothing ->
-            ( model, Cmd.none )
+            Nothing
 
-        Just grid ->
-            ( { model | gridPosition = Sidebar.updateGridPosition msg model.gridPosition grid }
-            , Cmd.none
-            )
+        Just sidebarModel ->
+            Just { sidebarModel | dateGrid = Success grid, gridSize = Model.getGridSize grid }
+
+
+updateSidebarTab : Maybe SidebarModel -> Int -> Maybe SidebarModel
+updateSidebarTab sidebar tab =
+    case sidebar of
+        Nothing ->
+            Nothing
+
+        Just sidebarModel ->
+            Just { sidebarModel | activeTab = tab }
+
+
+updateGridPosition : GridMsg -> Maybe SidebarModel -> Maybe SidebarModel
+updateGridPosition msg sidebar =
+    case sidebar of
+        Nothing ->
+            Nothing
+
+        Just sidebarModel ->
+            Just { sidebarModel | gridPosition = Sidebar.updateGridPosition msg sidebarModel }
+
+
+newSidebar : String -> Model -> SidebarModel
+newSidebar dest model =
+    let
+        cheapestRoute =
+            Response.getCheapestRouteForDestination model.mapData dest
+    in
+        case cheapestRoute of
+            Nothing ->
+                Debug.crash "no cheapest route!!"
+
+            Just route ->
+                Model.newSidebarModel dest route.departureDate route.returnDate route.priceDisplay
 
 
 getFullMonthData : Model -> Cmd Msg

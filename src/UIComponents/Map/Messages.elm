@@ -17,7 +17,7 @@ type Msg
     | SelectTab Int
     | Mdl (Material.Msg Msg)
     | MoveGrid GridMsg
-    | SelectGridItem ( Int, Int )
+    | SelectGridItem ( String, String )
 
 
 type GridMsg

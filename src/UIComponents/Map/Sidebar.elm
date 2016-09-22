@@ -4,10 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
 import UIComponents.Map.Messages exposing (Msg(..), GridMsg(..))
-import UIComponents.Map.Model exposing (Model, GridPosition)
+import UIComponents.Map.Model exposing (Model, SidebarModel, GridSize)
+import UIComponents.Map.Types exposing (..)
 import API.Response as Response
 import Array
 import Maybe exposing (withDefault)
+import Material
 
 
 -- THird party packages
@@ -15,17 +17,17 @@ import Maybe exposing (withDefault)
 import Material.Tabs as Tabs
 
 
-view : Model -> Html Msg
-view model =
+view : Material.Model -> SidebarModel -> Html Msg
+view mdl model =
     div [ class "sidebar" ]
-        [ tabs model ]
+        [ tabs mdl model ]
 
 
-tabs : Model -> Html Msg
-tabs model =
+tabs : Material.Model -> SidebarModel -> Html Msg
+tabs mdl model =
     Tabs.render Mdl
         [ 0 ]
-        model.mdl
+        mdl
         [ Tabs.activeTab model.activeTab
         , Tabs.onSelectTab SelectTab
         ]
@@ -49,30 +51,26 @@ tabs model =
         ]
 
 
-flightsTab : Model -> List (Html Msg)
+flightsTab : SidebarModel -> List (Html Msg)
 flightsTab model =
-    let
-        destination =
-            case model.selectedDestination of
-                Nothing ->
-                    ""
-
-                Just dest ->
-                    dest
-    in
-        [ div [] <| routesList <| getRoutesForLocation destination model.mapData
-        , div []
-            [ dateGrid model.dateGrid model.gridPosition ]
-        ]
+    [ div []
+        [ dateGrid model.dateGrid model.gridPosition ]
+    ]
 
 
-dateGrid : Maybe Response.DateGrid -> GridPosition -> Html Msg
+dateGrid : RemoteData Response.DateGrid -> GridPosition -> Html Msg
 dateGrid grid position =
     case grid of
-        Nothing ->
+        Empty ->
             text ""
 
-        Just grid ->
+        Loading ->
+            text "Loading"
+
+        Failure err ->
+            text "failed to load"
+
+        Success grid ->
             div [ class "grid__container" ]
                 [ div [ class "grid__controls grid__controls--top" ] <|
                     gridControlButtonsTop
@@ -171,21 +169,7 @@ displayCell rowIndex cellIndex cell =
             td [ class "grid__cell" ] []
 
         Just cell ->
-            td [ class "grid__cell grid__cell--selectable", onClick <| SelectGridItem ( rowIndex, cellIndex ) ] [ text cell.priceDisplay ]
-
-
-routesList : Response.Routes -> List (Html Msg)
-routesList routes =
-    List.map routeItem routes
-
-
-routeItem : Response.Route -> Html Msg
-routeItem route =
-    div []
-        [ h4 [] [ text route.destination.placeName ]
-        , div [] [ text <| "Departure Date: " ++ route.departureDate ]
-        , div [] [ text <| "Price:  " ++ route.priceDisplay ]
-        ]
+            td [ class "grid__cell grid__cell--selectable", onClick <| SelectGridItem ( cell.outboundDate, cell.outboundDate ) ] [ text cell.priceDisplay ]
 
 
 getTripDatesFromGrid : Int -> Int -> Response.DateGrid -> ( Maybe String, Maybe String )
@@ -220,23 +204,17 @@ getOutboundDateFromGrid colIndex grid =
         Array.get colIndex (Array.fromList grid.columnHeaders)
 
 
-getRoutesForLocation : String -> Response.Routes -> Response.Routes
-getRoutesForLocation locationId routes =
+updateGridPosition : GridMsg -> SidebarModel -> GridPosition
+updateGridPosition msg sidebar =
     let
-        filterFunc =
-            \n -> n.destination.airportCode == locationId
-    in
-        List.filter filterFunc routes
-
-
-updateGridPosition : GridMsg -> GridPosition -> Response.DateGrid -> GridPosition
-updateGridPosition msg position grid =
-    let
-        maxPosX =
-            List.length grid.columnHeaders - 6
-
         maxPosY =
-            List.length grid.rows - 6
+            sidebar.gridSize.rows - 6
+
+        maxPosX =
+            sidebar.gridSize.columns - 6
+
+        position =
+            sidebar.gridPosition
     in
         case msg of
             MoveGridUp ->
