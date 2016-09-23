@@ -1,10 +1,15 @@
 module UIComponents.Types exposing (..)
 
-import Date exposing (Date)
-
 
 type alias FilterCriteria =
     { locationId : String
     , outboundDate : String
     , inboundDate : String
     }
+
+
+type RemoteData a
+    = Empty
+    | Loading
+    | Success a
+    | Failure a

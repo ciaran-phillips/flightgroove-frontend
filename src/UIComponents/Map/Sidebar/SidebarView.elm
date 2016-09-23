@@ -1,29 +1,36 @@
-module UIComponents.Map.Sidebar exposing (..)
+module UIComponents.Map.Sidebar.SidebarView exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
-import UIComponents.Map.Messages exposing (..)
-import UIComponents.Map.Model exposing (Model, SidebarModel, GridSize)
-import UIComponents.Map.Types exposing (..)
-import API.Response as Response
-import Array
-import Maybe exposing (withDefault)
+
+
+-- Third party packages
+
 import Material
-
-
--- THird party packages
-
 import Material.Tabs as Tabs
 
 
-view : Material.Model -> SidebarModel -> Html Msg
+-- Custom Modules
+
+import UIComponents.Map.Messages exposing (Msg(SidebarTag, Mdl))
+import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
+import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
+import UIComponents.Types exposing (RemoteData(..))
+import API.Response as Response
+
+
+view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
 view mdl model =
     div [ class "sidebar" ]
         [ tabs mdl model ]
 
 
-tabs : Material.Model -> SidebarModel -> Html Msg
+
+-- PRIVATE FUNCTIONS
+
+
+tabs : Material.Model -> SidebarModel.SidebarModel -> Html Msg
 tabs mdl model =
     Tabs.render Mdl
         [ 0 ]
@@ -51,14 +58,14 @@ tabs mdl model =
         ]
 
 
-flightsTab : SidebarModel -> List (Html Msg)
+flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
 flightsTab model =
     [ div []
         [ dateGrid model.dateGrid model.gridPosition ]
     ]
 
 
-dateGrid : RemoteData Response.DateGrid -> GridPosition -> Html Msg
+dateGrid : RemoteData Response.DateGrid -> SidebarModel.GridPosition -> Html Msg
 dateGrid grid position =
     case grid of
         Empty ->
@@ -100,12 +107,12 @@ dateGrid grid position =
                 ]
 
 
-gridTableOffset : GridPosition -> List ( String, String )
+gridTableOffset : SidebarModel.GridPosition -> List ( String, String )
 gridTableOffset pos =
     [ gridRowOffset pos, gridColOffset pos ]
 
 
-gridRowOffset : GridPosition -> ( String, String )
+gridRowOffset : SidebarModel.GridPosition -> ( String, String )
 gridRowOffset pos =
     let
         pixelOffset =
@@ -114,7 +121,7 @@ gridRowOffset pos =
         ( "left", "-" ++ toString pixelOffset ++ "px" )
 
 
-gridColOffset : GridPosition -> ( String, String )
+gridColOffset : SidebarModel.GridPosition -> ( String, String )
 gridColOffset pos =
     let
         pixelOffset =
@@ -169,36 +176,16 @@ displayCell rowIndex cellIndex cell =
             td [ class "grid__cell" ] []
 
         Just cell ->
-            td [ class "grid__cell grid__cell--selectable", onClick <| SidebarTag <| SelectGridItem ( cell.outboundDate, cell.outboundDate ) ] [ text cell.priceDisplay ]
-
-
-getTripDatesFromGrid : Int -> Int -> Response.DateGrid -> ( Maybe String, Maybe String )
-getTripDatesFromGrid row col grid =
-    let
-        outboundDate =
-            getOutboundDateFromGrid col grid
-
-        inboundDate =
-            getInboundDateFromGrid row grid
-    in
-        ( outboundDate, inboundDate )
-
-
-getInboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
-getInboundDateFromGrid rowIndex grid =
-    let
-        inboundRow =
-            (Array.get rowIndex (Array.fromList grid.rows))
-    in
-        case inboundRow of
-            Nothing ->
-                Nothing
-
-            Just row ->
-                Just row.rowHeader
-
-
-getOutboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
-getOutboundDateFromGrid colIndex grid =
-    withDefault Nothing <|
-        Array.get colIndex (Array.fromList grid.columnHeaders)
+            let
+                cellData =
+                    { x = cellIndex
+                    , y = rowIndex
+                    , outboundDate = cell.outboundDate
+                    , inboundDate = cell.inboundDate
+                    }
+            in
+                td
+                    [ class "grid__cell grid__cell--selectable"
+                    , onClick <| SidebarTag <| SelectGridItem cellData
+                    ]
+                    [ text cell.priceDisplay ]

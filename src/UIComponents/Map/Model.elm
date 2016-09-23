@@ -2,6 +2,8 @@ module UIComponents.Map.Model exposing (..)
 
 import UIComponents.Types exposing (FilterCriteria)
 import UIComponents.Map.Types exposing (..)
+import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
+import UIComponents.Types exposing (RemoteData(..))
 import API.Response as Response
 import Material
 
@@ -12,26 +14,8 @@ type alias Model =
     , quotes : Response.Quotes
     , criteria : FilterCriteria
     , selectedDestination : Maybe String
-    , sidebar : Maybe SidebarModel
+    , sidebar : Maybe SidebarModel.SidebarModel
     , mdl : Material.Model
-    }
-
-
-type alias SidebarModel =
-    { dateGrid : RemoteData Response.DateGrid
-    , gridPosition : GridPosition
-    , gridSize : GridSize
-    , destination : String
-    , lowestPrice : String
-    , selectedOutboundDate : String
-    , selectedInboundDate : String
-    , activeTab : Int
-    }
-
-
-type alias GridSize =
-    { rows : Int
-    , columns : Int
     }
 
 
@@ -47,19 +31,6 @@ initialModel =
     }
 
 
-newSidebarModel : String -> String -> String -> String -> SidebarModel
-newSidebarModel destination outboundDate inboundDate lowestPrice =
-    { dateGrid = Empty
-    , gridPosition = { x = 0, y = 0 }
-    , gridSize = { rows = 0, columns = 0 }
-    , destination = destination
-    , selectedOutboundDate = outboundDate
-    , selectedInboundDate = inboundDate
-    , lowestPrice = lowestPrice
-    , activeTab = 0
-    }
-
-
 defaultMapData : Response.Routes
 defaultMapData =
     []
@@ -70,11 +41,4 @@ defaultCriteria =
     { locationId = "DUB-sky"
     , inboundDate = "2016-09"
     , outboundDate = "2016-09"
-    }
-
-
-getGridSize : Response.DateGrid -> GridSize
-getGridSize grid =
-    { rows = List.length grid.columnHeaders
-    , columns = List.length grid.rows
     }

@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (id, class)
 import UIComponents.Map.Messages exposing (Msg(..))
 import UIComponents.Map.Model exposing (Model)
-import UIComponents.Map.Sidebar as Sidebar
+import UIComponents.Map.Sidebar.SidebarView as SidebarView
 
 
 view : Model -> Html Msg
@@ -16,7 +16,7 @@ view model =
                     text ""
 
                 Just sidebarModel ->
-                    Sidebar.view model.mdl sidebarModel
+                    SidebarView.view model.mdl sidebarModel
     in
         div [ class "map-wrapper" ]
             [ sidebar
