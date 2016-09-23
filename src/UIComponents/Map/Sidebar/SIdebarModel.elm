@@ -40,7 +40,7 @@ type alias CellData =
 
 newSidebarModel : String -> String -> String -> String -> SidebarModel
 newSidebarModel destination outboundDate inboundDate lowestPrice =
-    { dateGrid = Empty
+    { dateGrid = Loading
     , gridPosition = { x = 0, y = 0 }
     , gridSize = { rows = 0, columns = 0 }
     , destination = destination

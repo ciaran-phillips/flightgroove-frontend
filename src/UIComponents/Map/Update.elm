@@ -98,7 +98,11 @@ updateSidebar sidebarModel msg =
         GridFetchSuccess response ->
             case response of
                 Response.DateGridResponse grid ->
-                    { sidebarModel | dateGrid = Success grid, gridSize = SidebarModel.getGridSize grid } ! []
+                    { sidebarModel
+                        | dateGrid = Success grid
+                        , gridSize = SidebarModel.getGridSize grid
+                    }
+                        ! []
 
                 Response.RoutesResponse routes ->
                     sidebarModel ! []

@@ -61,13 +61,13 @@ tabs mdl model =
 flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
 flightsTab model =
     [ div []
-        [ dateGrid model.dateGrid model.gridPosition ]
+        [ dateGrid model model.gridPosition ]
     ]
 
 
-dateGrid : RemoteData Response.DateGrid -> SidebarModel.GridPosition -> Html Msg
-dateGrid grid position =
-    case grid of
+dateGrid : SidebarModel.SidebarModel -> SidebarModel.GridPosition -> Html Msg
+dateGrid model position =
+    case model.dateGrid of
         Empty ->
             text ""
 
@@ -99,7 +99,7 @@ dateGrid grid position =
                         , div [ class "hide-overflow" ]
                             [ table [ class "grid__table grid__slider", style <| gridTableOffset position ]
                                 [ tbody [] <|
-                                    List.indexedMap (dateGridRow) grid.rows
+                                    List.indexedMap (dateGridRow model) grid.rows
                                 ]
                             ]
                         ]
@@ -163,14 +163,14 @@ displayHeaderCell content =
             div [ class "grid__cell grid__cell--header" ] [ text content ]
 
 
-dateGridRow : Int -> Response.DateGridRow -> Html Msg
-dateGridRow rowIndex row =
+dateGridRow : SidebarModel.SidebarModel -> Int -> Response.DateGridRow -> Html Msg
+dateGridRow model rowIndex row =
     tr [] <|
-        List.indexedMap (displayCell rowIndex) row.cells
+        List.indexedMap (displayCell model rowIndex) row.cells
 
 
-displayCell : Int -> Int -> Maybe Response.DateGridCell -> Html Msg
-displayCell rowIndex cellIndex cell =
+displayCell : SidebarModel.SidebarModel -> Int -> Int -> Maybe Response.DateGridCell -> Html Msg
+displayCell model rowIndex cellIndex cell =
     case cell of
         Nothing ->
             td [ class "grid__cell" ] []
@@ -183,9 +183,20 @@ displayCell rowIndex cellIndex cell =
                     , outboundDate = cell.outboundDate
                     , inboundDate = cell.inboundDate
                     }
+
+                modifierClass =
+                    if
+                        cell.outboundDate
+                            == model.selectedOutboundDate
+                            && cell.inboundDate
+                            == model.selectedInboundDate
+                    then
+                        "grid__cell--selected"
+                    else
+                        "grid__cell-selectable"
             in
                 td
-                    [ class "grid__cell grid__cell--selectable"
+                    [ class <| "grid__cell " ++ modifierClass
                     , onClick <| SidebarTag <| SelectGridItem cellData
                     ]
                     [ text cell.priceDisplay ]
