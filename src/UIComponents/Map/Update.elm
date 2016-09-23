@@ -1,6 +1,6 @@
 module UIComponents.Map.Update exposing (update)
 
-import UIComponents.Map.Messages exposing (Msg(..), GridMsg)
+import UIComponents.Map.Messages exposing (..)
 import UIComponents.Map.Model as Model exposing (Model, SidebarModel)
 import UIComponents.Map.Types exposing (..)
 import UIComponents.Types exposing (FilterCriteria)
@@ -60,60 +60,75 @@ update msg model =
                     ( { model | mapData = routes }, createPopups routes )
 
                 Response.DateGridResponse result ->
-                    ( { model | sidebar = updateSidebarGrid model.sidebar result }
-                    , Cmd.none
-                    )
+                    model ! []
 
                 Response.LocationsResponse locations ->
-                    ( model, Cmd.none )
+                    model ! []
 
-        SelectTab tab ->
-            { model | sidebar = updateSidebarTab model.sidebar tab } ! []
-
-        MoveGrid msg ->
-            let
-                updatedSidebar =
-                    updateGridPosition msg model.sidebar
-            in
-                { model | sidebar = updatedSidebar } ! []
-
-        SelectGridItem ( outbound, inbound ) ->
+        SidebarTag msg ->
             case model.sidebar of
                 Nothing ->
                     model ! []
 
-                Just sidebar ->
-                    { model | sidebar = Just { sidebar | selectedOutboundDate = outbound, selectedInboundDate = inbound } } ! []
+                Just sidebarModel ->
+                    let
+                        ( updatedSidebar, newCmd ) =
+                            updateSidebar sidebarModel msg
+                    in
+                        ( { model | sidebar = Just updatedSidebar }, newCmd )
 
 
-updateSidebarGrid : Maybe SidebarModel -> Response.DateGrid -> Maybe SidebarModel
-updateSidebarGrid sidebar grid =
-    case sidebar of
-        Nothing ->
-            Nothing
+updateSidebar : SidebarModel -> SidebarMsg -> ( SidebarModel, Cmd Msg )
+updateSidebar sidebarModel msg =
+    case msg of
+        MoveGrid msg ->
+            { sidebarModel | gridPosition = updateGridPosition msg sidebarModel } ! []
 
-        Just sidebarModel ->
-            Just { sidebarModel | dateGrid = Success grid, gridSize = Model.getGridSize grid }
+        SelectTab tab ->
+            { sidebarModel | activeTab = tab } ! []
+
+        SelectGridItem ( outbound, inbound ) ->
+            { sidebarModel | selectedOutboundDate = outbound, selectedInboundDate = inbound } ! []
+
+        GridFetchSuccess response ->
+            case response of
+                Response.DateGridResponse grid ->
+                    { sidebarModel | dateGrid = Success grid, gridSize = Model.getGridSize grid } ! []
+
+                Response.RoutesResponse routes ->
+                    sidebarModel ! []
+
+                Response.LocationsResponse locations ->
+                    sidebarModel ! []
+
+        GridFetchFail err ->
+            sidebarModel ! []
 
 
-updateSidebarTab : Maybe SidebarModel -> Int -> Maybe SidebarModel
-updateSidebarTab sidebar tab =
-    case sidebar of
-        Nothing ->
-            Nothing
-
-        Just sidebarModel ->
-            Just { sidebarModel | activeTab = tab }
-
-
-updateGridPosition : GridMsg -> Maybe SidebarModel -> Maybe SidebarModel
+updateGridPosition : MoveGridMsg -> SidebarModel -> GridPosition
 updateGridPosition msg sidebar =
-    case sidebar of
-        Nothing ->
-            Nothing
+    let
+        maxPosY =
+            sidebar.gridSize.rows - 6
 
-        Just sidebarModel ->
-            Just { sidebarModel | gridPosition = Sidebar.updateGridPosition msg sidebarModel }
+        maxPosX =
+            sidebar.gridSize.columns - 6
+
+        position =
+            sidebar.gridPosition
+    in
+        case msg of
+            MoveGridUp ->
+                { position | y = decrease 4 position.y 0 }
+
+            MoveGridDown ->
+                { position | y = increase 4 position.y maxPosY }
+
+            MoveGridLeft ->
+                { position | x = decrease 4 position.x 0 }
+
+            MoveGridRight ->
+                { position | x = increase 4 position.x maxPosX }
 
 
 newSidebar : String -> Model -> SidebarModel
@@ -141,7 +156,7 @@ getFullMonthData model =
                 Just dest ->
                     dest
     in
-        Task.perform FetchFail FetchSuccess <|
+        Task.perform (SidebarTag << GridFetchFail) (SidebarTag << GridFetchSuccess) <|
             API.callDates
                 { origin = model.criteria.locationId
                 , destination = dest
@@ -183,3 +198,19 @@ getRoutes criteria =
         , outboundDate = criteria.outboundDate
         , inboundDate = criteria.inboundDate
         }
+
+
+decrease : Int -> Int -> Int -> Int
+decrease stepAmount current minimum =
+    if (current - stepAmount) < minimum then
+        minimum
+    else
+        current - stepAmount
+
+
+increase : Int -> Int -> Int -> Int
+increase stepAmount current maximum =
+    if (current + stepAmount) > maximum then
+        maximum
+    else
+        current + stepAmount

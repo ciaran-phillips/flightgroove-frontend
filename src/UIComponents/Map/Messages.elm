@@ -1,4 +1,4 @@
-module UIComponents.Map.Messages exposing (Msg(..), GridMsg(..))
+module UIComponents.Map.Messages exposing (..)
 
 import API.Response as Response
 import Http
@@ -14,13 +14,19 @@ type Msg
     | FetchFail Http.Error
     | ChangeCriteria FilterCriteria
     | SelectDestination String
-    | SelectTab Int
     | Mdl (Material.Msg Msg)
-    | MoveGrid GridMsg
+    | SidebarTag SidebarMsg
+
+
+type SidebarMsg
+    = SelectTab Int
+    | MoveGrid MoveGridMsg
+    | GridFetchSuccess Response.Response
+    | GridFetchFail Http.Error
     | SelectGridItem ( String, String )
 
 
-type GridMsg
+type MoveGridMsg
     = MoveGridUp
     | MoveGridDown
     | MoveGridLeft

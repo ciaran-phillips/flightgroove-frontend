@@ -3,7 +3,7 @@ module UIComponents.Map.Sidebar exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (class, style, src)
 import Html.Events exposing (onClick)
-import UIComponents.Map.Messages exposing (Msg(..), GridMsg(..))
+import UIComponents.Map.Messages exposing (..)
 import UIComponents.Map.Model exposing (Model, SidebarModel, GridSize)
 import UIComponents.Map.Types exposing (..)
 import API.Response as Response
@@ -29,7 +29,7 @@ tabs mdl model =
         [ 0 ]
         mdl
         [ Tabs.activeTab model.activeTab
-        , Tabs.onSelectTab SelectTab
+        , Tabs.onSelectTab <| SidebarTag << SelectTab
         ]
         [ Tabs.textLabel [] "Flights"
         , Tabs.textLabel [] "Accommodation"
@@ -125,18 +125,18 @@ gridColOffset pos =
 
 gridControlButtonsTop : List (Html Msg)
 gridControlButtonsTop =
-    [ button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridLeft ]
+    [ button [ class gridControlButtonClass, onClick <| SidebarTag <| MoveGrid MoveGridLeft ]
         [ i [ class "material-icons" ] [ text "chevron_left" ] ]
-    , button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridRight ]
+    , button [ class gridControlButtonClass, onClick <| SidebarTag <| MoveGrid MoveGridRight ]
         [ i [ class "material-icons" ] [ text "chevron_right" ] ]
     ]
 
 
 gridControlButtonsSide : List (Html Msg)
 gridControlButtonsSide =
-    [ button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridUp ]
+    [ button [ class gridControlButtonClass, onClick <| SidebarTag <| MoveGrid MoveGridUp ]
         [ i [ class "material-icons" ] [ text "expand_less" ] ]
-    , button [ class gridControlButtonClass, onClick <| MoveGrid MoveGridDown ]
+    , button [ class gridControlButtonClass, onClick <| SidebarTag <| MoveGrid MoveGridDown ]
         [ i [ class "material-icons" ] [ text "expand_more" ] ]
     ]
 
@@ -169,7 +169,7 @@ displayCell rowIndex cellIndex cell =
             td [ class "grid__cell" ] []
 
         Just cell ->
-            td [ class "grid__cell grid__cell--selectable", onClick <| SelectGridItem ( cell.outboundDate, cell.outboundDate ) ] [ text cell.priceDisplay ]
+            td [ class "grid__cell grid__cell--selectable", onClick <| SidebarTag <| SelectGridItem ( cell.outboundDate, cell.outboundDate ) ] [ text cell.priceDisplay ]
 
 
 getTripDatesFromGrid : Int -> Int -> Response.DateGrid -> ( Maybe String, Maybe String )
@@ -202,45 +202,3 @@ getOutboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
 getOutboundDateFromGrid colIndex grid =
     withDefault Nothing <|
         Array.get colIndex (Array.fromList grid.columnHeaders)
-
-
-updateGridPosition : GridMsg -> SidebarModel -> GridPosition
-updateGridPosition msg sidebar =
-    let
-        maxPosY =
-            sidebar.gridSize.rows - 6
-
-        maxPosX =
-            sidebar.gridSize.columns - 6
-
-        position =
-            sidebar.gridPosition
-    in
-        case msg of
-            MoveGridUp ->
-                { position | y = decrease 4 position.y 0 }
-
-            MoveGridDown ->
-                { position | y = increase 4 position.y maxPosY }
-
-            MoveGridLeft ->
-                { position | x = decrease 4 position.x 0 }
-
-            MoveGridRight ->
-                { position | x = increase 4 position.x maxPosX }
-
-
-decrease : Int -> Int -> Int -> Int
-decrease stepAmount current minimum =
-    if (current - stepAmount) < minimum then
-        minimum
-    else
-        current - stepAmount
-
-
-increase : Int -> Int -> Int -> Int
-increase stepAmount current maximum =
-    if (current + stepAmount) > maximum then
-        maximum
-    else
-        current + stepAmount
