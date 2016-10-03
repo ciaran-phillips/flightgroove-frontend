@@ -5,6 +5,7 @@ import Http
 import UIComponents.Types exposing (FilterCriteria)
 import Material
 import UIComponents.Map.Sidebar.SidebarMessages exposing (SidebarMsg)
+import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg)
 
 
 type Msg
@@ -17,3 +18,4 @@ type Msg
     | SelectDestination String
     | Mdl (Material.Msg Msg)
     | SidebarTag SidebarMsg
+    | FlightSearchTag FlightSearchMsg

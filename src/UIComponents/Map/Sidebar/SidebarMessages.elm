@@ -15,6 +15,7 @@ type SidebarMsg
     | GridFetchSuccess Response.Response
     | GridFetchFail Http.Error
     | SelectGridItem SidebarModel.CellData
+    | ShowFlights FlightSearchConfig
 
 
 type MoveGridMsg
@@ -22,3 +23,10 @@ type MoveGridMsg
     | MoveGridDown
     | MoveGridLeft
     | MoveGridRight
+
+
+type alias FlightSearchConfig =
+    { destination : String
+    , outboundDate : String
+    , inboundDate : String
+    }

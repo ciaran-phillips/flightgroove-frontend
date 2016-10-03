@@ -1,0 +1,50 @@
+module UIComponents.Map.FlightSearch.FlightSearchCommands exposing (..)
+
+import API.PollLivePricing as PollLivePricing exposing (PollLivePricingParams, PollLivePricingResponse)
+import UIComponents.Map.FlightSearch.FlightSearchModel exposing (FlightSearchModel)
+import UIComponents.Map.Messages exposing (Msg(..))
+import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
+import Task
+import Process
+import Http
+
+
+pollPrices : FlightSearchModel -> Cmd Msg
+pollPrices model =
+    case model.pollingUrl of
+        Nothing ->
+            Cmd.none
+
+        Just url ->
+            if model.pollingFinished then
+                Cmd.none
+            else
+                Task.perform
+                    (FlightSearchTag << PollLivePricingFailure)
+                    (FlightSearchTag << PollLivePricingSuccess)
+                <|
+                    delayedPoll
+                        url
+                        (createParams model)
+                        model.pollingIncrement
+
+
+delayedPoll : String -> PollLivePricingParams -> Int -> Task.Task Http.Error PollLivePricingResponse
+delayedPoll url params timeDelay =
+    let
+        pollTask =
+            PollLivePricing.pollLivePricing (Debug.log "poll url is: " url) (Debug.log "params are" params)
+
+        sleepTask =
+            Process.sleep <| toFloat <| Debug.log "time delay is" timeDelay
+    in
+        sleepTask `Task.andThen` (\n -> pollTask)
+
+
+createParams : FlightSearchModel -> PollLivePricingParams
+createParams model =
+    PollLivePricingParams
+        model.origin
+        model.destination
+        model.outboundDate
+        model.inboundDate

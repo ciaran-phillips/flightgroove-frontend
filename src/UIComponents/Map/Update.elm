@@ -10,8 +10,13 @@ import UIComponents.Map.Sidebar.SidebarUpdate as SidebarUpdate
 import UIComponents.Map.Sidebar.SidebarCommands as SidebarCommands
 import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
 import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
+import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
+import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
+import UIComponents.Map.FlightSearch.FlightSearchCommands as FlightSearchCommands
+import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material
+import Process
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -65,6 +70,13 @@ update msg model =
                 Response.LocationsResponse locations ->
                     model ! []
 
+        SidebarTag (ShowFlights config) ->
+            let
+                ( flightSearchModel, flightSearchCmd ) =
+                    newLiveFlightSearch model config
+            in
+                { model | flightSearch = Just flightSearchModel } ! [ flightSearchCmd ]
+
         SidebarTag msg ->
             case model.sidebar of
                 Nothing ->
@@ -76,6 +88,42 @@ update msg model =
                             updateSidebar sidebarModel msg
                     in
                         ( { model | sidebar = Just updatedSidebar }, newCmd )
+
+        FlightSearchTag msg ->
+            case model.flightSearch of
+                Nothing ->
+                    model ! []
+
+                Just flightSearch ->
+                    let
+                        ( updatedFlightSearch, newCmd ) =
+                            updateFlightSearch flightSearch msg
+                    in
+                        ( { model | flightSearch = Just updatedFlightSearch }, newCmd )
+
+
+updateFlightSearch : FlightSearchModel.FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )
+updateFlightSearch model msg =
+    case msg of
+        StartLivePricingSuccess response ->
+            let
+                newModel =
+                    { model | pollingUrl = Just response.location }
+            in
+                ( newModel, FlightSearchCommands.pollPrices newModel )
+
+        StartLivePricingFailure err ->
+            ( always model <| Debug.log "Start pricing error is " err, Cmd.none )
+
+        PollLivePricingSuccess response ->
+            let
+                newModel =
+                    { model | pollingFinished = Debug.log "response completed: " response.completed, flights = Just <| Debug.log "response is: " response }
+            in
+                ( newModel, FlightSearchCommands.pollPrices <| Debug.log "polling " newModel )
+
+        PollLivePricingFailure err ->
+            ( always model <| Debug.log "Polling error is " err, Cmd.none )
 
 
 updateSidebar : SidebarModel.SidebarModel -> SidebarMsg -> ( SidebarModel.SidebarModel, Cmd Msg )
@@ -113,6 +161,9 @@ updateSidebar sidebarModel msg =
         GridFetchFail err ->
             sidebarModel ! []
 
+        ShowFlights config ->
+            sidebarModel ! []
+
 
 {-| Create a new sidebar model for the given destination
 -}
@@ -128,3 +179,13 @@ newSidebar dest model =
 
             Just route ->
                 SidebarModel.newSidebarModel dest route.departureDate route.returnDate route.priceDisplay
+
+
+newLiveFlightSearch : Model -> FlightSearchConfig -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )
+newLiveFlightSearch model config =
+    FlightSearchModel.init <|
+        FlightSearchModel.InitialFlightCriteria
+            model.criteria.locationId
+            config.destination
+            config.outboundDate
+            config.inboundDate

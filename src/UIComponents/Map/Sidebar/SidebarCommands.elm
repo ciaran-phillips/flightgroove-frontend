@@ -22,6 +22,6 @@ getFullMonthData model =
             API.callDates
                 { origin = model.criteria.locationId
                 , destination = dest
-                , outboundDate = "2016-09"
-                , inboundDate = "2016-09"
+                , outboundDate = "2016-10"
+                , inboundDate = "2016-10"
                 }

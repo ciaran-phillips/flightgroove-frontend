@@ -109,7 +109,7 @@ formatDate : Maybe Date -> String
 formatDate date =
     case date of
         Nothing ->
-            "2016-09"
+            "2016-10"
 
         Just date ->
             (toString <| Date.year date)

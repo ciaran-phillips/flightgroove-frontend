@@ -61,8 +61,42 @@ tabs mdl model =
 flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
 flightsTab model =
     [ div []
-        [ dateGrid model model.gridPosition ]
+        [ selectedDateView model
+        , dateGrid model model.gridPosition
+        ]
     ]
+
+
+selectedDateView : SidebarModel.SidebarModel -> Html Msg
+selectedDateView model =
+    let
+        estimatedPriceParagraph =
+            "Estimated Price per person is "
+                ++ model.lowestPrice
+                ++ ", departing on "
+                ++ model.selectedOutboundDate
+                ++ "and returning on "
+                ++ model.selectedInboundDate
+
+        disclaimerParagraph =
+            [ text "These prices are based on recent flight searches, click"
+            , em [] [ text "Show Flights" ]
+            , text " to see exact prices, customise stops / passengers / times / dates and more."
+            ]
+    in
+        div []
+            [ h5 [] [ text model.destination ]
+            , p [] [ text estimatedPriceParagraph ]
+            , p [] disclaimerParagraph
+            , button
+                [ class "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"
+                , onClick <|
+                    SidebarTag <|
+                        ShowFlights <|
+                            FlightSearchConfig model.destination model.selectedOutboundDate model.selectedInboundDate
+                ]
+                [ text "Show Flights" ]
+            ]
 
 
 dateGrid : SidebarModel.SidebarModel -> SidebarModel.GridPosition -> Html Msg
@@ -186,14 +220,12 @@ displayCell model rowIndex cellIndex cell =
 
                 modifierClass =
                     if
-                        cell.outboundDate
-                            == model.selectedOutboundDate
-                            && cell.inboundDate
-                            == model.selectedInboundDate
+                        (cell.outboundDate == model.selectedOutboundDate)
+                            && (cell.inboundDate == model.selectedInboundDate)
                     then
                         "grid__cell--selected"
                     else
-                        "grid__cell-selectable"
+                        "grid__cell--selectable"
             in
                 td
                     [ class <| "grid__cell " ++ modifierClass
