@@ -80,7 +80,7 @@ inboundDate model =
 
 filterWrapper : String -> Html Msg -> Html Msg
 filterWrapper labelText filterHtml =
-    div [ class "form-group filter" ]
+    div [ class "form-group form-control filter" ]
         [ label [] [ text labelText ]
         , div [] [ filterHtml ]
         ]
