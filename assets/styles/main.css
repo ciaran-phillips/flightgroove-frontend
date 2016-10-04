@@ -384,6 +384,10 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
     transform: translateX(0px);
 }
 
+.form-control select {
+  margin: 20px 0;
+}
+.form-control select,
 .form-control input {
       display: block;
       width: 100%;

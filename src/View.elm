@@ -43,8 +43,9 @@ topBarRows model =
             ]
         ]
     , div [ class "mdl-cell mdl-cell--3-col" ] [ searchBox model ]
-    , div [ class "mdl-cell mdl-cell--3-col" ] [ outboundDate model ]
-    , div [ class "mdl-cell mdl-cell--3-col" ] [ inboundDate model ]
+    , div [ class "mdl-cell mdl-cell--2-col" ] [ dateToggle model ]
+    , div [ class "mdl-cell mdl-cell--2-col" ] [ outboundDate model ]
+    , div [ class "mdl-cell mdl-cell--2-col" ] [ inboundDate model ]
     ]
 
 
@@ -76,6 +77,13 @@ inboundDate model =
     filterWrapper "" <|
         Html.App.map FilterMsg <|
             Filters.viewInboundDate model.filtersModel
+
+
+dateToggle : Model -> Html Msg
+dateToggle model =
+    filterWrapper "" <|
+        Html.App.map FilterMsg <|
+            Filters.viewToggle model.filtersModel
 
 
 filterWrapper : String -> Html Msg -> Html Msg

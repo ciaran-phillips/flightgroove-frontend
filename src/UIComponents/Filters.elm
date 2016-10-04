@@ -96,3 +96,9 @@ viewInboundDate : Model -> Html Msg
 viewInboundDate model =
     Html.App.map DateFieldMsg <|
         DateField.viewInbound model.dateField
+
+
+viewToggle : Model -> Html Msg
+viewToggle model =
+    Html.App.map DateFieldMsg <|
+        DateField.viewToggle model.dateField
