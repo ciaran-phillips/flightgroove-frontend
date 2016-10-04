@@ -16,6 +16,8 @@ type SidebarMsg
     | GridFetchFail Http.Error
     | SelectGridItem SidebarModel.CellData
     | ShowFlights FlightSearchConfig
+    | CloseSidebar
+    | OpenSidebar
 
 
 type MoveGridMsg

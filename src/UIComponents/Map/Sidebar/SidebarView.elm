@@ -22,8 +22,17 @@ import API.Response as Response
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
 view mdl model =
-    div [ class "sidebar" ]
-        [ tabs mdl model ]
+    let
+        displaySidebarClass =
+            if model.sidebarVisible then
+                " "
+            else
+                " is-hidden"
+    in
+        div [ class <| "sidebar" ++ displaySidebarClass ]
+            [ toggleDisplayButton model.sidebarVisible
+            , tabs mdl model
+            ]
 
 
 
@@ -232,3 +241,17 @@ displayCell model rowIndex cellIndex cell =
                     , onClick <| SidebarTag <| SelectGridItem cellData
                     ]
                     [ text cell.priceDisplay ]
+
+
+toggleDisplayButton : Bool -> Html Msg
+toggleDisplayButton currentVisibility =
+    let
+        ( action, icon ) =
+            if currentVisibility then
+                ( SidebarTag CloseSidebar, "chevron_left" )
+            else
+                ( SidebarTag OpenSidebar, "chevron_right" )
+    in
+        button [ onClick action, class "sidebar__close" ]
+            [ i [ class "material-icons" ] [ text icon ]
+            ]

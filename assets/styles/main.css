@@ -2,7 +2,11 @@
   line-height: 1.5em;
   font-weight: bold;
 }
-
+.clearing:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 .header {
   background-color: #de392e;
   color: #fbfbfb;
@@ -84,35 +88,6 @@ body, .wrapper, .map-wrapper {
 .autocomplete-item--key, .autocomplete-item--mouse {
     background-color: #f79a94;
     cursor: pointer;
-}
-
-
-@keyframes slidein {
-  from {
-    left: -350px;
-  }
-
-  to {
-    left: 0;
-  }
-}
-
-.sidebar {
-    position: absolute;
-    background: #fff;
-    height: 100%;
-    z-index: 1;
-    left: -430px;
-    width: 430px;
-    animation: slidein 0.25s forwards;
-    animation-delay: 0s;
-}
-
-.sidebar--block > div {
-    padding: 20px;
-}
-
-.sidebar--block:first-child {
 }
 
 .hide-overflow {
@@ -327,6 +302,8 @@ ul {}
     line-height: 24px;
     height: 24px;
     font-size: 16px;
+    width: 100px;
+    vertical-align: top;
 }
 
 .flight-result__airport {
@@ -366,4 +343,59 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
 .flight-result.is-active {
     border-left-color: #ef3f34;
     border-left-width: 4px;
+}
+
+
+
+
+.sidebar {
+    position: absolute;
+    background: #fff;
+    height: 100%;
+    z-index: 1;
+    left: -430px;
+    width: 430px;
+    z-index:1;
+    transform: translateX(430px);
+    transition: 0.5s;
+}
+
+.sidebar--block > div {
+    padding: 20px;
+}
+.sidebar__close {
+    position: absolute;
+    right: -30px;
+    background: #fbfbfb;
+    border-left: 0;
+    top: 60px;
+    border: 1px solid #ccc;
+    padding: 12px 3px;
+    border-left-width: 0;
+    width: 30px;
+}
+.sidebar__close:hover {
+    background: #de392e;
+    cursor: pointer;
+    color: #fff;
+    border-color: #b73b32;
+}
+.sidebar.is-hidden {
+    transform: translateX(0px);
+}
+
+.form-control input {
+      display: block;
+      width: 100%;
+      height: 34px;
+      padding: 6px 12px;
+      font-size: 14px;
+      line-height: 1.42857143;
+      color: #555;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+      transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }

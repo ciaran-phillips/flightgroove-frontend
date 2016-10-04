@@ -15,6 +15,7 @@ type alias SidebarModel =
     , selectedOutboundDate : String
     , selectedInboundDate : String
     , activeTab : Int
+    , sidebarVisible : Bool
     }
 
 
@@ -48,6 +49,7 @@ newSidebarModel destination outboundDate inboundDate lowestPrice =
     , selectedInboundDate = inboundDate
     , lowestPrice = lowestPrice
     , activeTab = 0
+    , sidebarVisible = True
     }
 
 

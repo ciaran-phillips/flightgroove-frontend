@@ -1,6 +1,7 @@
 module UIComponents.Map.FlightSearch.FlightSearchView exposing (..)
 
 import Html exposing (..)
+import Html.Events exposing (onClick)
 import Html.Attributes exposing (class, href)
 import Material
 import Dict
@@ -29,6 +30,7 @@ view mdl model =
             [ div [ class "search-overlay__header" ]
                 [ div [ class "location-background" ] []
                 , div [ class "background-overlay" ] []
+                , closeButton
                 , h3 [ class "search-overlay__title" ]
                     [ text <| "Flights to X" ++ model.destination ]
                 ]
@@ -39,6 +41,17 @@ view mdl model =
                         displayFlights model.flights
                     ]
                 ]
+            ]
+        ]
+
+
+closeButton : Html Msg
+closeButton =
+    div [ class "clearing" ]
+        [ button
+            [ onClick <| FlightSearchTag CloseFlightSearch, class "mdl-button" ]
+            [ text "Close Flight Search "
+            , i [ class "material-icons" ] [ text "clear" ]
             ]
         ]
 

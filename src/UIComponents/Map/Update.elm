@@ -89,6 +89,9 @@ update msg model =
                     in
                         ( { model | sidebar = Just updatedSidebar }, newCmd )
 
+        FlightSearchTag CloseFlightSearch ->
+            ( { model | flightSearch = Nothing }, Cmd.none )
+
         FlightSearchTag msg ->
             case model.flightSearch of
                 Nothing ->
@@ -124,6 +127,9 @@ updateFlightSearch model msg =
 
         PollLivePricingFailure err ->
             ( always model <| Debug.log "Polling error is " err, Cmd.none )
+
+        CloseFlightSearch ->
+            model ! []
 
 
 updateSidebar : SidebarModel.SidebarModel -> SidebarMsg -> ( SidebarModel.SidebarModel, Cmd Msg )
@@ -163,6 +169,12 @@ updateSidebar sidebarModel msg =
 
         ShowFlights config ->
             sidebarModel ! []
+
+        CloseSidebar ->
+            { sidebarModel | sidebarVisible = False } ! []
+
+        OpenSidebar ->
+            { sidebarModel | sidebarVisible = True } ! []
 
 
 {-| Create a new sidebar model for the given destination

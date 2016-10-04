@@ -10,3 +10,4 @@ type FlightSearchMsg
     | StartLivePricingFailure Http.Error
     | PollLivePricingSuccess PollLivePricingResponse
     | PollLivePricingFailure Http.Error
+    | CloseFlightSearch
