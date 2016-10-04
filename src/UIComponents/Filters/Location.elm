@@ -35,7 +35,7 @@ import API.Skyscanner as API
 type alias Model =
     { mdl : Material.Model
     , autocompleteState : Autocomplete.State
-    , chosenLocationId : String
+    , chosenLocationId : Maybe String
     , displayText : String
     , locationList : Response.Locations
     , maxLocationsDisplayed : Int
@@ -56,7 +56,7 @@ model : Model
 model =
     { mdl = Material.model
     , autocompleteState = Autocomplete.empty
-    , chosenLocationId = ""
+    , chosenLocationId = Nothing
     , displayText = ""
     , locationList = []
     , maxLocationsDisplayed = 10
@@ -79,7 +79,7 @@ update msg model =
 
         SelectLocation locationId ->
             ( { model
-                | chosenLocationId = locationId
+                | chosenLocationId = Just locationId
                 , showLocationsDropdown = False
                 , displayText = formattedLocationNameFromId model.locationList locationId
               }
@@ -89,7 +89,17 @@ update msg model =
         FetchSuccess response ->
             case response of
                 Response.LocationsResponse locations ->
-                    ( { model | locationList = locations }, Cmd.none )
+                    ( { model
+                        | locationList = locations
+                        , autocompleteState =
+                            Autocomplete.resetToFirstItem
+                                updateConfig
+                                locations
+                                model.maxLocationsDisplayed
+                                model.autocompleteState
+                      }
+                    , Cmd.none
+                    )
 
                 Response.RoutesResponse routes ->
                     model ! []
@@ -104,7 +114,7 @@ update msg model =
             updateAutocomplete msg model
 
 
-getSelectedLocation : Model -> String
+getSelectedLocation : Model -> Maybe String
 getSelectedLocation model =
     model.chosenLocationId
 
@@ -184,7 +194,6 @@ viewAirportSelector model =
                 "Airport"
             , Textfield.onInput InputQuery
             , Textfield.autofocus
-            , Textfield.floatingLabel
             , Textfield.value model.displayText
             ]
         ]
@@ -194,7 +203,12 @@ viewAutocomplete : Model -> Html Msg
 viewAutocomplete model =
     let
         filteredList =
-            filterLocations model.chosenLocationId model.locationList
+            case model.chosenLocationId of
+                Nothing ->
+                    model.locationList
+
+                Just locationId ->
+                    filterLocations locationId model.locationList
     in
         if model.showLocationsDropdown then
             Html.App.map AutocompleteMsg <|
@@ -238,7 +252,7 @@ updateConfig =
         , onMouseLeave = \_ -> Nothing
         , onMouseClick = \id -> Just <| SelectLocation id
         , toId = .placeId
-        , separateSelections = True
+        , separateSelections = False
         }
 
 
