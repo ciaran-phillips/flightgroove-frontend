@@ -13,7 +13,8 @@ module UIComponents.Filters.Location
 
 import Html exposing (..)
 import Html.App
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, placeholder, value)
+import Html.Events exposing (onInput)
 import Http
 import Task
 import String
@@ -180,22 +181,21 @@ formatLocationName location =
         ++ ", "
         ++ location.countryName
         ++ " ("
-        ++ location.placeId
+        ++ formatId location.placeId
         ++ ")"
+
+
+formatId : String -> String
+formatId idString =
+    Maybe.withDefault "" <|
+        List.head <|
+            String.split "-" idString
 
 
 viewAirportSelector : Model -> Html Msg
 viewAirportSelector model =
     div []
-        [ Textfield.render Mdl
-            [ 8 ]
-            model.mdl
-            [ Textfield.label
-                "Airport"
-            , Textfield.onInput InputQuery
-            , Textfield.autofocus
-            , Textfield.value model.displayText
-            ]
+        [ input [ onInput InputQuery, value model.displayText, placeholder "Dublin, London etc.." ] []
         ]
 
 
@@ -203,12 +203,7 @@ viewAutocomplete : Model -> Html Msg
 viewAutocomplete model =
     let
         filteredList =
-            case model.chosenLocationId of
-                Nothing ->
-                    model.locationList
-
-                Just locationId ->
-                    filterLocations locationId model.locationList
+            model.locationList
     in
         if model.showLocationsDropdown then
             Html.App.map AutocompleteMsg <|
