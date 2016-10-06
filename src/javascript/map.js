@@ -1,6 +1,8 @@
+
 (function (Elm, mapboxgl) {
     var map;
     var app = Elm.Main.fullscreen();
+    var popups = [];
     setupPorts(app);
 
     function setupPorts(app) {
@@ -18,6 +20,7 @@
             });
         });
 
+        app.ports.clearPopups.subscribe(clearPopups);
 
         app.ports.popup.subscribe(function (popupData) {
             var popupSuccess = addPopup(popupData);
@@ -38,12 +41,24 @@
         return success;
     }
 
+    function clearPopups() {
+        const len = popups.length;
+        for (let i = 0; i < len; i++) {
+            popups[i].remove();
+        }
+        popups = [];
+    }
+
     function addPopup(popupData) {
         var x = popupData;
-        var popup = new mapboxgl.Popup()
+        const options = {
+            closeOnClick : false
+        };
+        var popup = new mapboxgl.Popup(options)
             .setLngLat([popupData[1], popupData[2]])
             .setHTML('<div class="js-popup" data-airport-code="' + popupData[0] + '">' + popupData[3] + '</div>')
             .addTo(map);
+        popups.push(popup);
         return (typeof popup !== 'undefined');
     }
 })(Elm, mapboxgl);

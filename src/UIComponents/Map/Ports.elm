@@ -12,6 +12,9 @@ port map : String -> Cmd msg
 port popup : PopupDefinition -> Cmd msg
 
 
+port clearPopups : Bool -> Cmd msg
+
+
 
 -- Suscriptions
 
