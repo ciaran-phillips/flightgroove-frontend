@@ -7,3 +7,10 @@
 label.mdl-checkbox {
     margin: 24px 0;
 }
+
+.mdl-spinner--light-bg .mdl-spinner__layer-1,
+.mdl-spinner--light-bg .mdl-spinner__layer-2,
+.mdl-spinner--light-bg .mdl-spinner__layer-3,
+.mdl-spinner--light-bg .mdl-spinner__layer-4 {
+    color: #fff;
+}
