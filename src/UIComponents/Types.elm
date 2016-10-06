@@ -8,8 +8,8 @@ type alias FilterCriteria =
     }
 
 
-type RemoteData a
+type RemoteData err a
     = Empty
     | Loading
     | Success a
-    | Failure a
+    | Failure err

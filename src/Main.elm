@@ -62,7 +62,12 @@ update message model =
                     Filters.getCriteria newFiltersModel
 
                 ( newMapModel, newMapCmd ) =
-                    Map.update (MapMessages.ChangeCriteria filterCriteria) model.mapModel
+                    case filterCriteria of
+                        Nothing ->
+                            model.mapModel ! []
+
+                        Just criteria ->
+                            Map.update (MapMessages.ChangeCriteria criteria) model.mapModel
             in
                 ( { model | filtersModel = newFiltersModel, mapModel = newMapModel }
                 , Cmd.batch

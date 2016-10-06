@@ -4,10 +4,11 @@ import API.Response as Response
 import UIComponents.Types as Types exposing (RemoteData(..))
 import Maybe
 import Array
+import Http
 
 
 type alias SidebarModel =
-    { dateGrid : RemoteData Response.DateGrid
+    { dateGrid : RemoteData Http.Error Response.DateGrid
     , gridPosition : GridPosition
     , gridSize : GridSize
     , destination : String
