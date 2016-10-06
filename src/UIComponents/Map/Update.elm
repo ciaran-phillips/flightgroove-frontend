@@ -45,24 +45,30 @@ update msg model =
             if newCriteria == model.criteria then
                 ( model, Cmd.none )
             else
-                ( { model | criteria = newCriteria }
-                , Commands.getApiData newCriteria
+                ( { model
+                    | criteria = newCriteria
+                    , mapData = Loading
+                  }
+                , Cmd.batch
+                    [ Ports.clearPopups True
+                    , Commands.getApiData newCriteria
+                    ]
                 )
 
         FetchData ->
-            ( model, Commands.getApiData model.criteria )
+            ( { model | mapData = Loading }, Commands.getApiData model.criteria )
 
         FetchFail error ->
             let
-                r =
-                    Debug.log "error is: " error
+                model' =
+                    always model <| Debug.log "error is: " error
             in
-                ( always model r, Cmd.none )
+                ( { model' | mapData = Failure error }, Cmd.none )
 
         FetchSuccess response ->
             case response of
                 Response.RoutesResponse routes ->
-                    ( { model | mapData = routes }, Commands.createPopups routes )
+                    ( { model | mapData = Success routes }, Commands.createPopups routes )
 
                 Response.DateGridResponse result ->
                     model ! []
@@ -183,7 +189,12 @@ newSidebar : String -> Model -> SidebarModel.SidebarModel
 newSidebar dest model =
     let
         cheapestRoute =
-            Response.getCheapestRouteForDestination model.mapData dest
+            case model.mapData of
+                Success data ->
+                    Response.getCheapestRouteForDestination data dest
+
+                _ ->
+                    Nothing
     in
         case cheapestRoute of
             Nothing ->

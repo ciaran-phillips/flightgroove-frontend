@@ -50,7 +50,7 @@ body, .wrapper, .map-wrapper {
 #map { position:absolute; top:0; bottom:0; width:100%; }
 .map-wrapper {
   position: relative;
-
+  z-index: 0;
 }
 
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
@@ -79,11 +79,8 @@ body, .wrapper, .map-wrapper {
 }
 
 .dropdown-container {
-  height:73px;
   z-index:1;
-}
-.autocomplete-list {
-  margin-top: -20px;
+  height: 50px;
 }
 .autocomplete-item--key, .autocomplete-item--mouse {
     background-color: #f79a94;
@@ -259,7 +256,21 @@ body, .wrapper, .map-wrapper {
     position: absolute;
     z-index: -1;
 }
-
+.map__overlay {
+    z-index: 1;
+    display: none;
+}
+.map__overlay.is-active {
+  display: block;
+}
+.absolute-center {
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  right: 0;
+  left: 0;
+  top: 40%;
+}
 .search-overlay__header {position: relative;height: 15%;margin-top: 0;}
 
 ul {}
@@ -385,7 +396,7 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
 }
 
 .form-control select {
-  margin: 20px 0;
+  margin: 0px 0;
 }
 .form-control select,
 .form-control input {
@@ -402,4 +413,23 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
       border-radius: 4px;
       box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
       transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+label {
+  margin-bottom: 10px;
+  display: block;
+}
+.date-inputs select,
+.date-inputs input {
+  width: 120px;
+  float: left;
+  margin-right: 20px;
+}
+.mapboxgl-popup {
+  cursor: pointer
+}
+.mapboxgl-popup:hover .mapboxgl-popup-content {
+  background-color: #de392e;
+}
+.mapboxgl-popup:hover .mapboxgl-popup-tip {
+  border-top-color: #de392e;
 }

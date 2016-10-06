@@ -61,21 +61,22 @@ subscriptions model =
         ]
 
 
-getCriteria : Model -> FilterCriteria
+getCriteria : Model -> Maybe FilterCriteria
 getCriteria model =
     let
         locationId =
-            case Location.getSelectedLocation model.origin of
-                Nothing ->
-                    ""
-
-                Just location ->
-                    location
+            Location.getSelectedLocation model.origin
     in
-        FilterCriteria
-            (locationId)
-            (DateField.getInboundDate model.dateField)
-            (DateField.getOutboundDate model.dateField)
+        case locationId of
+            Nothing ->
+                Nothing
+
+            Just location ->
+                Just <|
+                    FilterCriteria
+                        (location)
+                        (DateField.getOutboundDate model.dateField)
+                        (DateField.getInboundDate model.dateField)
 
 
 viewOriginSearch : Model -> Html Msg

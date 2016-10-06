@@ -7,11 +7,12 @@ import UIComponents.Types exposing (RemoteData(..))
 import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
 import API.Response as Response
 import Material
+import Http
 
 
 type alias Model =
     { mapActive : Bool
-    , mapData : Response.Routes
+    , mapData : RemoteData Http.Error Response.Routes
     , quotes : Response.Quotes
     , criteria : FilterCriteria
     , selectedDestination : Maybe String
@@ -24,7 +25,7 @@ type alias Model =
 initialModel : Model
 initialModel =
     { mapActive = False
-    , mapData = defaultMapData
+    , mapData = Empty
     , criteria = defaultCriteria
     , quotes = []
     , selectedDestination = Nothing
