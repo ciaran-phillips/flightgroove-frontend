@@ -4,7 +4,7 @@ import Date exposing (Date, Day(..), Month(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings)
 import String
 import Html exposing (Html, select, text, option)
-import Html.Attributes exposing (value)
+import Html.Attributes exposing (value, class, selected)
 import Json.Decode
 import Html.Events
 import Html.App
@@ -21,8 +21,8 @@ type alias Model =
     , outboundPicker : DatePicker.DatePicker
     , inboundDate : Maybe Date
     , inboundPicker : DatePicker.DatePicker
-    , outboundMonth : Month
-    , inboundMonth : Month
+    , outboundMonth : PartialDate
+    , inboundMonth : PartialDate
     , useExactDates : Bool
     , mdl : Material.Model
     , currentDate : Date.Date
@@ -40,6 +40,12 @@ type Msg
     | GetCurrentDateSuccess Date
 
 
+type alias PartialDate =
+    { year : Int
+    , month : Month
+    }
+
+
 init : ( Model, Cmd Msg )
 init =
     let
@@ -51,17 +57,13 @@ init =
           , outboundPicker = datePickerModel
           , inboundDate = Nothing
           , inboundPicker = datePickerModel
-          , outboundMonth = Nov
-          , inboundMonth = Nov
+          , outboundMonth = PartialDate 2016 Nov
+          , inboundMonth = PartialDate 2016 Nov
           , useExactDates = False
           , mdl = Material.model
           , currentDate = Date.fromTime 0
           }
-        , Cmd.batch
-            [ Cmd.map OutboundMsg datePickerFx
-            , Cmd.map InboundMsg datePickerFx
-            , getCurrentDate
-            ]
+        , getCurrentDate
         )
 
 
@@ -79,16 +81,35 @@ update msg model =
                 ( newModel, newCmd, newDate ) =
                     DatePicker.update msg model.outboundPicker
 
-                date =
+                outboundDate =
                     case newDate of
                         Nothing ->
                             model.outboundDate
 
-                        date ->
-                            date
+                        Just date ->
+                            newDate
+
+                -- we need to re-initialize the inbound picker to properly restrict allowed dates
+                defaultSettings =
+                    DatePicker.defaultSettings
+
+                ( newInboundDate, boundingFunc ) =
+                    limitInboundDate model.currentDate model.inboundDate outboundDate
+
+                ( inboundPickerModel, inboundPickerCmd ) =
+                    DatePicker.init
+                        { defaultSettings
+                            | pickedDate = Debug.log "limiting inbound date to " newInboundDate
+                            , isDisabled = boundingFunc
+                        }
             in
-                ( { model | outboundDate = date, outboundPicker = newModel }
-                , Cmd.map OutboundMsg newCmd
+                ( { model
+                    | outboundDate = outboundDate
+                    , outboundPicker = newModel
+                    , inboundPicker = inboundPickerModel
+                    , inboundDate = newInboundDate
+                  }
+                , Cmd.batch [ Cmd.map OutboundMsg newCmd, Cmd.map InboundMsg inboundPickerCmd ]
                 )
 
         InboundMsg msg ->
@@ -101,42 +122,89 @@ update msg model =
                         Nothing ->
                             model.inboundDate
 
-                        date ->
-                            date
+                        Just date' ->
+                            Just date'
             in
                 ( { model | inboundDate = date, inboundPicker = newModel }
                 , Cmd.map InboundMsg newCmd
                 )
 
         GetCurrentDateSuccess date ->
-            ( { model | currentDate = date }, Cmd.none )
+            let
+                defaultSettings =
+                    DatePicker.defaultSettings
+
+                -- Create a version of the DatePicker that's already set to the current date, and
+                -- override the ones we've already set in our model (while we were waiting for this Cmd to finish)
+                initialOutboundDate =
+                    Just <| addDaysToDate 1 date
+
+                ( outboundPickerModel, outboundPickerCmd ) =
+                    DatePicker.init { defaultSettings | pickedDate = initialOutboundDate, isDisabled = earlierThan date }
+
+                initialInboundDate =
+                    Just <| addDaysToDate 4 date
+
+                ( inboundPickerModel, inboundPickerCmd ) =
+                    DatePicker.init
+                        { defaultSettings
+                            | pickedDate = initialInboundDate
+                            , isDisabled = earlierThan <| addDaysToDate 1 date
+                        }
+            in
+                ( { model
+                    | currentDate = date
+                    , outboundPicker = outboundPickerModel
+                    , inboundPicker = inboundPickerModel
+                    , inboundDate = initialInboundDate
+                    , outboundDate = initialOutboundDate
+                  }
+                , Cmd.batch
+                    [ Cmd.map OutboundMsg outboundPickerCmd
+                    , Cmd.map InboundMsg inboundPickerCmd
+                    ]
+                )
 
         GetCurrentDateFailure err ->
             model ! []
 
-        SelectOutboundMonth monthNumber ->
+        SelectOutboundMonth month ->
             let
-                num =
-                    Result.withDefault 11 <| String.toInt monthNumber
+                newOutbound =
+                    Maybe.withDefault (PartialDate 2016 Nov) <| decodeMonthSelection month
 
-                ( ind, month ) =
-                    Maybe.withDefault ( 11, Nov ) <|
-                        List.head <|
-                            List.filter (\( i, m ) -> i == num) listOfMonths
+                newInbound =
+                    limitInboundMonth newOutbound model.inboundMonth
             in
-                { model | outboundMonth = month } ! []
+                { model | outboundMonth = newOutbound, inboundMonth = newInbound } ! []
 
-        SelectInboundMonth monthNumber ->
+        SelectInboundMonth month ->
             let
-                num =
-                    Result.withDefault 11 <| String.toInt monthNumber
-
-                ( ind, month ) =
-                    Maybe.withDefault ( 11, Nov ) <|
-                        List.head <|
-                            List.filter (\( i, m ) -> i == num) listOfMonths
+                partialDate =
+                    Maybe.withDefault (PartialDate 2016 Nov) <| decodeMonthSelection month
             in
-                { model | inboundMonth = month } ! []
+                { model | inboundMonth = partialDate } ! []
+
+
+limitInboundMonth : PartialDate -> PartialDate -> PartialDate
+limitInboundMonth newOutboundMonth inboundMonth =
+    if earlierMonthThan newOutboundMonth inboundMonth then
+        Debug.log "resetting inbound month" newOutboundMonth
+    else
+        inboundMonth
+
+
+limitInboundDate : Date -> Maybe Date -> Maybe Date -> ( Maybe Date, Date -> Bool )
+limitInboundDate currentDate currentInbound outboundDate =
+    case ( currentInbound, outboundDate ) of
+        ( Just inbound, Just outbound ) ->
+            if earlierThan outbound inbound then
+                ( Just <| addDaysToDate 1 outbound, earlierThan outbound )
+            else
+                ( Just inbound, earlierThan outbound )
+
+        _ ->
+            ( currentInbound, earlierThan currentDate )
 
 
 onChange : (String -> msg) -> Html.Attribute msg
@@ -146,23 +214,27 @@ onChange msg =
 
 viewToggle : Model -> Html Msg
 viewToggle model =
-    Toggles.checkbox MaterialMsg
+    Toggles.switch MaterialMsg
         [ 0 ]
         model.mdl
         [ Toggles.onClick ToggleExactDates
         , Toggles.ripple
         , Toggles.value model.useExactDates
         ]
-        [ text "Search specific dates" ]
+        [ text "search specific dates" ]
 
 
 viewOutbound : Model -> Html Msg
 viewOutbound model =
-    if model.useExactDates then
-        DatePicker.view model.outboundPicker
-            |> Html.App.map OutboundMsg
-    else
-        Html.select [ onChange SelectOutboundMonth ] <| getMonthOptions model model.outboundMonth
+    let
+        currentPartialDate =
+            PartialDate (Date.year model.currentDate) (Date.month model.currentDate)
+    in
+        if model.useExactDates then
+            DatePicker.view model.outboundPicker
+                |> Html.App.map OutboundMsg
+        else
+            Html.select [ onChange SelectOutboundMonth ] <| getMonthOptions model currentPartialDate model.outboundMonth
 
 
 viewInbound : Model -> Html Msg
@@ -171,7 +243,8 @@ viewInbound model =
         DatePicker.view model.inboundPicker
             |> Html.App.map InboundMsg
     else
-        Html.select [ onChange SelectInboundMonth ] <| getMonthOptions model model.inboundMonth
+        Html.select [ onChange SelectInboundMonth ] <|
+            getMonthOptions model model.outboundMonth model.inboundMonth
 
 
 subscriptions : Model -> Sub Msg
@@ -181,12 +254,18 @@ subscriptions model =
 
 getInboundDate : Model -> String
 getInboundDate model =
-    formatDate model.inboundDate
+    if model.useExactDates then
+        formatDate model.inboundDate
+    else
+        formatMonth model.inboundMonth.year model.inboundMonth.month
 
 
 getOutboundDate : Model -> String
 getOutboundDate model =
-    formatDate model.outboundDate
+    if model.useExactDates then
+        formatDate model.outboundDate
+    else
+        formatMonth model.outboundMonth.year model.outboundMonth.month
 
 
 formatDate : Maybe Date -> String
@@ -203,8 +282,43 @@ formatDate date =
                 ++ (padDigits <| toString <| Date.day date)
 
 
-getMonthOptions : Model -> Month -> List (Html Msg)
-getMonthOptions model selectedMonth =
+formatMonth : Int -> Month -> String
+formatMonth year month =
+    let
+        monthNumber =
+            String.pad 2 '0' <|
+                toString <|
+                    getMonthNumber month
+    in
+        toString year
+            ++ "-"
+            ++ monthNumber
+
+
+decodeMonthSelection : String -> Maybe PartialDate
+decodeMonthSelection yearAndMonth =
+    let
+        year =
+            Result.withDefault 0 <| String.toInt <| String.slice 0 4 yearAndMonth
+
+        monthNum =
+            Result.withDefault 1 <| String.toInt <| String.slice 5 7 yearAndMonth
+
+        month =
+            List.head <|
+                List.filter (\( i, month' ) -> i == monthNum)
+                    listOfMonths
+    in
+        case month of
+            Nothing ->
+                Nothing
+
+            Just ( index, m ) ->
+                Just <| PartialDate year m
+
+
+getMonthOptions : Model -> PartialDate -> PartialDate -> List (Html Msg)
+getMonthOptions model earliestMonth selectedMonth =
     let
         currentDate =
             model.currentDate
@@ -217,13 +331,36 @@ getMonthOptions model selectedMonth =
 
         currentYear =
             Date.year currentDate
+
+        nextYear =
+            currentYear + 1
+
+        filterTooEarly =
+            \year ( monthNumber, month ) ->
+                if year < earliestMonth.year then
+                    False
+                else if year > earliestMonth.year then
+                    True
+                else
+                    monthNumber >= getMonthNumber earliestMonth.month
     in
-        List.map (formatOption currentYear) <| List.drop (currentMonthNumber - 1) listOfMonths
+        (List.map (formatOption currentYear selectedMonth) <|
+            List.filter (filterTooEarly currentYear) <|
+                List.drop (currentMonthNumber - 1) listOfMonths
+        )
+            ++ (List.map (formatOption nextYear selectedMonth) <|
+                    List.filter (filterTooEarly nextYear) <|
+                        List.take (currentMonthNumber) listOfMonths
+               )
 
 
-formatOption : Int -> ( Int, Month ) -> Html Msg
-formatOption year ( monthNumber, month ) =
-    Html.option [ value <| toString monthNumber ] [ text <| toString month ++ " " ++ toString year ]
+formatOption : Int -> PartialDate -> ( Int, Month ) -> Html Msg
+formatOption year selectedMonth ( monthNumber, month ) =
+    let
+        isSelected =
+            selectedMonth.month == month && selectedMonth.year == year
+    in
+        Html.option [ selected isSelected, value <| toString year ++ "-" ++ toString monthNumber ] [ text <| toString month ++ " " ++ toString year ]
 
 
 getMonthNumber : Date.Month -> Int
@@ -284,3 +421,41 @@ padDigits txt =
 getCurrentDate : Cmd Msg
 getCurrentDate =
     Task.perform GetCurrentDateFailure GetCurrentDateSuccess Date.now
+
+
+addDaysToDate : Int -> Date.Date -> Date.Date
+addDaysToDate numDays date =
+    let
+        -- Elm works on milliseconds, so multiply by 1000
+        seconds =
+            numDays * 86400 * 1000
+    in
+        date |> Date.toTime |> (+) seconds |> Date.fromTime
+
+
+earlierThan : Date -> Date -> Bool
+earlierThan earlyDate dateToTest =
+    Date.toTime dateToTest < Date.toTime earlyDate
+
+
+earlierMonthThan : PartialDate -> PartialDate -> Bool
+earlierMonthThan earlyDate dateToTest =
+    let
+        earlyMonthIndex =
+            getMonthNumber earlyDate.month
+
+        monthToTestIndex =
+            getMonthNumber dateToTest.month
+
+        earlyYear =
+            earlyDate.year
+
+        yearToTest =
+            dateToTest.year
+    in
+        if yearToTest < earlyYear then
+            True
+        else if yearToTest > earlyYear then
+            False
+        else
+            (monthToTestIndex < earlyMonthIndex)
