@@ -11,7 +11,7 @@ type alias SidebarModel =
     { dateGrid : RemoteData Http.Error Response.DateGrid
     , gridPosition : GridPosition
     , gridSize : GridSize
-    , destination : String
+    , destination : Response.Airport
     , lowestPrice : String
     , selectedOutboundDate : String
     , selectedInboundDate : String
@@ -40,7 +40,7 @@ type alias CellData =
     }
 
 
-newSidebarModel : String -> String -> String -> String -> SidebarModel
+newSidebarModel : Response.Airport -> String -> String -> String -> SidebarModel
 newSidebarModel destination outboundDate inboundDate lowestPrice =
     { dateGrid = Loading
     , gridPosition = { x = 0, y = 0 }

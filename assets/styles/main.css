@@ -258,7 +258,9 @@ body, .wrapper, .map-wrapper {
 }
 .map__overlay {
     z-index: 1;
+    width: 100%;
     display: none;
+    height: 100%;
 }
 .map__overlay.is-active {
   display: block;
@@ -270,6 +272,7 @@ body, .wrapper, .map-wrapper {
   right: 0;
   left: 0;
   top: 40%;
+  z-index: 2;
 }
 .search-overlay__header {position: relative;height: 15%;margin-top: 0;}
 
@@ -432,4 +435,13 @@ label {
 }
 .mapboxgl-popup:hover .mapboxgl-popup-tip {
   border-top-color: #de392e;
+}
+.mdl-tabs__tab i {
+    display: block;
+    padding-top:4px;
+    font-size: 21px;
+}
+.mdl-tabs__tab:hover {
+  background: #fbfbfb;
+  cursor: pointer;
 }

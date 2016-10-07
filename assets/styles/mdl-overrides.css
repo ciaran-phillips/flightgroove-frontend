@@ -12,5 +12,9 @@ label.mdl-checkbox {
 .mdl-spinner--light-bg .mdl-spinner__layer-2,
 .mdl-spinner--light-bg .mdl-spinner__layer-3,
 .mdl-spinner--light-bg .mdl-spinner__layer-4 {
-    color: #fff;
+    border-color: #fff;
+}
+.mdl-tabs__tab {
+    font-size: 11px;
+    line-height: 22px;
 }

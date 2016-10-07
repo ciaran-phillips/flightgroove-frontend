@@ -47,24 +47,25 @@ tabs mdl model =
         [ Tabs.activeTab model.activeTab
         , Tabs.onSelectTab <| SidebarTag << SelectTab
         ]
-        [ Tabs.textLabel [] "Flights"
-        , Tabs.textLabel [] "Accommodation"
-        , Tabs.textLabel [] "Cost of Living"
-        , Tabs.textLabel [] "Attractions"
+        [ Tabs.label [] [ icon "flight", text "Flights" ]
+        , Tabs.label [] [ icon "euro_symbol", text "Cost of Living" ]
+        , Tabs.label [] [ icon "place", text "Attractions" ]
         ]
         [ case model.activeTab of
             0 ->
                 div [ class "sidebar--block" ] <| flightsTab model
 
             1 ->
-                div [ class "sidebar--block" ] [ text "Accommodation content" ]
-
-            2 ->
                 div [ class "sidebar--block" ] [ text "Cost of Living content" ]
 
             _ ->
                 div [ class "sidebar--block" ] [ text "Attractions content" ]
         ]
+
+
+icon : String -> Html Msg
+icon iconName =
+    i [ class "material-icons" ] [ text iconName ]
 
 
 flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
@@ -94,7 +95,7 @@ selectedDateView model =
             ]
     in
         div []
-            [ h5 [] [ text model.destination ]
+            [ h5 [] [ text <| model.destination.placeName ++ " (" ++ model.destination.airportCode ++ ")" ]
             , p [] [ text estimatedPriceParagraph ]
             , p [] disclaimerParagraph
             , button
@@ -102,7 +103,7 @@ selectedDateView model =
                 , onClick <|
                     SidebarTag <|
                         ShowFlights <|
-                            FlightSearchConfig model.destination model.selectedOutboundDate model.selectedInboundDate
+                            FlightSearchConfig model.destination.airportCode model.selectedOutboundDate model.selectedInboundDate
                 ]
                 [ text "Show Flights" ]
             ]

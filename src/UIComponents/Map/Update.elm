@@ -17,6 +17,7 @@ import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material
 import Process
+import Dict
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -34,12 +35,17 @@ update msg model =
 
         SelectDestination dest ->
             let
-                x =
-                    Debug.log ("setting destination to " ++ dest) <| Just dest
+                airport =
+                    Dict.get dest model.airports
             in
-                ( { model | selectedDestination = x, sidebar = Just (newSidebar dest model) }
-                , SidebarCommands.getFullMonthData model
-                )
+                case airport of
+                    Nothing ->
+                        model ! []
+
+                    Just airport' ->
+                        ( { model | selectedDestination = Just dest, sidebar = Just (newSidebar airport' model) }
+                        , SidebarCommands.getFullMonthData model
+                        )
 
         ChangeCriteria newCriteria ->
             if newCriteria == model.criteria then
@@ -68,7 +74,7 @@ update msg model =
         FetchSuccess response ->
             case response of
                 Response.RoutesResponse routes ->
-                    ( { model | mapData = Success routes }, Commands.createPopups routes )
+                    ( { model | mapData = Success routes, airports = getAirports routes }, Commands.createPopups routes )
 
                 Response.DateGridResponse result ->
                     model ! []
@@ -185,13 +191,13 @@ updateSidebar sidebarModel msg =
 
 {-| Create a new sidebar model for the given destination
 -}
-newSidebar : String -> Model -> SidebarModel.SidebarModel
-newSidebar dest model =
+newSidebar : Response.Airport -> Model -> SidebarModel.SidebarModel
+newSidebar destination model =
     let
         cheapestRoute =
             case model.mapData of
                 Success data ->
-                    Response.getCheapestRouteForDestination data dest
+                    Response.getCheapestRouteForDestination data destination.airportCode
 
                 _ ->
                     Nothing
@@ -201,7 +207,7 @@ newSidebar dest model =
                 Debug.crash "no cheapest route!!"
 
             Just route ->
-                SidebarModel.newSidebarModel dest route.departureDate route.returnDate route.priceDisplay
+                SidebarModel.newSidebarModel destination route.departureDate route.returnDate route.priceDisplay
 
 
 newLiveFlightSearch : Model -> FlightSearchConfig -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )
@@ -212,3 +218,11 @@ newLiveFlightSearch model config =
             config.destination
             config.outboundDate
             config.inboundDate
+
+
+getAirports : Response.Routes -> Dict.Dict String Response.Airport
+getAirports routes =
+    Dict.fromList <|
+        List.map
+            (\route -> ( route.destination.airportCode, route.destination ))
+            routes
