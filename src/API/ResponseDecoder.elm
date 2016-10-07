@@ -23,9 +23,10 @@ routeDecoder =
 
 airportDecoder : Decoder Response.Airport
 airportDecoder =
-    object5 Response.Airport
+    object6 Response.Airport
         ("name" := string)
         ("country" := string)
+        ("cityId" := string)
         ("code" := string)
         ("latitude" := float)
         ("longitude" := float)

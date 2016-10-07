@@ -24,6 +24,7 @@ type alias Route =
 type alias Airport =
     { placeName : String
     , countryName : String
+    , cityId : String
     , airportCode : String
     , latitude : Float
     , longitude : Float
