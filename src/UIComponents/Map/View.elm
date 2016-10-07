@@ -52,8 +52,9 @@ viewMap model =
     in
         div [ class "map-wrapper" ]
             [ sidebar
-            , div [ classList [ ( "map__overlay background-overlay", True ), ( "is-active", isLoading ) ] ]
-                [ Loading.spinner
+            , div [ classList [ ( "map__overlay", True ), ( "is-active", isLoading ) ] ]
+                [ div [ class "background-overlay" ] []
+                , Loading.spinner
                     [ Options.cs "absolute-center mdl-spinner--light-bg"
                     , Loading.active isLoading
                     , Loading.singleColor True
