@@ -2,12 +2,18 @@ module UIComponents.Map.Sidebar.SidebarUpdate
     exposing
         ( focusGridOn
         , updateGridPosition
+        , getCostOfLiving
         )
 
 import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
+import UIComponents.Map.Messages exposing (Msg(..))
 import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
+import UIComponents.Map.Sidebar.SidebarCommands as SidebarCommands
 import UIComponents.Map.Model as Model
+import UIComponents.Types exposing (RemoteData(..))
+import Http
 import API.Response as Response
+import API.CostOfLiving as CostOfLiving
 
 
 {-| Move the grid to display the given X and Y coordinates.
@@ -48,6 +54,18 @@ updateGridPosition msg sidebar =
 
             MoveGridRight ->
                 { position | x = increase 4 position.x maxPosX }
+
+
+getCostOfLiving : SidebarModel.SidebarModel -> ( RemoteData Http.Error CostOfLiving.CostOfLiving, Cmd Msg )
+getCostOfLiving model =
+    case model.costOfLivingData of
+        Empty ->
+            ( Loading
+            , SidebarCommands.getCostOfLivingData model.destination.cityId
+            )
+
+        _ ->
+            ( model.costOfLivingData, Cmd.none )
 
 
 

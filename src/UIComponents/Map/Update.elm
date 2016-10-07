@@ -151,7 +151,11 @@ updateSidebar sidebarModel msg =
             { sidebarModel | gridPosition = SidebarUpdate.updateGridPosition msg sidebarModel } ! []
 
         SelectTab tab ->
-            { sidebarModel | activeTab = tab } ! []
+            let
+                ( colData, colCmd ) =
+                    SidebarUpdate.getCostOfLiving sidebarModel
+            in
+                ( { sidebarModel | activeTab = tab, costOfLivingData = colData }, colCmd )
 
         SelectGridItem cellData ->
             { sidebarModel
@@ -187,6 +191,12 @@ updateSidebar sidebarModel msg =
 
         OpenSidebar ->
             { sidebarModel | sidebarVisible = True } ! []
+
+        CostOfLivingFetchSuccess data ->
+            ( { sidebarModel | costOfLivingData = Success data }, Cmd.none )
+
+        CostOfLivingFetchFailure err ->
+            ( { sidebarModel | costOfLivingData = Failure err }, Cmd.none )
 
 
 {-| Create a new sidebar model for the given destination

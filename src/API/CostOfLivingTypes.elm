@@ -8,8 +8,8 @@ type alias Params =
 type alias CostOfLiving =
     { city : String
     , cityId : String
-    , summary : CostOfLivingSummary
-    , prices : CostOfLivingPrices
+    , summary : TravelCosts
+    , prices : Prices
     }
 
 

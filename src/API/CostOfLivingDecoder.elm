@@ -1,17 +1,24 @@
 module API.CostOfLivingDecoder exposing (..)
 
-import Json.Decode exposing (:=)
-import Json.Decode.Extra exposing (|:)
+import Json.Encode
+import Json.Decode exposing ((:=))
+import Json.Decode.Extra exposing ((|:))
 import API.CostOfLivingTypes exposing (..)
 
 
 decoder : Json.Decode.Decoder CostOfLiving
 decoder =
+    ("costOfLiving" := costOfLivingDecoder)
+
+
+costOfLivingDecoder : Json.Decode.Decoder CostOfLiving
+costOfLivingDecoder =
     Json.Decode.succeed CostOfLiving
         |: ("city" := Json.Decode.string)
         |: ("cityId" := Json.Decode.string)
-        |: ("summary" := decodeCostOfLivingSummary)
-        |: ("prices" := decodeCostOfLivingPrices)
+        |: ("summary" := decodeTravelCosts)
+        |: ("prices" := decodePrices)
+
 
 decodeTravelCosts : Json.Decode.Decoder TravelCosts
 decodeTravelCosts =
@@ -50,50 +57,53 @@ decodePrices =
         |: ("taxiOneHr" := Json.Decode.string)
         |: ("kiloBeef" := Json.Decode.string)
 
+
 encodeCostOfLiving : CostOfLiving -> Json.Encode.Value
 encodeCostOfLiving record =
     Json.Encode.object
-        [ ("city",  Json.Encode.string <| record.city)
-        , ("cityId",  Json.Encode.string <| record.cityId)
-        , ("summary",  encodeCostOfLivingSummary <| record.summary)
-        , ("prices",  encodeCostOfLivingPrices <| record.prices)
+        [ ( "city", Json.Encode.string <| record.city )
+        , ( "cityId", Json.Encode.string <| record.cityId )
+        , ( "summary", encodeCostOfLivingSummary <| record.summary )
+        , ( "prices", encodeCostOfLivingPrices <| record.prices )
         ]
 
-encodeCostOfLivingSummary : CostOfLivingSummary -> Json.Encode.Value
+
+encodeCostOfLivingSummary : TravelCosts -> Json.Encode.Value
 encodeCostOfLivingSummary record =
     Json.Encode.object
-        [ ("hostelIndex",  Json.Encode.string <| record.hostelIndex)
-        , ("hotelIndex",  Json.Encode.string <| record.hotelIndex)
-        , ("backpackerTravelCostIndex",  Json.Encode.string <| record.backpackerTravelCostIndex)
-        , ("travelCostsIndex",  Json.Encode.string <| record.travelCostsIndex)
-        , ("backpackerCostPerDay",  Json.Encode.string <| record.backpackerCostPerDay)
-        , ("travelCostPerDay",  Json.Encode.string <| record.travelCostPerDay)
+        [ ( "hostelIndex", Json.Encode.string <| record.hostelIndex )
+        , ( "hotelIndex", Json.Encode.string <| record.hotelIndex )
+        , ( "backpackerTravelCostIndex", Json.Encode.string <| record.backpackerTravelCostIndex )
+        , ( "travelCostsIndex", Json.Encode.string <| record.travelCostsIndex )
+        , ( "backpackerCostPerDay", Json.Encode.string <| record.backpackerCostPerDay )
+        , ( "travelCostPerDay", Json.Encode.string <| record.travelCostPerDay )
         ]
 
-encodeCostOfLivingPrices : CostOfLivingPrices -> Json.Encode.Value
+
+encodeCostOfLivingPrices : Prices -> Json.Encode.Value
 encodeCostOfLivingPrices record =
     Json.Encode.object
-        [ ("inexpensiveMeal",  Json.Encode.string <| record.inexpensiveMeal)
-        , ("midRangeTwoPersonMeal",  Json.Encode.string <| record.midRangeTwoPersonMeal)
-        , ("comboMeal",  Json.Encode.string <| record.comboMeal)
-        , ("domesticBeerDraught",  Json.Encode.string <| record.domesticBeerDraught)
-        , ("importedBeerBottleRestaurant",  Json.Encode.string <| record.importedBeerBottleRestaurant)
-        , ("waterBottleRestaurant",  Json.Encode.string <| record.waterBottleRestaurant)
-        , ("oneLitreMilk",  Json.Encode.string <| record.oneLitreMilk)
-        , ("loafBread",  Json.Encode.string <| record.loafBread)
-        , ("kiloCheese",  Json.Encode.string <| record.kiloCheese)
-        , ("bottleWineShop",  Json.Encode.string <| record.bottleWineShop)
-        , ("domesticBeerBottleShop",  Json.Encode.string <| record.domesticBeerBottleShop)
-        , ("importedBeerBottleShop",  Json.Encode.string <| record.importedBeerBottleShop)
-        , ("publicTransportOneWay",  Json.Encode.string <| record.publicTransportOneWay)
-        , ("publicTransportMonthlyPass",  Json.Encode.string <| record.publicTransportMonthlyPass)
-        , ("litreGasoline",  Json.Encode.string <| record.litreGasoline)
-        , ("oneBedCityCentre",  Json.Encode.string <| record.oneBedCityCentre)
-        , ("oneBedOutsideCentre",  Json.Encode.string <| record.oneBedOutsideCentre)
-        , ("monthlyInternet",  Json.Encode.string <| record.monthlyInternet)
-        , ("averageNetSalary",  Json.Encode.string <| record.averageNetSalary)
-        , ("taxiStart",  Json.Encode.string <| record.taxiStart)
-        , ("taxiOneKm",  Json.Encode.string <| record.taxiOneKm)
-        , ("taxiOneHr",  Json.Encode.string <| record.taxiOneHr)
-        , ("kiloBeef",  Json.Encode.string <| record.kiloBeef)
+        [ ( "inexpensiveMeal", Json.Encode.string <| record.inexpensiveMeal )
+        , ( "midRangeTwoPersonMeal", Json.Encode.string <| record.midRangeTwoPersonMeal )
+        , ( "comboMeal", Json.Encode.string <| record.comboMeal )
+        , ( "domesticBeerDraught", Json.Encode.string <| record.domesticBeerDraught )
+        , ( "importedBeerBottleRestaurant", Json.Encode.string <| record.importedBeerBottleRestaurant )
+        , ( "waterBottleRestaurant", Json.Encode.string <| record.waterBottleRestaurant )
+        , ( "oneLitreMilk", Json.Encode.string <| record.oneLitreMilk )
+        , ( "loafBread", Json.Encode.string <| record.loafBread )
+        , ( "kiloCheese", Json.Encode.string <| record.kiloCheese )
+        , ( "bottleWineShop", Json.Encode.string <| record.bottleWineShop )
+        , ( "domesticBeerBottleShop", Json.Encode.string <| record.domesticBeerBottleShop )
+        , ( "importedBeerBottleShop", Json.Encode.string <| record.importedBeerBottleShop )
+        , ( "publicTransportOneWay", Json.Encode.string <| record.publicTransportOneWay )
+        , ( "publicTransportMonthlyPass", Json.Encode.string <| record.publicTransportMonthlyPass )
+        , ( "litreGasoline", Json.Encode.string <| record.litreGasoline )
+        , ( "oneBedCityCentre", Json.Encode.string <| record.oneBedCityCentre )
+        , ( "oneBedOutsideCentre", Json.Encode.string <| record.oneBedOutsideCentre )
+        , ( "monthlyInternet", Json.Encode.string <| record.monthlyInternet )
+        , ( "averageNetSalary", Json.Encode.string <| record.averageNetSalary )
+        , ( "taxiStart", Json.Encode.string <| record.taxiStart )
+        , ( "taxiOneKm", Json.Encode.string <| record.taxiOneKm )
+        , ( "taxiOneHr", Json.Encode.string <| record.taxiOneHr )
+        , ( "kiloBeef", Json.Encode.string <| record.kiloBeef )
         ]

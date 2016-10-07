@@ -1,16 +1,22 @@
 module API.CostOfLiving exposing (..)
 
 import API.CostOfLivingDecoder as CostOfLivingDecoder
-import API.CostOfLivingTypes exposing (..)
+import API.CostOfLivingTypes as Types
+import Http
+import Task
 
 
-getData : Params -> Task.Task Http.Error CostOfLiving
+type alias CostOfLiving =
+    Types.CostOfLiving
+
+
+getData : Types.Params -> Task.Task Http.Error CostOfLiving
 getData params =
     Http.get CostOfLivingDecoder.decoder <|
         buildUrl params
 
 
-buildUrl : Params -> String
+buildUrl : Types.Params -> String
 buildUrl params =
     "http://localhost:4000/costofliving/"
         ++ params.cityId

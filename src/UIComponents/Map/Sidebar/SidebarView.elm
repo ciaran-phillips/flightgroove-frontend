@@ -18,6 +18,7 @@ import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
 import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
 import UIComponents.Types exposing (RemoteData(..))
 import API.Response as Response
+import UIComponents.Map.Sidebar.CostOfLivingView as CostOfLivingView
 
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
@@ -56,7 +57,7 @@ tabs mdl model =
                 div [ class "sidebar--block" ] <| flightsTab model
 
             1 ->
-                div [ class "sidebar--block" ] [ text "Cost of Living content" ]
+                div [ class "sidebar--block" ] <| [ CostOfLivingView.view mdl model ]
 
             _ ->
                 div [ class "sidebar--block" ] [ text "Attractions content" ]

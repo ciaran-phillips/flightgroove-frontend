@@ -2,6 +2,7 @@ module UIComponents.Map.Sidebar.SidebarModel exposing (..)
 
 import API.Response as Response
 import UIComponents.Types as Types exposing (RemoteData(..))
+import API.CostOfLiving as CostOfLiving
 import Maybe
 import Array
 import Http
@@ -16,6 +17,7 @@ type alias SidebarModel =
     , selectedOutboundDate : String
     , selectedInboundDate : String
     , activeTab : Int
+    , costOfLivingData : RemoteData Http.Error CostOfLiving.CostOfLiving
     , sidebarVisible : Bool
     }
 
@@ -50,6 +52,7 @@ newSidebarModel destination outboundDate inboundDate lowestPrice =
     , selectedInboundDate = inboundDate
     , lowestPrice = lowestPrice
     , activeTab = 0
+    , costOfLivingData = Empty
     , sidebarVisible = True
     }
 
