@@ -13,9 +13,11 @@
 
             var map = document.getElementById('map');
             map.addEventListener('click', function (e) {
-                if (e.target && e.target.getAttribute('class') === 'js-popup') {
-                    var id = e.target.getAttribute('data-airport-code');
-                    app.ports.popupSelected.send(id);
+                if (e.target) {
+                    var id = getAirportCode(e.target);
+                    if (id) {
+                        app.ports.popupSelected.send(id);
+                    }
                 }
             });
         });
@@ -60,5 +62,35 @@
             .addTo(map);
         popups.push(popup);
         return (typeof popup !== 'undefined');
+    }
+
+    function getAirportCode(elem) {
+        const airportAttr = 'data-airport-code';
+        const elemClass = elem.getAttribute('class');
+        let id = null;
+        if (elemClass === 'js-popup') {
+            id = elem.getAttribute(airportAttr);
+        }
+        else if (elemClass === 'mapboxgl-popup-content') {
+            id = getIdFromContentDiv(elem, airportAttr);
+        }
+        else if (elemClass == 'mapboxgl-popup-tip') {
+            const contentDiv = elem.nextSibling();
+            if (contentDiv) {
+                id = getIdFromContentDiv(contentDiv)
+            }
+        }
+        return id;
+
+        function getIdFromContentDiv(elem, attr) {
+            let id = null;
+            var children = elem.children;
+            for (let i = 0; i < children.length; i++) {
+                if (children[i].getAttribute('class') == 'js-popup') {
+                    id = children[i].getAttribute(attr);
+                }
+            }
+            return id;
+        }
     }
 })(Elm, mapboxgl);
