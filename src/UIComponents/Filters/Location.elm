@@ -3,6 +3,7 @@ module UIComponents.Filters.Location
         ( Model
         , Msg
         , model
+        , initialCmd
         , update
         , view
         , subscriptions
@@ -31,6 +32,8 @@ import Autocomplete
 
 import API.Response as Response
 import API.Skyscanner as API
+import API.GetUserLocation as GetUserLocation
+import UIComponents.Types as Types exposing (RemoteData(..))
 
 
 type alias Model =
@@ -39,6 +42,7 @@ type alias Model =
     , chosenLocationId : Maybe String
     , displayText : String
     , locationList : Response.Locations
+    , userLocation : RemoteData Http.Error Response.LocationSuggestion
     , maxLocationsDisplayed : Int
     , showLocationsDropdown : Bool
     }
@@ -49,6 +53,8 @@ type Msg
     | SelectLocation String
     | FetchSuccess Response.Response
     | FetchFail Http.Error
+    | GetUserLocationFailure Http.Error
+    | GetUserLocationSuccess Response.Response
     | AutocompleteMsg Autocomplete.Msg
     | Mdl (Material.Msg Msg)
 
@@ -60,9 +66,15 @@ model =
     , chosenLocationId = Nothing
     , displayText = ""
     , locationList = []
+    , userLocation = Empty
     , maxLocationsDisplayed = 10
     , showLocationsDropdown = False
     }
+
+
+initialCmd : Cmd Msg
+initialCmd =
+    Task.perform GetUserLocationFailure GetUserLocationSuccess GetUserLocation.getUserLocation
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -110,6 +122,29 @@ update msg model =
 
         FetchFail error ->
             model ! []
+
+        GetUserLocationSuccess response ->
+            case response of
+                Response.LocationsResponse locations ->
+                    ( { model
+                        | locationList = locations
+                        , displayText = Maybe.withDefault "default" <| firstLocationName locations
+                        , chosenLocationId = firstLocationId locations
+                        , autocompleteState =
+                            Autocomplete.resetToFirstItem
+                                updateConfig
+                                locations
+                                model.maxLocationsDisplayed
+                                model.autocompleteState
+                      }
+                    , Cmd.none
+                    )
+
+                _ ->
+                    model ! []
+
+        GetUserLocationFailure err ->
+            ( { model | userLocation = Failure <| Debug.log "failed to load user location" err }, Cmd.none )
 
         AutocompleteMsg msg ->
             updateAutocomplete msg model
@@ -173,6 +208,26 @@ formattedLocationNameFromId airportList chosenId =
 
             Just chosenLocation ->
                 formatLocationName chosenLocation
+
+
+firstLocationName : Response.Locations -> Maybe String
+firstLocationName locations =
+    case List.head locations of
+        Nothing ->
+            Nothing
+
+        Just location ->
+            Just <| formatLocationName location
+
+
+firstLocationId : Response.Locations -> Maybe String
+firstLocationId locations =
+    case List.head locations of
+        Nothing ->
+            Nothing
+
+        Just location ->
+            Just location.placeId
 
 
 formatLocationName : Response.LocationSuggestion -> String

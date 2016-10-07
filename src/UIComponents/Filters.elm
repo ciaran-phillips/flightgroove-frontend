@@ -27,7 +27,10 @@ init =
         ( { origin = Location.model
           , dateField = dateFieldModel
           }
-        , Cmd.map DateFieldMsg dateFieldCmd
+        , Cmd.batch
+            [ Cmd.map DateFieldMsg dateFieldCmd
+            , Cmd.map OriginMsg Location.initialCmd
+            ]
         )
 
 

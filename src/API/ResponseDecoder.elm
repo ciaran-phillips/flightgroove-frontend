@@ -1,6 +1,6 @@
 module API.ResponseDecoder exposing (..)
 
-import Json.Decode exposing (Decoder, maybe, int, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
+import Json.Decode exposing (Decoder, maybe, int, oneOf, succeed, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
 import API.Response as Response
 
 
@@ -39,7 +39,7 @@ suggestionDecoder =
         ("CountryName" := string)
         ("PlaceId" := string)
         ("PlaceName" := string)
-        ("RegionId" := string)
+        (oneOf [ "RegionId" := string, succeed "" ])
 
 
 locationsDecoder : Decoder Response.Response
