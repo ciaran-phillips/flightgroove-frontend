@@ -18,7 +18,7 @@ import API.Response as Response
 
 baseUrl : String
 baseUrl =
-    "http://192.168.0.29:4000/"
+    "/api/"
 
 
 

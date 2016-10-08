@@ -18,5 +18,5 @@ getData params =
 
 buildUrl : Types.Params -> String
 buildUrl params =
-    "http://localhost:4000/costofliving/"
+    "/api/costofliving/"
         ++ params.cityId

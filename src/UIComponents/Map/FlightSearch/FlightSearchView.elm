@@ -32,7 +32,7 @@ view mdl model =
                 , div [ class "background-overlay" ] []
                 , closeButton
                 , h3 [ class "search-overlay__title" ]
-                    [ text <| "Flights to X" ++ model.destination ]
+                    [ text <| "Flights to " ++ model.destination ]
                 ]
             , div [ class "search-overlay__body flight-search" ]
                 [ div [ class "flight-search__filters" ] []
@@ -60,7 +60,7 @@ displayFlights : Maybe PollLivePricingResponse -> List (Html Msg)
 displayFlights flightData =
     case flightData of
         Nothing ->
-            [ text "no itineraries yet" ]
+            [ text "loading itineraries" ]
 
         Just data ->
             List.map (displayFlight data) data.itineraries

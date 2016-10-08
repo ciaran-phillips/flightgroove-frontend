@@ -35,7 +35,7 @@ getData params =
 
 buildUrl : Params -> String
 buildUrl params =
-    "http://localhost:4000/activities/"
+    "/api/activities/"
         ++ (Http.uriEncode params.locationQuery)
 
 

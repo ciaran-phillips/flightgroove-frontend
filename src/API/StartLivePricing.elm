@@ -32,7 +32,7 @@ startLivePricingDecoder =
 
 buildUrl : StartLivePricingParams -> String
 buildUrl params =
-    "http://localhost:4000/livepricing/start?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
+    "/api/livepricing/start?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
         ++ ("&originplace=" ++ params.origin)
         ++ ("&destinationplace=" ++ params.destination)
         ++ ("&outbounddate=" ++ params.outboundDate)

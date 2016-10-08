@@ -245,7 +245,7 @@ directionDecoder direction =
 
 buildUrl : PollingUrl -> PollLivePricingParams -> String
 buildUrl url params =
-    "http://localhost:4000/livepricing/poll/"
+    "/api/livepricing/poll/"
         ++ (Http.uriEncode url)
         ++ "?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
         ++ ("&originplace=" ++ params.origin)

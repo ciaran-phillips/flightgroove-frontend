@@ -10,4 +10,4 @@ getUserLocation : Task.Task Http.Error Response.Response
 getUserLocation =
     Http.get
         locationsDecoder
-        "http://localhost:4000/get-user-origin/"
+        "/api/get-user-origin/"

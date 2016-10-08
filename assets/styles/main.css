@@ -2,6 +2,9 @@
   line-height: 1.5em;
   font-weight: bold;
 }
+body {
+  overflow: hidden;
+}
 .clearing:after {
   content: "";
   display: table;
@@ -21,6 +24,7 @@
 }
 .logo--part img {
   width: 50px;
+  display: none;
 }
 .logo--heading {
   text-align: center;
@@ -532,4 +536,8 @@ label {
 .mdl-tab__panel {
     max-height: 90%;
     overflow: auto;
+}
+
+.header .mdl-switch {
+    margin-top: 28px;
 }
