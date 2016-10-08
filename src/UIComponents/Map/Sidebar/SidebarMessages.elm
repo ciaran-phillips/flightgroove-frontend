@@ -3,6 +3,7 @@ module UIComponents.Map.Sidebar.SidebarMessages exposing (..)
 import API.Response as Response
 import Http
 import API.CostOfLiving as COL
+import API.Activities as Activities
 
 
 -- Custom Modules
@@ -21,6 +22,8 @@ type SidebarMsg
     | OpenSidebar
     | CostOfLivingFetchSuccess COL.CostOfLiving
     | CostOfLivingFetchFailure Http.Error
+    | ActivitiesFetchSuccess Activities.Activities
+    | ActivitiesFetchFailure Http.Error
 
 
 type MoveGridMsg

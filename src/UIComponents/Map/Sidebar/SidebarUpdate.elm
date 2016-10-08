@@ -3,6 +3,7 @@ module UIComponents.Map.Sidebar.SidebarUpdate
         ( focusGridOn
         , updateGridPosition
         , getCostOfLiving
+        , getActivities
         )
 
 import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
@@ -14,6 +15,7 @@ import UIComponents.Types exposing (RemoteData(..))
 import Http
 import API.Response as Response
 import API.CostOfLiving as CostOfLiving
+import API.Activities as Activities
 
 
 {-| Move the grid to display the given X and Y coordinates.
@@ -66,6 +68,22 @@ getCostOfLiving model =
 
         _ ->
             ( model.costOfLivingData, Cmd.none )
+
+
+getActivities : SidebarModel.SidebarModel -> ( RemoteData Http.Error Activities.Activities, Cmd Msg )
+getActivities model =
+    let
+        query =
+            model.destination.placeName ++ ", " ++ model.destination.countryName
+    in
+        case model.activities of
+            Empty ->
+                ( Loading
+                , SidebarCommands.getActivities query
+                )
+
+            _ ->
+                ( model.activities, Cmd.none )
 
 
 

@@ -445,3 +445,38 @@ label {
   background: #fbfbfb;
   cursor: pointer;
 }
+
+
+.activities-title {
+  margin-bottom: 20px;
+}
+
+.activities-title__heading {
+  font-size: 21px;
+  margin:0;
+}
+.activity {
+  margin-top: 10px;
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+.activity__img > img {
+  width: 100%;
+}
+.activity__content td {
+  font-size: 12px;
+  font-weight: normal;
+}
+.activity__img {width: 140px;padding: 10px;float: left;}
+
+.activity__content {
+    float: left;
+    width: 200px;
+}
+
+.activity__title {
+    font-size: 16px;
+    line-height: 1.5em;
+    margin: 0;
+}

@@ -154,8 +154,17 @@ updateSidebar sidebarModel msg =
             let
                 ( colData, colCmd ) =
                     SidebarUpdate.getCostOfLiving sidebarModel
+
+                ( activities, activitiesCmd ) =
+                    SidebarUpdate.getActivities sidebarModel
             in
-                ( { sidebarModel | activeTab = tab, costOfLivingData = colData }, colCmd )
+                ( { sidebarModel
+                    | activeTab = tab
+                    , costOfLivingData = colData
+                    , activities = activities
+                  }
+                , Cmd.batch [ colCmd, activitiesCmd ]
+                )
 
         SelectGridItem cellData ->
             { sidebarModel
@@ -197,6 +206,12 @@ updateSidebar sidebarModel msg =
 
         CostOfLivingFetchFailure err ->
             ( { sidebarModel | costOfLivingData = Failure err }, Cmd.none )
+
+        ActivitiesFetchSuccess data ->
+            ( { sidebarModel | activities = Success data }, Cmd.none )
+
+        ActivitiesFetchFailure err ->
+            ( { sidebarModel | activities = Failure err }, Cmd.none )
 
 
 {-| Create a new sidebar model for the given destination
