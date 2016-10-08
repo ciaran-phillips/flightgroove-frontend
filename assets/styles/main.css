@@ -521,3 +521,15 @@ label {
   background-color: #c52f25;
   padding: 10px;
 }
+.mdl-tabs {
+    max-height: 90%;
+}
+
+.map-wrapper {
+    max-height: 90%;
+}
+
+.mdl-tab__panel {
+    max-height: 90%;
+    overflow: auto;
+}
