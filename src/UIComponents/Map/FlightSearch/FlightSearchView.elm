@@ -2,7 +2,7 @@ module UIComponents.Map.FlightSearch.FlightSearchView exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (class, href)
+import Html.Attributes exposing (class, href, rel)
 import Material
 import Dict
 import String
@@ -193,9 +193,10 @@ displayBookingLink pricingOptions =
                     pricingOption.deeplink
     in
         div [ class "flight-result__action mdl-cell mdl-cell--2-col" ]
-            [ button
+            [ a
                 [ class "mdl-button mdl-button--raised mdl-button--colored"
                 , href bookingLink
+                , rel "nofollow"
                 ]
                 [ text "Buy Flights" ]
             ]

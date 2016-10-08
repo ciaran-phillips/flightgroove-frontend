@@ -50,7 +50,7 @@ topBarRows model =
             , inboundDate model
             ]
         ]
-    , div [ class "mdl-cell mdl-cell--2-col" ] [ dateToggle model ]
+    , div [ class "mdl-cell mdl-cell--2-col" ] [ dateToggle model, originsToggle model ]
     ]
 
 
@@ -65,9 +65,8 @@ filterRows model =
 
 searchBox : Model -> Html Msg
 searchBox model =
-    filterWrapper "departure airport" <|
-        Html.App.map FilterMsg <|
-            Filters.viewOriginSearch model.filtersModel
+    Html.App.map FilterMsg <|
+        Filters.viewOriginSearch model.filtersModel
 
 
 outboundDate : Model -> Html Msg
@@ -86,6 +85,12 @@ dateToggle : Model -> Html Msg
 dateToggle model =
     Html.App.map FilterMsg <|
         Filters.viewToggle model.filtersModel
+
+
+originsToggle : Model -> Html Msg
+originsToggle model =
+    Html.App.map FilterMsg <|
+        Filters.viewOriginsToggle model.filtersModel
 
 
 filterWrapper : String -> Html Msg -> Html Msg

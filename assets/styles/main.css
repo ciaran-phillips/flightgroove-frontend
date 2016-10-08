@@ -239,7 +239,7 @@ body, .wrapper, .map-wrapper {
 }
 
 .location-background {
-    background-image: url(http://www.blirk.net/wallpapers/1680x1050/night-city-wallpaper-16.jpg);
+    background-image: url("/assets/img/banner-sml.jpg");
     background-position: center;
     background-size: cover;
     position: absolute;
@@ -479,4 +479,45 @@ label {
     font-size: 16px;
     line-height: 1.5em;
     margin: 0;
+}
+
+.origin-dropdown__content {
+    position: absolute;
+    background: #fff;
+    z-index: 5;
+    width: 260px;
+    top: 90px;
+    padding: 20px;
+    display: none;
+    
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+    border-radius: 4px;
+}
+.origin-dropdown__airports {
+  border-radius: 4px;
+}
+.origin-dropdown.is-active .origin-dropdown__content {
+  display: block;
+}
+.origin-dropdown__content label {
+    color: #444;
+}
+
+.origin-dropdown__triangle {
+    border-width: 10px;
+    border-color: transparent;
+    border-bottom-color: white;
+    position: absolute;
+    border-style: solid;
+    top: -20px;
+    left: 10px;
+}
+.origin-dropdown__airports .material-icons {
+  vertical-align: middle;
+
+}
+.origin-dropdown__airports:hover {
+  cursor: pointer;
+  background-color: #c52f25;
+  padding: 10px;
 }

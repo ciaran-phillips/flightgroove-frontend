@@ -8,6 +8,7 @@ module UIComponents.Filters.Location
         , view
         , subscriptions
         , getSelectedLocation
+        , viewAirportName
         )
 
 -- Core Imports
@@ -166,6 +167,14 @@ view model =
         [ viewAirportSelector model
         , viewAutocomplete model
         ]
+
+
+viewAirportName : Model -> String
+viewAirportName model =
+    if String.isEmpty model.displayText then
+        "unset"
+    else
+        model.displayText
 
 
 
