@@ -62,7 +62,7 @@ colItem item =
         , div [ class "cost-item__column mdl-cell mdl-cell--4-col" ]
             [ span [ class "cost-item__name" ] [ text item.name ] ]
         , div [ class "cost-item__column mdl-cell mdl-cell--4-col" ]
-            [ span [ class "cost-item__column" ] [ text item.cost ] ]
+            [ span [ class "cost-item__column" ] [ text <| "€" ++ item.cost ] ]
         ]
 
 

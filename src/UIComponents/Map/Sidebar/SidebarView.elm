@@ -83,15 +83,15 @@ selectedDateView : SidebarModel.SidebarModel -> Html Msg
 selectedDateView model =
     let
         estimatedPriceParagraph =
-            "Estimated Price per person is "
+            "Estimated Price per person is €"
                 ++ model.lowestPrice
                 ++ ", departing on "
                 ++ model.selectedOutboundDate
-                ++ "and returning on "
+                ++ " and returning on "
                 ++ model.selectedInboundDate
 
         disclaimerParagraph =
-            [ text "These prices are based on recent flight searches, click"
+            [ text "These prices are based on recent flight searches, click "
             , em [] [ text "Show Flights" ]
             , text " to see exact prices, customise stops / passengers / times / dates and more."
             ]
