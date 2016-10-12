@@ -3,6 +3,8 @@ module UIComponents.Map.FlightSearch.FlightSearchModel
         ( init
         , FlightSearchModel
         , InitialFlightCriteria
+        , OriginFlights
+        , FlightsForOrigin(..)
         )
 
 import UIComponents.Map.Messages exposing (..)
@@ -12,15 +14,34 @@ import API.StartLivePricing as StartLivePricing
 import Task
 
 
+type FlightsForOrigin
+    = SingleOrigin OriginFlights
+    | MultipleOrigins OriginFlights OriginFlights
+
+
+type alias OriginFlights =
+    { origin : Origin
+    , flightData : FlightData
+    }
+
+
+type alias Origin =
+    String
+
+
+type alias FlightData =
+    Maybe PollLivePricing.PollLivePricingResponse
+
+
 type alias FlightSearchModel =
-    { origin : String
-    , destination : String
+    { destination : String
     , outboundDate : String
     , inboundDate : String
     , pollingUrl : Maybe String
     , pollingFinished : Bool
     , pollingIncrement : Int
-    , flights : Maybe PollLivePricing.PollLivePricingResponse
+    , flightsForOrigin : FlightsForOrigin
+    , activeTab : Int
     }
 
 
@@ -48,26 +69,35 @@ init criteria =
 
 initialModel : InitialFlightCriteria -> FlightSearchModel
 initialModel criteria =
-    { origin = criteria.origin
-    , destination = criteria.destination
+    { destination = criteria.destination
     , outboundDate = criteria.outboundDate
     , inboundDate = criteria.inboundDate
     , pollingUrl = Nothing
     , pollingFinished = False
     , pollingIncrement = pollingIncrement
-    , flights = Nothing
+    , flightsForOrigin = SingleOrigin <| OriginFlights criteria.origin Nothing
+    , activeTab = 0
     }
 
 
 initialCmd : FlightSearchModel -> Cmd Msg
 initialCmd model =
-    Task.perform
-        (FlightSearchTag << StartLivePricingFailure)
-        (FlightSearchTag << StartLivePricingSuccess)
-    <|
-        StartLivePricing.startLivePricing <|
-            StartLivePricing.StartLivePricingParams
-                model.origin
-                model.destination
-                model.outboundDate
-                model.inboundDate
+    let
+        origin =
+            case model.flightsForOrigin of
+                SingleOrigin originAndFlights ->
+                    originAndFlights.origin
+
+                MultipleOrigins originAndFlights secondOriginAndFlights ->
+                    originAndFlights.origin
+    in
+        Task.perform
+            (FlightSearchTag << StartLivePricingFailure)
+            (FlightSearchTag << StartLivePricingSuccess)
+        <|
+            StartLivePricing.startLivePricing <|
+                StartLivePricing.StartLivePricingParams
+                    origin
+                    model.destination
+                    model.outboundDate
+                    model.inboundDate
