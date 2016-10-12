@@ -15,6 +15,7 @@ type alias SidebarModel =
     , gridPosition : GridPosition
     , gridSize : GridSize
     , destination : LocationTypes.Airport
+    , multipleOrigins : Bool
     , lowestPrice : String
     , selectedOutboundDate : String
     , selectedInboundDate : String
@@ -45,11 +46,12 @@ type alias CellData =
     }
 
 
-newSidebarModel : LocationTypes.Airport -> String -> String -> String -> SidebarModel
-newSidebarModel destination outboundDate inboundDate lowestPrice =
+newSidebarModel : LocationTypes.Airport -> String -> String -> String -> Bool -> SidebarModel
+newSidebarModel destination outboundDate inboundDate lowestPrice multipleOrigins =
     { dateGrid = Loading
     , gridPosition = { x = 0, y = 0 }
     , gridSize = { rows = 0, columns = 0 }
+    , multipleOrigins = multipleOrigins
     , destination = destination
     , selectedOutboundDate = outboundDate
     , selectedInboundDate = inboundDate
