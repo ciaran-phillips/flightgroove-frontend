@@ -72,23 +72,44 @@ icon iconName =
 
 flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
 flightsTab model =
-    [ div []
-        [ selectedDateView model
-        , dateGrid model model.gridPosition
+    let
+        grid =
+            if not model.multipleOrigins then
+                dateGrid model model.gridPosition
+            else
+                text ""
+    in
+        [ div []
+            [ selectedDateView model
+            , grid
+            ]
         ]
-    ]
 
 
 selectedDateView : SidebarModel.SidebarModel -> Html Msg
 selectedDateView model =
     let
-        estimatedPriceParagraph =
+        pricePerPersonParagraph =
             "Estimated Price per person is "
                 ++ model.lowestPrice
                 ++ ", departing on "
                 ++ model.selectedOutboundDate
                 ++ " and returning on "
                 ++ model.selectedInboundDate
+
+        combinedPrices =
+            "Estimated combined price for both travellers is "
+                ++ model.lowestPrice
+                ++ ", departing on "
+                ++ model.selectedOutboundDate
+                ++ " and returning on "
+                ++ model.selectedInboundDate
+
+        pricesParagraph =
+            if model.multipleOrigins then
+                combinedPrices
+            else
+                pricePerPersonParagraph
 
         disclaimerParagraph =
             [ text "These prices are based on recent flight searches, click "
@@ -98,7 +119,7 @@ selectedDateView model =
     in
         div []
             [ h5 [] [ text <| model.destination.placeName ++ " (" ++ model.destination.airportCode ++ ")" ]
-            , p [] [ text estimatedPriceParagraph ]
+            , p [] [ text pricesParagraph ]
             , p [] disclaimerParagraph
             , button
                 [ class "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"

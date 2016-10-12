@@ -226,13 +226,21 @@ newSidebar destination model =
 
                 _ ->
                     Nothing
+
+        multipleOrigins =
+            case model.criteria.secondOriginId of
+                Nothing ->
+                    False
+
+                Just originId ->
+                    True
     in
         case cheapestRoute of
             Nothing ->
                 Debug.crash "no cheapest route!!"
 
             Just route ->
-                SidebarModel.newSidebarModel destination route.departureDate route.returnDate route.priceDisplay
+                SidebarModel.newSidebarModel destination route.departureDate route.returnDate route.priceDisplay multipleOrigins
 
 
 newLiveFlightSearch : Model -> FlightSearchConfig -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )
