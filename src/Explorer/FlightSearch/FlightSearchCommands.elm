@@ -2,7 +2,7 @@ module Explorer.FlightSearch.FlightSearchCommands exposing (..)
 
 import API.PollLivePricing.Types exposing (PollLivePricingParams, PollLivePricingResponse)
 import API.PollLivePricing.Action as PollLivePricing
-import Explorer.FlightSearch.FlightSearchModel exposing (FlightSearchModel)
+import Explorer.FlightSearch.FlightSearchModel exposing (FlightSearchModel, FlightsForOrigin(..))
 import Explorer.Messages exposing (Msg(..))
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
 import Task
@@ -44,8 +44,17 @@ delayedPoll url params timeDelay =
 
 createParams : FlightSearchModel -> PollLivePricingParams
 createParams model =
-    PollLivePricingParams
-        model.origin
-        model.destination
-        model.outboundDate
-        model.inboundDate
+    let
+        origin =
+            case model.flightsForOrigin of
+                SingleOrigin originAndFlights ->
+                    originAndFlights.origin
+
+                MultipleOrigins originAndFlights secondOriginAndFlights ->
+                    originAndFlights.origin
+    in
+        PollLivePricingParams
+            origin
+            model.destination
+            model.outboundDate
+            model.inboundDate

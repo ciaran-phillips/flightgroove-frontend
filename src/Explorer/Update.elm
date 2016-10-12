@@ -9,7 +9,7 @@ import Explorer.Sidebar.SidebarUpdate as SidebarUpdate
 import Explorer.Sidebar.SidebarCommands as SidebarCommands
 import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Sidebar.SidebarMessages exposing (..)
-import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
+import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel exposing (FlightsForOrigin(..))
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.MapComp.MapMessages exposing (..)
@@ -129,12 +129,18 @@ updateFlightSearch model msg =
         PollLivePricingSuccess response ->
             let
                 newModel =
-                    { model | pollingFinished = Debug.log "response completed: " response.completed, flights = Just <| Debug.log "response is: " response }
+                    { model
+                        | pollingFinished = Debug.log "response completed: " response.completed
+                        , flightsForOrigin = SingleOrigin { origin = "", flightData = Just response }
+                    }
             in
                 ( newModel, FlightSearchCommands.pollPrices <| Debug.log "polling " newModel )
 
         PollLivePricingFailure err ->
             ( always model <| Debug.log "Polling error is " err, Cmd.none )
+
+        SelectFlightsTab tab ->
+            { model | activeTab = tab } ! []
 
         CloseFlightSearch ->
             model ! []

@@ -11,3 +11,4 @@ type FlightSearchMsg
     | PollLivePricingSuccess PollLivePricingResponse
     | PollLivePricingFailure Http.Error
     | CloseFlightSearch
+    | SelectFlightsTab Int

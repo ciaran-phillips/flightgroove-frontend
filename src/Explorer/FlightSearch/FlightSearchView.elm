@@ -6,12 +6,18 @@ import Html.Attributes exposing (class, href, rel)
 import Material
 import Dict
 import String
+import Material.Tabs as Tabs
 
 
 -- Custom Modules
 
 import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
-import Explorer.Messages exposing (Msg(FlightSearchTag))
+    exposing
+        ( FlightSearchModel
+        , FlightsForOrigin(..)
+        , OriginFlights
+        )
+import Explorer.Messages exposing (Msg(FlightSearchTag, Mdl))
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
 import API.PollLivePricing.Action as PollLivePricing
 import API.PollLivePricing.Types as PollLivePricingTypes
@@ -23,7 +29,7 @@ import API.PollLivePricing.Types as PollLivePricingTypes
         )
 
 
-view : Material.Model -> FlightSearchModel.FlightSearchModel -> Html Msg
+view : Material.Model -> FlightSearchModel -> Html Msg
 view mdl model =
     div []
         [ div [ class "search-overlay__background" ] []
@@ -35,13 +41,48 @@ view mdl model =
                 , h3 [ class "search-overlay__title" ]
                     [ text <| "Flights to " ++ model.destination ]
                 ]
-            , div [ class "search-overlay__body flight-search" ]
-                [ div [ class "flight-search__filters" ] []
-                , div [ class "flight-search__list" ]
-                    [ ul [ class "unstyled" ] <|
-                        displayFlights model.flights
-                    ]
-                ]
+            , viewPopupBody mdl model
+            ]
+        ]
+
+
+viewPopupBody : Material.Model -> FlightSearchModel -> Html Msg
+viewPopupBody mdl model =
+    case model.flightsForOrigin of
+        SingleOrigin originAndFlight ->
+            viewContent originAndFlight
+
+        MultipleOrigins originAndFlight secondOriginAndFlight ->
+            viewTabs mdl model originAndFlight secondOriginAndFlight
+
+
+viewTabs : Material.Model -> FlightSearchModel -> OriginFlights -> OriginFlights -> Html Msg
+viewTabs mdl model firstOriginFlights secondOriginFlights =
+    Tabs.render Mdl
+        [ 2 ]
+        mdl
+        [ Tabs.activeTab model.activeTab
+        , Tabs.onSelectTab <| FlightSearchTag << SelectFlightsTab
+        ]
+        [ Tabs.label [] [ text "Flights from" ]
+        , Tabs.label [] [ text "Flights from" ]
+        ]
+        [ case model.activeTab of
+            0 ->
+                div [ class "sidebar--block" ] []
+
+            _ ->
+                div [ class "sidebar--block" ] []
+        ]
+
+
+viewContent : OriginFlights -> Html Msg
+viewContent flightData =
+    div [ class "search-overlay__body flight-search" ]
+        [ div [ class "flight-search__filters" ] []
+        , div [ class "flight-search__list" ]
+            [ ul [ class "unstyled" ] <|
+                displayFlights flightData
             ]
         ]
 
@@ -57,9 +98,9 @@ closeButton =
         ]
 
 
-displayFlights : Maybe PollLivePricingResponse -> List (Html Msg)
-displayFlights flightData =
-    case flightData of
+displayFlights : OriginFlights -> List (Html Msg)
+displayFlights originFlights =
+    case originFlights.flightData of
         Nothing ->
             [ text "loading itineraries" ]
 
