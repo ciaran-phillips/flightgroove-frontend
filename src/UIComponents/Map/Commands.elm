@@ -5,6 +5,7 @@ import UIComponents.Map.Ports as Ports
 import UIComponents.Map.Messages exposing (..)
 import API.Response as Response
 import API.Skyscanner as API
+import API.RoutesForMultipleLocations as RoutesForMultipleLocations
 import Http
 import Task
 import String
@@ -37,9 +38,20 @@ popupFromRoute route =
 
 getRoutes : Types.FilterCriteria -> Task.Task Http.Error Response.Response
 getRoutes criteria =
-    API.callRoutes
-        { origin = criteria.locationId
-        , destination = "anywhere"
-        , outboundDate = criteria.outboundDate
-        , inboundDate = criteria.inboundDate
-        }
+    case criteria.secondOriginId of
+        Nothing ->
+            API.callRoutes
+                { origin = criteria.locationId
+                , destination = "anywhere"
+                , outboundDate = criteria.outboundDate
+                , inboundDate = criteria.inboundDate
+                }
+
+        Just originId ->
+            RoutesForMultipleLocations.getData
+                { origin = criteria.locationId
+                , secondOrigin = originId
+                , destination = "anywhere"
+                , outboundDate = criteria.outboundDate
+                , inboundDate = criteria.inboundDate
+                }

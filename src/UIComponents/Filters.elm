@@ -128,17 +128,26 @@ subscriptions model =
 getCriteria : Model -> Maybe FilterCriteria
 getCriteria model =
     let
-        locationId =
+        originId =
             Location.getSelectedLocation model.firstOrigin
+
+        secondOriginId =
+            case model.secondOrigin of
+                Disabled origin ->
+                    Nothing
+
+                Enabled origin ->
+                    Location.getSelectedLocation origin
     in
-        case locationId of
+        case originId of
             Nothing ->
                 Nothing
 
-            Just location ->
+            Just originId' ->
                 Just <|
                     FilterCriteria
-                        (location)
+                        originId'
+                        secondOriginId
                         (DateField.getOutboundDate model.dateField)
                         (DateField.getInboundDate model.dateField)
 

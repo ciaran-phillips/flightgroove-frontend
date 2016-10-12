@@ -17,6 +17,7 @@ type alias Route =
     , priceCredits : Int
     , priceDisplay : String
     , origin : Airport
+    , secondOrigin : Maybe Airport
     , destination : Airport
     }
 

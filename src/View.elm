@@ -89,7 +89,8 @@ dateToggle model =
 
 originsToggle : Model -> Html Msg
 originsToggle model =
-    text ""
+    Html.App.map FilterMsg <|
+        Filters.viewOriginsToggle model.filtersModel
 
 
 filterWrapper : String -> Html Msg -> Html Msg

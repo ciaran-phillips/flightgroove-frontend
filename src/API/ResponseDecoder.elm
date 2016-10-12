@@ -12,12 +12,13 @@ routesDecoder =
 
 routeDecoder : Decoder Response.Route
 routeDecoder =
-    object6 Response.Route
+    object7 Response.Route
         ("departureDate" := string)
         ("returnDate" := string)
         ("priceCredits" := int)
         ("priceDisplay" := string)
         ("origin" := airportDecoder)
+        (maybe ("secondOrigin" := airportDecoder))
         ("destination" := airportDecoder)
 
 

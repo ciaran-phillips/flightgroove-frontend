@@ -3,6 +3,7 @@ module UIComponents.Types exposing (..)
 
 type alias FilterCriteria =
     { locationId : String
+    , secondOriginId : Maybe String
     , outboundDate : String
     , inboundDate : String
     }

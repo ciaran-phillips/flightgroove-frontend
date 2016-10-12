@@ -46,6 +46,7 @@ defaultMapData =
 defaultCriteria : FilterCriteria
 defaultCriteria =
     { locationId = "DUB-sky"
+    , secondOriginId = Nothing
     , inboundDate = "2016-10"
     , outboundDate = "2016-10"
     }
