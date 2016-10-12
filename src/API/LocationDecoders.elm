@@ -16,12 +16,13 @@ locationSuggestions =
 
 routeDecoder : Decoder Route
 routeDecoder =
-    object6 Route
+    object7 Route
         ("departureDate" := string)
         ("returnDate" := string)
         ("priceCredits" := int)
         ("priceDisplay" := string)
         ("origin" := airportDecoder)
+        (maybe ("secondOrigin" := airportDecoder))
         ("destination" := airportDecoder)
 
 

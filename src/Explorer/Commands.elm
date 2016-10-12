@@ -5,6 +5,7 @@ import Explorer.Ports as Ports
 import Explorer.Messages exposing (..)
 import API.GetRoutes.Action as Routes
 import API.LocationTypes as LocationTypes
+import API.GetRoutesMultipleOrigins.Action as GetRoutesMultipleOrigins
 import Http
 import Task
 import String
@@ -37,9 +38,20 @@ popupFromRoute route =
 
 getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error LocationTypes.Routes
 getRoutes criteria =
-    Routes.get
-        { origin = criteria.locationId
-        , destination = "anywhere"
-        , outboundDate = criteria.outboundDate
-        , inboundDate = criteria.inboundDate
-        }
+    case criteria.secondOriginId of
+        Nothing ->
+            Routes.get
+                { origin = criteria.locationId
+                , destination = "anywhere"
+                , outboundDate = criteria.outboundDate
+                , inboundDate = criteria.inboundDate
+                }
+
+        Just originId ->
+            GetRoutesMultipleOrigins.get
+                { origin = criteria.locationId
+                , secondOrigin = originId
+                , destination = "anywhere"
+                , outboundDate = criteria.outboundDate
+                , inboundDate = criteria.inboundDate
+                }
