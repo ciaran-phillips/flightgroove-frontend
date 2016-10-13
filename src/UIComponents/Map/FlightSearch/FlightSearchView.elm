@@ -2,7 +2,7 @@ module UIComponents.Map.FlightSearch.FlightSearchView exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (class, href, rel)
+import Html.Attributes exposing (class, href, rel, target)
 import Material
 import Dict
 import String
@@ -245,6 +245,7 @@ displayBookingLink pricingOptions =
                 [ class "mdl-button mdl-button--raised mdl-button--accent"
                 , href bookingLink
                 , rel "nofollow"
+                , target "_blank"
                 ]
                 [ text "Buy Flights" ]
             ]
