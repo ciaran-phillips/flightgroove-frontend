@@ -1,7 +1,7 @@
 module UIComponents.Map.View exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class, classList)
+import Html.Attributes exposing (id, class, classList, src)
 import UIComponents.Types exposing (RemoteData(..))
 import UIComponents.Map.Messages exposing (Msg(..))
 import UIComponents.Map.Model exposing (Model)
@@ -51,7 +51,8 @@ viewMap model =
                     False
     in
         div [ class "map-wrapper" ]
-            [ sidebar
+            [ skyscannerLogo
+            , sidebar
             , div [ classList [ ( "map__overlay", True ), ( "is-active", isLoading ) ] ]
                 [ div [ class "background-overlay" ] []
                 , Loading.spinner
@@ -62,6 +63,11 @@ viewMap model =
                 ]
             , div [ id mapId ] []
             ]
+
+
+skyscannerLogo : Html Msg
+skyscannerLogo =
+    img [ src "/assets/img/skyscanner-logo.png", class "skyscanner-logo" ] []
 
 
 mapId : String
