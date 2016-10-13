@@ -8,7 +8,7 @@ import Material
 import Material.Spinner as Loading
 import Material.Options as Options
 import Html exposing (..)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, href)
 import API.CostOfLiving as CostOfLiving
 
 
@@ -43,9 +43,15 @@ view mdl model =
 
 prices : CostOfLiving.CostOfLiving -> Html Msg
 prices data =
-    div [ class "cost-list" ] <|
-        List.map itemGroup <|
-            items data
+    div []
+        [ div [ class "attribution" ]
+            [ text "Source: "
+            , a [ href "numbeo.com" ] [ text "numbeo.com" ]
+            ]
+        , div [ class "cost-list" ] <|
+            List.map itemGroup <|
+                items data
+        ]
 
 
 itemGroup : List (ItemDisplay) -> Html Msg
