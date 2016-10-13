@@ -115,7 +115,7 @@ selectedDateView model =
         disclaimerParagraph =
             [ text "These prices are based on recent flight searches, click "
             , em [] [ text "Show Flights" ]
-            , text " to see exact prices, customise stops / passengers / times / dates and more."
+            , text " to see exact prices for these dates."
             ]
     in
         div []
