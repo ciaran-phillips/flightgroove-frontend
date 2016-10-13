@@ -536,5 +536,12 @@ label {
 }
 
 .header .mdl-switch {
-    margin-top: 28px;
+  margin-top: 10px;
+}
+.mdl-switch.is-checked .mdl-switch__thumb {
+  background-color: #fff;
+}
+
+.mdl-switch.is-checked .mdl-switch__track {
+  background-color: rgba(244,244,244,.5);
 }
