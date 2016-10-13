@@ -1,7 +1,7 @@
 module Explorer.View exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class, classList, src)
+import Html.Attributes exposing (id, class, classList, src, href, target)
 import Explorer.Types exposing (RemoteData(..))
 import Explorer.Messages exposing (Msg(..))
 import Explorer.Model exposing (Model)
@@ -67,7 +67,7 @@ viewMap model =
 
 skyscannerLogo : Html Msg
 skyscannerLogo =
-    img [ src "/assets/img/skyscanner-logo.png", class "skyscanner-logo" ] []
+    a [ target "_blank", href "https://skyscanner.net" ] [ img [ src "/assets/img/skyscanner-logo.png", class "skyscanner-logo" ] [] ]
 
 
 mapId : String
