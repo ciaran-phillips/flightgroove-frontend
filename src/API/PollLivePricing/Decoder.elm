@@ -75,7 +75,7 @@ pricingOptionDecoder : Decode.Decoder PricingOption
 pricingOptionDecoder =
     Decode.object2 PricingOption
         ("price" := float)
-        ("deeplinkUrl" := string)
+        (oneOf [ ("deeplinkUrl" := string), (succeed "") ])
 
 
 legDecoder : Decode.Decoder Leg
