@@ -217,7 +217,7 @@ gridControlButtonsSide =
 
 gridControlButtonClass : String
 gridControlButtonClass =
-    "mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--colored"
+    "mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-js-ripple-effect mdl-button--accent"
 
 
 displayHeaderCell : Maybe String -> Html Msg

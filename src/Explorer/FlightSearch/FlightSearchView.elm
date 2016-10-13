@@ -236,7 +236,7 @@ displayBookingLink pricingOptions =
     in
         div [ class "flight-result__action mdl-cell mdl-cell--2-col" ]
             [ a
-                [ class "mdl-button mdl-button--raised mdl-button--colored"
+                [ class "mdl-button mdl-button--raised mdl-button--accent"
                 , href bookingLink
                 , rel "nofollow"
                 ]
