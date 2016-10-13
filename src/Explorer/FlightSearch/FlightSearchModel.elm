@@ -22,6 +22,8 @@ type FlightsForOrigin
 type alias OriginFlights =
     { origin : Origin
     , flightData : FlightData
+    , pollingUrl : Maybe String
+    , pollingFinished : Bool
     }
 
 
@@ -37,8 +39,6 @@ type alias FlightSearchModel =
     { destination : String
     , outboundDate : String
     , inboundDate : String
-    , pollingUrl : Maybe String
-    , pollingFinished : Bool
     , pollingIncrement : Int
     , flightsForOrigin : FlightsForOrigin
     , activeTab : Int
@@ -47,6 +47,7 @@ type alias FlightSearchModel =
 
 type alias InitialFlightCriteria =
     { origin : String
+    , secondOrigin : Maybe String
     , destination : String
     , outboundDate : String
     , inboundDate : String
@@ -69,35 +70,61 @@ init criteria =
 
 initialModel : InitialFlightCriteria -> FlightSearchModel
 initialModel criteria =
-    { destination = criteria.destination
-    , outboundDate = criteria.outboundDate
-    , inboundDate = criteria.inboundDate
-    , pollingUrl = Nothing
-    , pollingFinished = False
-    , pollingIncrement = pollingIncrement
-    , flightsForOrigin = SingleOrigin <| OriginFlights criteria.origin Nothing
-    , activeTab = 0
-    }
+    let
+        flightsForOrigin =
+            case criteria.secondOrigin of
+                Nothing ->
+                    SingleOrigin <|
+                        { origin = criteria.origin
+                        , flightData = Nothing
+                        , pollingUrl = Nothing
+                        , pollingFinished = False
+                        }
+
+                Just secondOrigin ->
+                    MultipleOrigins
+                        { origin = criteria.origin
+                        , flightData = Nothing
+                        , pollingUrl = Nothing
+                        , pollingFinished = False
+                        }
+                        { origin = secondOrigin
+                        , flightData = Nothing
+                        , pollingUrl = Nothing
+                        , pollingFinished = False
+                        }
+    in
+        { destination = criteria.destination
+        , outboundDate = criteria.outboundDate
+        , inboundDate = criteria.inboundDate
+        , pollingIncrement = pollingIncrement
+        , flightsForOrigin = flightsForOrigin
+        , activeTab = 0
+        }
 
 
 initialCmd : FlightSearchModel -> Cmd Msg
 initialCmd model =
-    let
-        origin =
-            case model.flightsForOrigin of
-                SingleOrigin originAndFlights ->
-                    originAndFlights.origin
+    case model.flightsForOrigin of
+        SingleOrigin originAndFlights ->
+            startSessionForOrigin model FirstOrigin originAndFlights
 
-                MultipleOrigins originAndFlights secondOriginAndFlights ->
-                    originAndFlights.origin
-    in
-        Task.perform
-            (FlightSearchTag << StartLivePricingFailure)
-            (FlightSearchTag << StartLivePricingSuccess)
-        <|
-            StartLivePricing.start <|
-                StartLivePricing.StartLivePricingParams
-                    origin
-                    model.destination
-                    model.outboundDate
-                    model.inboundDate
+        MultipleOrigins originAndFlights secondOriginAndFlights ->
+            Cmd.batch
+                [ startSessionForOrigin model FirstOrigin originAndFlights
+                , startSessionForOrigin model SecondOrigin secondOriginAndFlights
+                ]
+
+
+startSessionForOrigin : FlightSearchModel -> OriginNumber -> OriginFlights -> Cmd Msg
+startSessionForOrigin model numberTag originAndFlights =
+    Task.perform
+        (FlightSearchTag << StartLivePricingFailure numberTag)
+        (FlightSearchTag << StartLivePricingSuccess numberTag)
+    <|
+        StartLivePricing.start <|
+            StartLivePricing.StartLivePricingParams
+                originAndFlights.origin
+                model.destination
+                model.outboundDate
+                model.inboundDate

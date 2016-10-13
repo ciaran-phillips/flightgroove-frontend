@@ -6,9 +6,14 @@ import Http
 
 
 type FlightSearchMsg
-    = StartLivePricingSuccess StartLivePricingResponse
-    | StartLivePricingFailure Http.Error
-    | PollLivePricingSuccess PollLivePricingResponse
-    | PollLivePricingFailure Http.Error
+    = StartLivePricingSuccess OriginNumber StartLivePricingResponse
+    | StartLivePricingFailure OriginNumber Http.Error
+    | PollLivePricingSuccess OriginNumber PollLivePricingResponse
+    | PollLivePricingFailure OriginNumber Http.Error
     | CloseFlightSearch
     | SelectFlightsTab Int
+
+
+type OriginNumber
+    = FirstOrigin
+    | SecondOrigin
