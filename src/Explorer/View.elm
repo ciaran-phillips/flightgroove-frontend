@@ -1,7 +1,7 @@
 module Explorer.View exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (id, class, classList)
+import Html.Attributes exposing (id, class, classList, src)
 import Explorer.Types exposing (RemoteData(..))
 import Explorer.Messages exposing (Msg(..))
 import Explorer.Model exposing (Model)
@@ -51,7 +51,8 @@ viewMap model =
                     False
     in
         div [ class "map-wrapper" ]
-            [ sidebar
+            [ skyscannerLogo
+            , sidebar
             , div [ classList [ ( "map__overlay", True ), ( "is-active", isLoading ) ] ]
                 [ div [ class "background-overlay" ] []
                 , Loading.spinner
@@ -62,6 +63,11 @@ viewMap model =
                 ]
             , div [ id mapId ] []
             ]
+
+
+skyscannerLogo : Html Msg
+skyscannerLogo =
+    img [ src "/assets/img/skyscanner-logo.png", class "skyscanner-logo" ] []
 
 
 mapId : String

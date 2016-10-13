@@ -462,7 +462,7 @@ label {
 .activity {
   margin-top: 10px;
   background-color: #fff;
-  padding: 10px;
+  padding: 10px 5px;
   box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
 }
 .activity__img > img {
@@ -472,7 +472,7 @@ label {
   font-size: 12px;
   font-weight: normal;
 }
-.activity__img {width: 140px;padding: 10px;float: left;}
+.activity__img {width: 140px;padding: 5px;float: left;}
 
 .activity__content {
     float: left;
@@ -523,7 +523,7 @@ label {
   cursor: pointer;
 }
 .mdl-tabs {
-    max-height: 90%;
+    height: 100%;
 }
 
 .map-wrapper {
@@ -544,4 +544,16 @@ label {
 
 .mdl-switch.is-checked .mdl-switch__track {
   background-color: rgba(244,244,244,.5);
+}
+.skyscanner-logo {
+    position: absolute;
+    z-index: 100;
+    right: 0;
+    top: 0;
+    padding: 0;
+    background-color: #526b98;
+}
+.attribution {
+  text-align: center;
+  font-style: italic;
 }
