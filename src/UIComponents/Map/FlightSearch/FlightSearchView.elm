@@ -7,6 +7,7 @@ import Material
 import Dict
 import String
 import Material.Tabs as Tabs
+import Material.Spinner as Loading
 
 
 -- Custom Modules
@@ -101,7 +102,13 @@ displayFlights : OriginFlights -> List (Html Msg)
 displayFlights originFlights =
     case originFlights.flightData of
         Nothing ->
-            [ text "loading itineraries" ]
+            [ div [ class "loading-spinner" ]
+                [ Loading.spinner
+                    [ Loading.active True
+                    , Loading.singleColor True
+                    ]
+                ]
+            ]
 
         Just data ->
             List.map (displayFlight data) data.itineraries
