@@ -13,6 +13,7 @@ import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
 import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel exposing (FlightsForOrigin(..))
 import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
 import UIComponents.Map.FlightSearch.FlightSearchCommands as FlightSearchCommands
+import UIComponents.Map.FlightSearch.FlightSearchUpdate as FlightSearchUpdate
 import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material
@@ -119,35 +120,7 @@ update msg model =
 
 updateFlightSearch : FlightSearchModel.FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )
 updateFlightSearch model msg =
-    case msg of
-        StartLivePricingSuccess response ->
-            let
-                newModel =
-                    { model | pollingUrl = Just response.location }
-            in
-                ( newModel, FlightSearchCommands.pollPrices newModel )
-
-        StartLivePricingFailure err ->
-            ( always model <| Debug.log "Start pricing error is " err, Cmd.none )
-
-        PollLivePricingSuccess response ->
-            let
-                newModel =
-                    { model
-                        | pollingFinished = Debug.log "response completed: " response.completed
-                        , flightsForOrigin = SingleOrigin { origin = "", flightData = Just response }
-                    }
-            in
-                ( newModel, FlightSearchCommands.pollPrices <| Debug.log "polling " newModel )
-
-        PollLivePricingFailure err ->
-            ( always model <| Debug.log "Polling error is " err, Cmd.none )
-
-        SelectFlightsTab tab ->
-            { model | activeTab = tab } ! []
-
-        CloseFlightSearch ->
-            model ! []
+    FlightSearchUpdate.update model msg
 
 
 updateSidebar : SidebarModel.SidebarModel -> SidebarMsg -> ( SidebarModel.SidebarModel, Cmd Msg )
@@ -254,6 +227,7 @@ newLiveFlightSearch model config =
     FlightSearchModel.init <|
         FlightSearchModel.InitialFlightCriteria
             model.criteria.locationId
+            model.criteria.secondOriginId
             config.destination
             config.outboundDate
             config.inboundDate

@@ -63,15 +63,15 @@ viewTabs mdl model firstOriginFlights secondOriginFlights =
         [ Tabs.activeTab model.activeTab
         , Tabs.onSelectTab <| FlightSearchTag << SelectFlightsTab
         ]
-        [ Tabs.label [] [ text "Flights from" ]
-        , Tabs.label [] [ text "Flights from" ]
+        [ Tabs.label [] [ text <| "Flights from " ++ firstOriginFlights.origin ]
+        , Tabs.label [] [ text <| "Flights from " ++ secondOriginFlights.origin ]
         ]
         [ case model.activeTab of
             0 ->
-                div [ class "sidebar--block" ] []
+                div [ class "sidebar--block" ] [ viewContent firstOriginFlights ]
 
             _ ->
-                div [ class "sidebar--block" ] []
+                div [ class "sidebar--block" ] [ viewContent secondOriginFlights ]
         ]
 
 

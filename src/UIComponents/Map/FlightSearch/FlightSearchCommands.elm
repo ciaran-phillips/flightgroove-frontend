@@ -1,31 +1,61 @@
 module UIComponents.Map.FlightSearch.FlightSearchCommands exposing (..)
 
 import API.PollLivePricing as PollLivePricing exposing (PollLivePricingParams, PollLivePricingResponse)
-import UIComponents.Map.FlightSearch.FlightSearchModel exposing (FlightSearchModel, FlightsForOrigin(..))
+import UIComponents.Map.FlightSearch.FlightSearchModel exposing (FlightSearchModel, FlightsForOrigin(..), OriginFlights)
 import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
+import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..), OriginNumber(..))
 import Task
 import Process
 import Http
 
 
-pollPrices : FlightSearchModel -> Cmd Msg
-pollPrices model =
-    case model.pollingUrl of
+pollPrices : OriginNumber -> FlightSearchModel -> Cmd Msg
+pollPrices numberTag model =
+    case numberTag of
+        FirstOrigin ->
+            pollFirstOrigin model
+
+        SecondOrigin ->
+            pollSecondOrigin model
+
+
+pollFirstOrigin : FlightSearchModel -> Cmd Msg
+pollFirstOrigin model =
+    case model.flightsForOrigin of
+        SingleOrigin originAndFlights ->
+            pollOrigin model FirstOrigin originAndFlights
+
+        MultipleOrigins originAndFlights secondOriginAndFlights ->
+            pollOrigin model FirstOrigin originAndFlights
+
+
+pollSecondOrigin : FlightSearchModel -> Cmd Msg
+pollSecondOrigin model =
+    case model.flightsForOrigin of
+        SingleOrigin originAndFlights ->
+            Cmd.none
+
+        MultipleOrigins originAndFlights secondOriginAndFlights ->
+            pollOrigin model SecondOrigin secondOriginAndFlights
+
+
+pollOrigin : FlightSearchModel -> OriginNumber -> OriginFlights -> Cmd Msg
+pollOrigin model numberTag originAndFlights =
+    case originAndFlights.pollingUrl of
         Nothing ->
             Cmd.none
 
         Just url ->
-            if model.pollingFinished then
+            if Debug.log "polling finished is " originAndFlights.pollingFinished then
                 Cmd.none
             else
                 Task.perform
-                    (FlightSearchTag << PollLivePricingFailure)
-                    (FlightSearchTag << PollLivePricingSuccess)
+                    (FlightSearchTag << PollLivePricingFailure numberTag)
+                    (FlightSearchTag << PollLivePricingSuccess numberTag)
                 <|
                     delayedPoll
                         url
-                        (createParams model)
+                        (createParams model originAndFlights.origin)
                         model.pollingIncrement
 
 
@@ -41,19 +71,10 @@ delayedPoll url params timeDelay =
         sleepTask `Task.andThen` (\n -> pollTask)
 
 
-createParams : FlightSearchModel -> PollLivePricingParams
-createParams model =
-    let
-        origin =
-            case model.flightsForOrigin of
-                SingleOrigin originAndFlights ->
-                    originAndFlights.origin
-
-                MultipleOrigins originAndFlights secondOriginAndFlights ->
-                    originAndFlights.origin
-    in
-        PollLivePricingParams
-            origin
-            model.destination
-            model.outboundDate
-            model.inboundDate
+createParams : FlightSearchModel -> String -> PollLivePricingParams
+createParams model origin =
+    PollLivePricingParams
+        origin
+        model.destination
+        model.outboundDate
+        model.inboundDate
