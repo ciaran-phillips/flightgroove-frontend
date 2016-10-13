@@ -93,6 +93,13 @@ viewContent flightData =
         ]
 
 
+formatName : String -> String
+formatName originName =
+    String.split "-" originName
+        |> List.head
+        |> Maybe.withDefault originName
+
+
 closeButton : Html Msg
 closeButton =
     div [ class "clearing" ]
@@ -143,10 +150,30 @@ displayPrice pricingOptions =
                     text "No price found"
 
                 Just pricingOption ->
-                    text <| toString pricingOption.price
+                    text <| formatPrice <| toString pricingOption.price
     in
         div [ class "flight-result__price mdl-cell mdl-cell--2-col" ]
             [ priceDisplay ]
+
+
+formatPrice : String -> String
+formatPrice price =
+    let
+        parts =
+            String.split "." price
+    in
+        case parts of
+            [] ->
+                price
+
+            [ x ] ->
+                "€" ++ x ++ ".00"
+
+            [ x, xs ] ->
+                "€" ++ x ++ "." ++ String.slice 0 2 xs
+
+            x :: xs :: _ ->
+                "€" ++ x ++ "." ++ String.slice 0 2 xs
 
 
 displayCarrier : PollLivePricingResponse -> Itinerary -> Html Msg
@@ -259,7 +286,7 @@ displayBookingLink pricingOptions =
 
 formatDate : String -> String
 formatDate dateString =
-    String.slice 11 15 dateString
+    String.slice 11 16 dateString
 
 
 formatDuration : Int -> String
