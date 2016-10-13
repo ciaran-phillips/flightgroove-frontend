@@ -26,16 +26,20 @@ view mdl model =
             text "No Cost of Living Data found for this city"
 
         Loading ->
-            div []
+            div [ class "loading-spinner" ]
                 [ Loading.spinner
                     [ Loading.active True
                     , Loading.singleColor True
                     ]
-                , text "loading"
                 ]
 
         Failure err ->
-            always (p [] [ text "Problem loading data for this city" ]) <| Debug.log "error is: " err
+            div [ class "sidebar--block" ]
+                [ div []
+                    [ text "Unfortunately, we don't yet have data for this location, but we're working on expanding our coverage "
+                    , text "(this can be because it isn't near a large city, or simply because we haven't associated this airport with a given city yet)"
+                    ]
+                ]
 
         Success data ->
             prices data

@@ -8,6 +8,7 @@ import Explorer.Types exposing (RemoteData(..))
 import API.GetActivities.Types exposing (Activities, Activity)
 import Html exposing (..)
 import Html.Attributes exposing (class, src, colspan)
+import Material.Spinner as Loading
 
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
@@ -17,7 +18,12 @@ view mdl model =
             text "No activities loaded"
 
         Loading ->
-            text "loading"
+            div [ class "loading-spinner" ]
+                [ Loading.spinner
+                    [ Loading.active True
+                    , Loading.singleColor True
+                    ]
+                ]
 
         Success data ->
             div [ class "activities-title" ]
