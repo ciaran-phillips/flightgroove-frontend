@@ -91,7 +91,7 @@ closeButton : Html Msg
 closeButton =
     div [ class "clearing" ]
         [ button
-            [ onClick <| FlightSearchTag CloseFlightSearch, class "mdl-button" ]
+            [ onClick <| FlightSearchTag CloseFlightSearch, class "mdl-button flight-search__close" ]
             [ text "Close Flight Search "
             , i [ class "material-icons" ] [ text "clear" ]
             ]
