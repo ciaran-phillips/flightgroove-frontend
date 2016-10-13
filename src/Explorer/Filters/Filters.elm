@@ -173,7 +173,8 @@ viewOriginSearch model =
 
         Enabled origin ->
             div []
-                [ div [ onClick ToggleOriginDropdown, class "origin-dropdown__airports" ]
+                [ label [] [ text "Departing from" ]
+                , div [ onClick ToggleOriginDropdown, class "origin-dropdown__airports" ]
                     [ div []
                         [ text <| "1: " ++ Location.viewAirportName model.firstOrigin
                         , i [ class "material-icons" ] [ text "expand_more" ]
