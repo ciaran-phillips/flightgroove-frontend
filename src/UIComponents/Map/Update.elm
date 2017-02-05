@@ -13,6 +13,7 @@ import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
 import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
 import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
 import UIComponents.Map.FlightSearch.FlightSearchCommands as FlightSearchCommands
+import UIComponents.Map.MapComp.MapMessages exposing (..)
 import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material
@@ -26,26 +27,6 @@ update msg model =
         -- MDL Boilerplate
         Mdl msg' ->
             Material.update msg' model
-
-        MapResponse response ->
-            ( { model | mapActive = response }, Cmd.none )
-
-        PopupResponse response ->
-            ( model, Cmd.none )
-
-        SelectDestination dest ->
-            let
-                airport =
-                    Dict.get dest model.airports
-            in
-                case airport of
-                    Nothing ->
-                        model ! []
-
-                    Just airport' ->
-                        ( { model | selectedDestination = Just dest, sidebar = Just (newSidebar airport' model) }
-                        , SidebarCommands.getFullMonthData model
-                        )
 
         ChangeCriteria newCriteria ->
             if newCriteria == model.criteria then
@@ -82,6 +63,9 @@ update msg model =
                 Response.LocationsResponse locations ->
                     model ! []
 
+        MapTag msg ->
+            updateMap model msg
+
         SidebarTag (ShowFlights config) ->
             let
                 ( flightSearchModel, flightSearchCmd ) =
@@ -115,6 +99,30 @@ update msg model =
                             updateFlightSearch flightSearch msg
                     in
                         ( { model | flightSearch = Just updatedFlightSearch }, newCmd )
+
+
+updateMap : Model -> MapMsg -> ( Model, Cmd Msg )
+updateMap model msg =
+    case msg of
+        MapResponse response ->
+            ( { model | mapActive = response }, Cmd.none )
+
+        PopupResponse response ->
+            ( model, Cmd.none )
+
+        SelectDestination dest ->
+            let
+                airport =
+                    Dict.get dest model.airports
+            in
+                case airport of
+                    Nothing ->
+                        model ! []
+
+                    Just airport' ->
+                        ( { model | selectedDestination = Just dest, sidebar = Just (newSidebar airport' model) }
+                        , SidebarCommands.getFullMonthData model
+                        )
 
 
 updateFlightSearch : FlightSearchModel.FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel.FlightSearchModel, Cmd Msg )

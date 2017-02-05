@@ -2,6 +2,7 @@ port module UIComponents.Map.Map exposing (..)
 
 import UIComponents.Map.Ports as Ports
 import UIComponents.Map.Messages as Messages
+import UIComponents.Map.MapComp.MapMessages as MapMessages
 import UIComponents.Map.Update as Update
 import UIComponents.Map.View as View
 import UIComponents.Map.Model as Model
@@ -23,7 +24,8 @@ initialModel =
 
 initialCmd : Cmd Msg
 initialCmd =
-    Ports.map "map"
+    Ports.map
+        "map"
 
 
 view : Model -> Html Msg
@@ -39,7 +41,7 @@ update msg model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Ports.mapCallback Messages.MapResponse
-        , Ports.popupCallback Messages.PopupResponse
-        , Ports.popupSelected Messages.SelectDestination
+        [ Ports.mapCallback <| Messages.MapTag << MapMessages.MapResponse
+        , Ports.popupCallback <| Messages.MapTag << MapMessages.PopupResponse
+        , Ports.popupSelected <| Messages.MapTag << MapMessages.SelectDestination
         ]
