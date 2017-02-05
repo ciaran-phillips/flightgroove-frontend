@@ -1,7 +1,6 @@
 module UIComponents.Map.Model exposing (..)
 
 import UIComponents.Map.Filters.Types exposing (FilterCriteria)
-import UIComponents.Map.Types exposing (..)
 import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
 import UIComponents.Types exposing (RemoteData(..))
 import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel

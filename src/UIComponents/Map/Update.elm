@@ -3,7 +3,6 @@ module UIComponents.Map.Update exposing (update)
 import UIComponents.Types exposing (RemoteData(..))
 import UIComponents.Map.Messages exposing (..)
 import UIComponents.Map.Model as Model exposing (Model)
-import UIComponents.Map.Types exposing (..)
 import UIComponents.Map.Ports as Ports
 import UIComponents.Map.Commands as Commands
 import UIComponents.Map.Sidebar.SidebarUpdate as SidebarUpdate
