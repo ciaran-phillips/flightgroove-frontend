@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import UIComponents.Map.Map as Map
-import UIComponents.Filters as Filters
+import UIComponents.Map.Filters.Filters as Filters
 
 
 type alias Model =

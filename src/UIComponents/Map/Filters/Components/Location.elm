@@ -1,4 +1,4 @@
-module UIComponents.Filters.Location
+module UIComponents.Map.Filters.Components.Location
     exposing
         ( Model
         , Msg

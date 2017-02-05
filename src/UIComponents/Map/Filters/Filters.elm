@@ -1,7 +1,7 @@
-module UIComponents.Filters exposing (..)
+module UIComponents.Map.Filters.Filters exposing (..)
 
-import UIComponents.Filters.Location as Location
-import UIComponents.Filters.DateField as DateField
+import UIComponents.Map.Filters.Components.Location as Location
+import UIComponents.Map.Filters.Components.DateField as DateField
 import UIComponents.Types exposing (FilterCriteria)
 import Html.App
 import Html exposing (Html, div, text, button, label, i)

@@ -14,7 +14,7 @@ import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
 import UIComponents.Map.Map as Map
 import UIComponents.Map.Messages as MapMessages
-import UIComponents.Filters as Filters
+import UIComponents.Map.Filters.Filters as Filters
 
 
 init : ( Model, Cmd Msg )
