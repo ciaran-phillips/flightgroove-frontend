@@ -1,10 +1,10 @@
-module UIComponents.Map.Sidebar.ActivitiesView exposing (..)
+module Explorer.Sidebar.ActivitiesView exposing (..)
 
 import Material
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
-import UIComponents.Map.Messages exposing (..)
-import UIComponents.Types exposing (RemoteData(..))
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Sidebar.SidebarMessages exposing (..)
+import Explorer.Messages exposing (..)
+import Explorer.Types exposing (RemoteData(..))
 import API.Activities exposing (Activities, Activity)
 import Html exposing (..)
 import Html.Attributes exposing (class, src, colspan)

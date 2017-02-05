@@ -1,4 +1,4 @@
-module UIComponents.Map.MapComp.MapMessages exposing (..)
+module Explorer.MapComp.MapMessages exposing (..)
 
 
 type MapMsg

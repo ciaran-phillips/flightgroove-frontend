@@ -1,4 +1,4 @@
-module UIComponents.Map.Filters.Components.Location
+module Explorer.Filters.Components.Location
     exposing
         ( Model
         , Msg
@@ -34,7 +34,7 @@ import Autocomplete
 import API.Response as Response
 import API.Skyscanner as API
 import API.GetUserLocation as GetUserLocation
-import UIComponents.Types as Types exposing (RemoteData(..))
+import Explorer.Types as Types exposing (RemoteData(..))
 
 
 type alias Model =

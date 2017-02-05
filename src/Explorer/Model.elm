@@ -1,9 +1,9 @@
-module UIComponents.Map.Model exposing (..)
+module Explorer.Model exposing (..)
 
-import UIComponents.Map.Filters.Types exposing (FilterCriteria)
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Types exposing (RemoteData(..))
-import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
+import Explorer.Filters.Types exposing (FilterCriteria)
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Types exposing (RemoteData(..))
+import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
 import API.Response as Response
 import Material
 import Http

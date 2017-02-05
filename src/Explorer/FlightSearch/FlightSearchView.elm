@@ -1,4 +1,4 @@
-module UIComponents.Map.FlightSearch.FlightSearchView exposing (..)
+module Explorer.FlightSearch.FlightSearchView exposing (..)
 
 import Html exposing (..)
 import Html.Events exposing (onClick)
@@ -10,9 +10,9 @@ import String
 
 -- Custom Modules
 
-import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
-import UIComponents.Map.Messages exposing (Msg(FlightSearchTag))
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
+import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
+import Explorer.Messages exposing (Msg(FlightSearchTag))
+import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
 import API.PollLivePricing as PollLivePricing
     exposing
         ( PollLivePricingResponse

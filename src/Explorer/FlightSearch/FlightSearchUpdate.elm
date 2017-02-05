@@ -1,2 +1,2 @@
-module UIComponents.Map.FlightSearch.FlightSearchUpdate exposing (..)
+module Explorer.FlightSearch.FlightSearchUpdate exposing (..)
 

@@ -1,18 +1,18 @@
-module UIComponents.Map.Update exposing (update)
+module Explorer.Update exposing (update)
 
-import UIComponents.Types exposing (RemoteData(..))
-import UIComponents.Map.Messages exposing (..)
-import UIComponents.Map.Model as Model exposing (Model)
-import UIComponents.Map.Ports as Ports
-import UIComponents.Map.Commands as Commands
-import UIComponents.Map.Sidebar.SidebarUpdate as SidebarUpdate
-import UIComponents.Map.Sidebar.SidebarCommands as SidebarCommands
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
-import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
-import UIComponents.Map.FlightSearch.FlightSearchCommands as FlightSearchCommands
-import UIComponents.Map.MapComp.MapMessages exposing (..)
+import Explorer.Types exposing (RemoteData(..))
+import Explorer.Messages exposing (..)
+import Explorer.Model as Model exposing (Model)
+import Explorer.Ports as Ports
+import Explorer.Commands as Commands
+import Explorer.Sidebar.SidebarUpdate as SidebarUpdate
+import Explorer.Sidebar.SidebarCommands as SidebarCommands
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Sidebar.SidebarMessages exposing (..)
+import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
+import Explorer.FlightSearch.FlightSearchMessages exposing (..)
+import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
+import Explorer.MapComp.MapMessages exposing (..)
 import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material

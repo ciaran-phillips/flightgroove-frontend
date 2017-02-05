@@ -1,4 +1,4 @@
-module UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
+module Explorer.FlightSearch.FlightSearchMessages exposing (..)
 
 import API.StartLivePricing exposing (StartLivePricingResponse)
 import API.PollLivePricing exposing (PollLivePricingResponse)

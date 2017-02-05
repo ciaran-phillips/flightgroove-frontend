@@ -1,4 +1,4 @@
-module UIComponents.Map.Sidebar.SidebarUpdate
+module Explorer.Sidebar.SidebarUpdate
     exposing
         ( focusGridOn
         , updateGridPosition
@@ -6,12 +6,12 @@ module UIComponents.Map.Sidebar.SidebarUpdate
         , getActivities
         )
 
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
-import UIComponents.Map.Sidebar.SidebarCommands as SidebarCommands
-import UIComponents.Map.Model as Model
-import UIComponents.Types exposing (RemoteData(..))
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Messages exposing (Msg(..))
+import Explorer.Sidebar.SidebarMessages exposing (..)
+import Explorer.Sidebar.SidebarCommands as SidebarCommands
+import Explorer.Model as Model
+import Explorer.Types exposing (RemoteData(..))
 import Http
 import API.Response as Response
 import API.CostOfLiving as CostOfLiving

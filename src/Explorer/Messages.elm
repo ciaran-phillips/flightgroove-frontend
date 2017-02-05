@@ -1,12 +1,12 @@
-module UIComponents.Map.Messages exposing (..)
+module Explorer.Messages exposing (..)
 
 import API.Response as Response
 import Http
-import UIComponents.Map.Filters.Types exposing (FilterCriteria)
+import Explorer.Filters.Types exposing (FilterCriteria)
 import Material
-import UIComponents.Map.Sidebar.SidebarMessages exposing (SidebarMsg)
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg)
-import UIComponents.Map.MapComp.MapMessages exposing (MapMsg)
+import Explorer.Sidebar.SidebarMessages exposing (SidebarMsg)
+import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg)
+import Explorer.MapComp.MapMessages exposing (MapMsg)
 
 
 type Msg

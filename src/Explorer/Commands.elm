@@ -1,8 +1,8 @@
-module UIComponents.Map.Commands exposing (..)
+module Explorer.Commands exposing (..)
 
-import UIComponents.Map.Filters.Types as FiltersTypes
-import UIComponents.Map.Ports as Ports
-import UIComponents.Map.Messages exposing (..)
+import Explorer.Filters.Types as FiltersTypes
+import Explorer.Ports as Ports
+import Explorer.Messages exposing (..)
 import API.Response as Response
 import API.Skyscanner as API
 import Http

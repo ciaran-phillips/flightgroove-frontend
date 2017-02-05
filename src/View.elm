@@ -12,8 +12,8 @@ import Html.Events exposing (onClick)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model)
-import UIComponents.Map.Map as Map
-import UIComponents.Map.Filters.Filters as Filters
+import Explorer.Map as Map
+import Explorer.Filters.Filters as Filters
 
 
 view : Model -> Html Msg

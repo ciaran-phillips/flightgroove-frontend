@@ -1,9 +1,9 @@
-module UIComponents.Map.FlightSearch.FlightSearchCommands exposing (..)
+module Explorer.FlightSearch.FlightSearchCommands exposing (..)
 
 import API.PollLivePricing as PollLivePricing exposing (PollLivePricingParams, PollLivePricingResponse)
-import UIComponents.Map.FlightSearch.FlightSearchModel exposing (FlightSearchModel)
-import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
+import Explorer.FlightSearch.FlightSearchModel exposing (FlightSearchModel)
+import Explorer.Messages exposing (Msg(..))
+import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
 import Task
 import Process
 import Http

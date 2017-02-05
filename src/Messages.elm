@@ -1,7 +1,7 @@
 module Messages exposing (..)
 
-import UIComponents.Map.Map as Map
-import UIComponents.Map.Filters.Filters as Filters
+import Explorer.Map as Map
+import Explorer.Filters.Filters as Filters
 
 
 type Msg

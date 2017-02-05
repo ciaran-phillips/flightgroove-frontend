@@ -1,13 +1,13 @@
-module UIComponents.Map.View exposing (view)
+module Explorer.View exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, class, classList)
-import UIComponents.Types exposing (RemoteData(..))
-import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.Model exposing (Model)
-import UIComponents.Map.Sidebar.SidebarView as SidebarView
-import UIComponents.Map.FlightSearch.FlightSearchView as FlightSearchView
-import UIComponents.Map.FlightSearch.FlightSearchModel as FlightSearchModel
+import Explorer.Types exposing (RemoteData(..))
+import Explorer.Messages exposing (Msg(..))
+import Explorer.Model exposing (Model)
+import Explorer.Sidebar.SidebarView as SidebarView
+import Explorer.FlightSearch.FlightSearchView as FlightSearchView
+import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
 import Material
 import Material.Spinner as Loading
 import Material.Options as Options

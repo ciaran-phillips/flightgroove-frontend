@@ -1,4 +1,4 @@
-module UIComponents.Map.Filters.Components.DateField exposing (..)
+module Explorer.Filters.Components.DateField exposing (..)
 
 import Date exposing (Date, Day(..), Month(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings)

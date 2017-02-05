@@ -1,9 +1,9 @@
-module UIComponents.Map.Sidebar.CostOfLivingView exposing (..)
+module Explorer.Sidebar.CostOfLivingView exposing (..)
 
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Map.Messages exposing (Msg(..))
-import UIComponents.Map.Sidebar.SidebarMessages exposing (SidebarMsg(..))
-import UIComponents.Types exposing (RemoteData(..))
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Messages exposing (Msg(..))
+import Explorer.Sidebar.SidebarMessages exposing (SidebarMsg(..))
+import Explorer.Types exposing (RemoteData(..))
 import Material
 import Material.Spinner as Loading
 import Material.Options as Options

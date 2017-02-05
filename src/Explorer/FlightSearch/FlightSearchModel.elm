@@ -1,12 +1,12 @@
-module UIComponents.Map.FlightSearch.FlightSearchModel
+module Explorer.FlightSearch.FlightSearchModel
     exposing
         ( init
         , FlightSearchModel
         , InitialFlightCriteria
         )
 
-import UIComponents.Map.Messages exposing (..)
-import UIComponents.Map.FlightSearch.FlightSearchMessages exposing (..)
+import Explorer.Messages exposing (..)
+import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import API.PollLivePricing as PollLivePricing
 import API.StartLivePricing as StartLivePricing
 import Task

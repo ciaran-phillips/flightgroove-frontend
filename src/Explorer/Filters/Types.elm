@@ -1,4 +1,4 @@
-module UIComponents.Map.Filters.Types exposing (FilterCriteria)
+module Explorer.Filters.Types exposing (FilterCriteria)
 
 
 type alias FilterCriteria =

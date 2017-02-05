@@ -1,4 +1,4 @@
-module UIComponents.Map.Sidebar.SidebarMessages exposing (..)
+module Explorer.Sidebar.SidebarMessages exposing (..)
 
 import API.Response as Response
 import Http
@@ -8,7 +8,7 @@ import API.Activities as Activities
 
 -- Custom Modules
 
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
+import Explorer.Sidebar.SidebarModel as SidebarModel
 
 
 type SidebarMsg

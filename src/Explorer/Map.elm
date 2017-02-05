@@ -1,11 +1,11 @@
-port module UIComponents.Map.Map exposing (..)
+port module Explorer.Map exposing (..)
 
-import UIComponents.Map.Ports as Ports
-import UIComponents.Map.Messages as Messages
-import UIComponents.Map.MapComp.MapMessages as MapMessages
-import UIComponents.Map.Update as Update
-import UIComponents.Map.View as View
-import UIComponents.Map.Model as Model
+import Explorer.Ports as Ports
+import Explorer.Messages as Messages
+import Explorer.MapComp.MapMessages as MapMessages
+import Explorer.Update as Update
+import Explorer.View as View
+import Explorer.Model as Model
 import Html exposing (Html)
 
 

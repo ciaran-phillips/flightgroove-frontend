@@ -1,9 +1,9 @@
-module UIComponents.Map.Sidebar.SidebarCommands exposing (..)
+module Explorer.Sidebar.SidebarCommands exposing (..)
 
 import API.Skyscanner as API
-import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
-import UIComponents.Map.Messages exposing (Msg(SidebarTag))
-import UIComponents.Map.Model exposing (Model)
+import Explorer.Sidebar.SidebarMessages exposing (..)
+import Explorer.Messages exposing (Msg(SidebarTag))
+import Explorer.Model exposing (Model)
 import Task
 import API.CostOfLiving as CostOfLiving
 import API.Activities as Activities

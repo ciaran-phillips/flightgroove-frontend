@@ -12,9 +12,9 @@ import Html.App
 import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
-import UIComponents.Map.Map as Map
-import UIComponents.Map.Messages as MapMessages
-import UIComponents.Map.Filters.Filters as Filters
+import Explorer.Map as Map
+import Explorer.Messages as MapMessages
+import Explorer.Filters.Filters as Filters
 
 
 init : ( Model, Cmd Msg )

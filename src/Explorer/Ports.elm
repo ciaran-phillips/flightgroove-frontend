@@ -1,6 +1,6 @@
-port module UIComponents.Map.Ports exposing (..)
+port module Explorer.Ports exposing (..)
 
-import UIComponents.Map.MapComp.MapTypes exposing (PopupDefinition)
+import Explorer.MapComp.MapTypes exposing (PopupDefinition)
 
 
 -- Commands

@@ -1,7 +1,7 @@
-module UIComponents.Map.Sidebar.SidebarModel exposing (..)
+module Explorer.Sidebar.SidebarModel exposing (..)
 
 import API.Response as Response
-import UIComponents.Types as Types exposing (RemoteData(..))
+import Explorer.Types as Types exposing (RemoteData(..))
 import API.CostOfLiving as CostOfLiving
 import API.Activities as Activities
 import Maybe

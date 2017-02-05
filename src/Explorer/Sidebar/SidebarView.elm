@@ -1,4 +1,4 @@
-module UIComponents.Map.Sidebar.SidebarView exposing (view)
+module Explorer.Sidebar.SidebarView exposing (view)
 
 import Html exposing (..)
 import Html.Attributes exposing (class, style, src)
@@ -13,13 +13,13 @@ import Material.Tabs as Tabs
 
 -- Custom Modules
 
-import UIComponents.Map.Messages exposing (Msg(SidebarTag, Mdl))
-import UIComponents.Map.Sidebar.SidebarMessages exposing (..)
-import UIComponents.Map.Sidebar.SidebarModel as SidebarModel
-import UIComponents.Types exposing (RemoteData(..))
+import Explorer.Messages exposing (Msg(SidebarTag, Mdl))
+import Explorer.Sidebar.SidebarMessages exposing (..)
+import Explorer.Sidebar.SidebarModel as SidebarModel
+import Explorer.Types exposing (RemoteData(..))
 import API.Response as Response
-import UIComponents.Map.Sidebar.CostOfLivingView as CostOfLivingView
-import UIComponents.Map.Sidebar.ActivitiesView as ActivitiesView
+import Explorer.Sidebar.CostOfLivingView as CostOfLivingView
+import Explorer.Sidebar.ActivitiesView as ActivitiesView
 
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg

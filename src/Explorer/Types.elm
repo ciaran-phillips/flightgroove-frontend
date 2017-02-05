@@ -1,4 +1,4 @@
-module UIComponents.Types exposing (..)
+module Explorer.Types exposing (..)
 
 
 type RemoteData err a
