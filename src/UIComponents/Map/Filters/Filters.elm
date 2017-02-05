@@ -2,7 +2,7 @@ module UIComponents.Map.Filters.Filters exposing (..)
 
 import UIComponents.Map.Filters.Components.Location as Location
 import UIComponents.Map.Filters.Components.DateField as DateField
-import UIComponents.Types exposing (FilterCriteria)
+import UIComponents.Map.Filters.Types exposing (FilterCriteria)
 import Html.App
 import Html exposing (Html, div, text, button, label, i)
 import Html.Events exposing (onClick)

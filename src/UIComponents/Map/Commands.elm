@@ -1,6 +1,6 @@
 module UIComponents.Map.Commands exposing (..)
 
-import UIComponents.Types as Types
+import UIComponents.Map.Filters.Types as FiltersTypes
 import UIComponents.Map.Ports as Ports
 import UIComponents.Map.Messages exposing (..)
 import API.Response as Response
@@ -10,7 +10,7 @@ import Task
 import String
 
 
-getApiData : Types.FilterCriteria -> Cmd Msg
+getApiData : FiltersTypes.FilterCriteria -> Cmd Msg
 getApiData criteria =
     Task.perform FetchFail FetchSuccess <|
         if String.isEmpty criteria.locationId then
@@ -35,7 +35,7 @@ popupFromRoute route =
         )
 
 
-getRoutes : Types.FilterCriteria -> Task.Task Http.Error Response.Response
+getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error Response.Response
 getRoutes criteria =
     API.callRoutes
         { origin = criteria.locationId
