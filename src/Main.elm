@@ -12,7 +12,6 @@ import Html.App
 import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
-import UIComponents.Menu as Menu
 import UIComponents.Map.Map as Map
 import UIComponents.Map.Messages as MapMessages
 import UIComponents.Filters as Filters
@@ -24,8 +23,7 @@ init =
         ( filtersModel, filtersCmd ) =
             Filters.init
     in
-        ( { menuModel = Menu.initialModel
-          , route = ""
+        ( { route = ""
           , mapModel = Map.initialModel
           , filtersModel = filtersModel
           }
@@ -39,13 +37,6 @@ init =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        MenuMsg msg ->
-            let
-                ( newModel, newCmd ) =
-                    Menu.update msg model.menuModel
-            in
-                ( { model | menuModel = newModel }, Cmd.map MenuMsg newCmd )
-
         MapMsg msg ->
             let
                 ( newModel, newCmd ) =
@@ -80,8 +71,7 @@ update message model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Sub.map MenuMsg (Menu.subscriptions model.menuModel)
-        , Sub.map MapMsg (Map.subscriptions model.mapModel)
+        [ Sub.map MapMsg (Map.subscriptions model.mapModel)
         , Sub.map FilterMsg (Filters.subscriptions model.filtersModel)
         ]
 

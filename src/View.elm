@@ -12,7 +12,6 @@ import Html.Events exposing (onClick)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model)
-import UIComponents.Menu as Menu
 import UIComponents.Map.Map as Map
 import UIComponents.Filters as Filters
 
@@ -27,7 +26,6 @@ basePage model =
     div [ class "wrapper" ]
         [ div []
             [ div [ class "mdl-grid header" ] <| topBarRows model
-            , div [ class "mdl-grid filterbar" ] <| filterRows model
             ]
         , mapContainer model
         ]
@@ -51,15 +49,6 @@ topBarRows model =
             ]
         ]
     , div [ class "mdl-cell mdl-cell--2-col" ] [ dateToggle model, originsToggle model ]
-    ]
-
-
-filterRows : Model -> List (Html Msg)
-filterRows model =
-    [ div [ class "mdl-cell mdl-cell--3-col" ] []
-    , div [ class "mdl-cell mdl-cell--2-col" ] [ Html.App.map MenuMsg (Menu.view model.menuModel) ]
-    , div [ class "mdl-cell mdl-cell--2-col" ] []
-    , div [ class "mdl-cell mdl-cell--2-col" ] []
     ]
 
 

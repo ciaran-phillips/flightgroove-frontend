@@ -10,8 +10,7 @@ import UIComponents.Map.MapComp.MapMessages exposing (MapMsg)
 
 
 type Msg
-    = FetchData
-    | FetchSuccess Response.Response
+    = FetchSuccess Response.Response
     | FetchFail Http.Error
     | ChangeCriteria FilterCriteria
     | Mdl (Material.Msg Msg)

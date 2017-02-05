@@ -42,9 +42,6 @@ update msg model =
                     ]
                 )
 
-        FetchData ->
-            ( { model | mapData = Loading }, Commands.getApiData model.criteria )
-
         FetchFail error ->
             let
                 model' =
