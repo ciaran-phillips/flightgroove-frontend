@@ -2,8 +2,8 @@ module Explorer.Sidebar.SidebarMessages exposing (..)
 
 import API.Response as Response
 import Http
-import API.CostOfLiving as COL
-import API.Activities as Activities
+import API.GetCostOfLiving.Types as CostOfLivingTypes
+import API.GetActivities.Types as ActivitiesTypes
 
 
 -- Custom Modules
@@ -20,9 +20,9 @@ type SidebarMsg
     | ShowFlights FlightSearchConfig
     | CloseSidebar
     | OpenSidebar
-    | CostOfLivingFetchSuccess COL.CostOfLiving
+    | CostOfLivingFetchSuccess CostOfLivingTypes.CostOfLiving
     | CostOfLivingFetchFailure Http.Error
-    | ActivitiesFetchSuccess Activities.Activities
+    | ActivitiesFetchSuccess ActivitiesTypes.Activities
     | ActivitiesFetchFailure Http.Error
 
 

@@ -1,9 +1,9 @@
-module API.CostOfLivingDecoder exposing (..)
+module API.GetCostOfLiving.Decoder exposing (..)
 
 import Json.Encode
 import Json.Decode exposing ((:=))
 import Json.Decode.Extra exposing ((|:))
-import API.CostOfLivingTypes exposing (..)
+import API.GetCostOfLiving.Types exposing (..)
 
 
 decoder : Json.Decode.Decoder CostOfLiving
@@ -29,6 +29,7 @@ decodeTravelCosts =
         |: ("travelCostsIndex" := Json.Decode.string)
         |: ("backpackerCostPerDay" := Json.Decode.string)
         |: ("travelCostPerDay" := Json.Decode.string)
+
 
 decodePrices : Json.Decode.Decoder Prices
 decodePrices =

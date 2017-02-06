@@ -33,7 +33,7 @@ import Autocomplete
 
 import API.Response as Response
 import API.Skyscanner as API
-import API.GetUserLocation as GetUserLocation
+import API.GetUserLocation.Action as GetUserLocation
 import Explorer.Types as Types exposing (RemoteData(..))
 
 
@@ -75,7 +75,7 @@ model =
 
 initialCmd : Cmd Msg
 initialCmd =
-    Task.perform GetUserLocationFailure GetUserLocationSuccess GetUserLocation.getUserLocation
+    Task.perform GetUserLocationFailure GetUserLocationSuccess GetUserLocation.get
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )

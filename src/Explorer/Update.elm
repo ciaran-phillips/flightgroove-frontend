@@ -13,7 +13,6 @@ import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.MapComp.MapMessages exposing (..)
-import API.PollLivePricing as PollLivePricing
 import API.Response as Response
 import Material
 import Process

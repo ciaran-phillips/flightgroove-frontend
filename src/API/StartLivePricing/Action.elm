@@ -1,4 +1,9 @@
-module API.StartLivePricing exposing (..)
+module API.StartLivePricing.Action
+    exposing
+        ( StartLivePricingResponse
+        , StartLivePricingParams
+        , start
+        )
 
 import Json.Decode as Decode exposing ((:=))
 import Http
@@ -18,14 +23,14 @@ type alias StartLivePricingParams =
     }
 
 
-startLivePricing : StartLivePricingParams -> Task.Task Http.Error StartLivePricingResponse
-startLivePricing params =
-    Http.get startLivePricingDecoder <|
+start : StartLivePricingParams -> Task.Task Http.Error StartLivePricingResponse
+start params =
+    Http.get decoder <|
         buildUrl params
 
 
-startLivePricingDecoder : Decode.Decoder StartLivePricingResponse
-startLivePricingDecoder =
+decoder : Decode.Decoder StartLivePricingResponse
+decoder =
     Decode.object1 StartLivePricingResponse
         ("location" := Decode.string)
 

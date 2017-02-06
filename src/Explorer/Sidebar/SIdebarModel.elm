@@ -2,8 +2,8 @@ module Explorer.Sidebar.SidebarModel exposing (..)
 
 import API.Response as Response
 import Explorer.Types as Types exposing (RemoteData(..))
-import API.CostOfLiving as CostOfLiving
-import API.Activities as Activities
+import API.GetCostOfLiving.Types as CostOfLivingTypes
+import API.GetActivities.Types as ActivitiesTypes
 import Maybe
 import Array
 import Http
@@ -18,8 +18,8 @@ type alias SidebarModel =
     , selectedOutboundDate : String
     , selectedInboundDate : String
     , activeTab : Int
-    , costOfLivingData : RemoteData Http.Error CostOfLiving.CostOfLiving
-    , activities : RemoteData Http.Error Activities.Activities
+    , costOfLivingData : RemoteData Http.Error CostOfLivingTypes.CostOfLiving
+    , activities : RemoteData Http.Error ActivitiesTypes.Activities
     , sidebarVisible : Bool
     }
 

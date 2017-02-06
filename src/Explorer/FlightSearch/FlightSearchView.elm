@@ -13,7 +13,8 @@ import String
 import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
 import Explorer.Messages exposing (Msg(FlightSearchTag))
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
-import API.PollLivePricing as PollLivePricing
+import API.PollLivePricing.Action as PollLivePricing
+import API.PollLivePricing.Types as PollLivePricingTypes
     exposing
         ( PollLivePricingResponse
         , Itinerary
@@ -126,10 +127,10 @@ displayItineraryDetails fullFlightData itinerary =
             PollLivePricing.getLeg fullFlightData.legs itinerary
 
         outboundLeg =
-            getLeg PollLivePricing.Outbound
+            getLeg PollLivePricingTypes.Outbound
 
         inboundLeg =
-            getLeg PollLivePricing.Inbound
+            getLeg PollLivePricingTypes.Inbound
     in
         div [ class "flight-result__details mdl-cell--6-col" ]
             [ table []
@@ -139,7 +140,7 @@ displayItineraryDetails fullFlightData itinerary =
             ]
 
 
-displayLegDetails : List PollLivePricing.Place -> Maybe PollLivePricing.Leg -> Html Msg
+displayLegDetails : List PollLivePricingTypes.Place -> Maybe PollLivePricingTypes.Leg -> Html Msg
 displayLegDetails places leg =
     case leg of
         Nothing ->
@@ -164,7 +165,7 @@ displayLegDetails places leg =
                 ]
 
 
-displayAirport : List PollLivePricing.Place -> Int -> Html Msg
+displayAirport : List PollLivePricingTypes.Place -> Int -> Html Msg
 displayAirport places placeId =
     let
         place =
@@ -174,7 +175,7 @@ displayAirport places placeId =
             Nothing ->
                 text ""
 
-            Just (PollLivePricing.AirportTag airport) ->
+            Just (PollLivePricingTypes.AirportTag airport) ->
                 text airport.name
 
             _ ->

@@ -5,8 +5,8 @@ import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Messages exposing (Msg(SidebarTag))
 import Explorer.Model exposing (Model)
 import Task
-import API.CostOfLiving as CostOfLiving
-import API.Activities as Activities
+import API.GetCostOfLiving.Action as GetCostOfLiving
+import API.GetActivities.Action as GetActivities
 
 
 getFullMonthData : Model -> Cmd Msg
@@ -32,10 +32,10 @@ getFullMonthData model =
 getCostOfLivingData : String -> Cmd Msg
 getCostOfLivingData cityId =
     Task.perform (SidebarTag << CostOfLivingFetchFailure) (SidebarTag << CostOfLivingFetchSuccess) <|
-        CostOfLiving.getData { cityId = cityId }
+        GetCostOfLiving.get { cityId = cityId }
 
 
 getActivities : String -> Cmd Msg
 getActivities query =
     Task.perform (SidebarTag << ActivitiesFetchFailure) (SidebarTag << ActivitiesFetchSuccess) <|
-        Activities.getData { locationQuery = query }
+        GetActivities.get { locationQuery = query }

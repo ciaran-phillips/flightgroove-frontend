@@ -14,8 +14,8 @@ import Explorer.Model as Model
 import Explorer.Types exposing (RemoteData(..))
 import Http
 import API.Response as Response
-import API.CostOfLiving as CostOfLiving
-import API.Activities as Activities
+import API.GetCostOfLiving.Types as CostOfLivingTypes
+import API.GetActivities.Types as ActivitiesTypes
 
 
 {-| Move the grid to display the given X and Y coordinates.
@@ -58,7 +58,7 @@ updateGridPosition msg sidebar =
                 { position | x = increase 4 position.x maxPosX }
 
 
-getCostOfLiving : SidebarModel.SidebarModel -> ( RemoteData Http.Error CostOfLiving.CostOfLiving, Cmd Msg )
+getCostOfLiving : SidebarModel.SidebarModel -> ( RemoteData Http.Error CostOfLivingTypes.CostOfLiving, Cmd Msg )
 getCostOfLiving model =
     case model.costOfLivingData of
         Empty ->
@@ -70,7 +70,7 @@ getCostOfLiving model =
             ( model.costOfLivingData, Cmd.none )
 
 
-getActivities : SidebarModel.SidebarModel -> ( RemoteData Http.Error Activities.Activities, Cmd Msg )
+getActivities : SidebarModel.SidebarModel -> ( RemoteData Http.Error ActivitiesTypes.Activities, Cmd Msg )
 getActivities model =
     let
         query =

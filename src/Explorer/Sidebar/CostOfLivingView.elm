@@ -9,7 +9,7 @@ import Material.Spinner as Loading
 import Material.Options as Options
 import Html exposing (..)
 import Html.Attributes exposing (class)
-import API.CostOfLiving as CostOfLiving
+import API.GetCostOfLiving.Types as CostOfLivingTypes
 
 
 type alias ItemDisplay =
@@ -41,7 +41,7 @@ view mdl model =
             prices data
 
 
-prices : CostOfLiving.CostOfLiving -> Html Msg
+prices : CostOfLivingTypes.CostOfLiving -> Html Msg
 prices data =
     div [ class "cost-list" ] <|
         List.map itemGroup <|
@@ -66,7 +66,7 @@ colItem item =
         ]
 
 
-items : CostOfLiving.CostOfLiving -> List (List ItemDisplay)
+items : CostOfLivingTypes.CostOfLiving -> List (List ItemDisplay)
 items data =
     let
         prices =

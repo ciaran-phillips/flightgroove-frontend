@@ -1,7 +1,7 @@
-module API.CostOfLiving exposing (..)
+module API.GetCostOfLiving.Action exposing (..)
 
-import API.CostOfLivingDecoder as CostOfLivingDecoder
-import API.CostOfLivingTypes as Types
+import API.GetCostOfLiving.Decoder as Decoder
+import API.GetCostOfLiving.Types as Types
 import Http
 import Task
 
@@ -10,9 +10,9 @@ type alias CostOfLiving =
     Types.CostOfLiving
 
 
-getData : Types.Params -> Task.Task Http.Error CostOfLiving
-getData params =
-    Http.get CostOfLivingDecoder.decoder <|
+get : Types.Params -> Task.Task Http.Error CostOfLiving
+get params =
+    Http.get Decoder.decoder <|
         buildUrl params
 
 

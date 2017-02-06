@@ -1,59 +1,18 @@
-module API.Activities exposing (..)
+module API.GetActivities.Action exposing (..)
 
-import Json.Decode as Decode exposing ((:=), object3, object7, string, list)
 import Task
 import Http
+import API.GetActivities.Decoder as Decoder
+import API.GetActivities.Types as Types
 
 
-type alias Params =
-    { locationQuery : String }
-
-
-type alias Activities =
-    { destination : String
-    , fullName : String
-    , activities : List Activity
-    }
-
-
-type alias Activity =
-    { title : String
-    , fromPrice : String
-    , fromPriceLabel : String
-    , id : String
-    , imageUrl : String
-    , supplierName : String
-    , duration : String
-    }
-
-
-getData : Params -> Task.Task Http.Error Activities
-getData params =
-    Http.get decoder <|
+get : Types.Params -> Task.Task Http.Error Types.Activities
+get params =
+    Http.get Decoder.decoder <|
         buildUrl params
 
 
-buildUrl : Params -> String
+buildUrl : Types.Params -> String
 buildUrl params =
     "/api/activities/"
         ++ (Http.uriEncode params.locationQuery)
-
-
-decoder : Decode.Decoder Activities
-decoder =
-    object3 Activities
-        ("destination" := string)
-        ("fullName" := string)
-        ("activities" := list activityDecoder)
-
-
-activityDecoder : Decode.Decoder Activity
-activityDecoder =
-    object7 Activity
-        ("title" := string)
-        ("fromPrice" := string)
-        ("fromPriceLabel" := string)
-        ("id" := string)
-        ("imageUrl" := string)
-        ("supplierName" := string)
-        ("duration" := string)

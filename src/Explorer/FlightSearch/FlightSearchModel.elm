@@ -7,8 +7,8 @@ module Explorer.FlightSearch.FlightSearchModel
 
 import Explorer.Messages exposing (..)
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
-import API.PollLivePricing as PollLivePricing
-import API.StartLivePricing as StartLivePricing
+import API.PollLivePricing.Types as PollLivePricingTypes
+import API.StartLivePricing.Action as StartLivePricing
 import Task
 
 
@@ -20,7 +20,7 @@ type alias FlightSearchModel =
     , pollingUrl : Maybe String
     , pollingFinished : Bool
     , pollingIncrement : Int
-    , flights : Maybe PollLivePricing.PollLivePricingResponse
+    , flights : Maybe PollLivePricingTypes.PollLivePricingResponse
     }
 
 
@@ -65,7 +65,7 @@ initialCmd model =
         (FlightSearchTag << StartLivePricingFailure)
         (FlightSearchTag << StartLivePricingSuccess)
     <|
-        StartLivePricing.startLivePricing <|
+        StartLivePricing.start <|
             StartLivePricing.StartLivePricingParams
                 model.origin
                 model.destination
