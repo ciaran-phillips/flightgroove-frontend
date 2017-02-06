@@ -17,9 +17,9 @@ import Explorer.Messages exposing (Msg(SidebarTag, Mdl))
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Types exposing (RemoteData(..))
-import API.Response as Response
 import Explorer.Sidebar.CostOfLivingView as CostOfLivingView
 import Explorer.Sidebar.ActivitiesView as ActivitiesView
+import API.DateGridTypes as DateGridTypes
 
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
@@ -209,13 +209,13 @@ displayHeaderCell content =
             div [ class "grid__cell grid__cell--header" ] [ text content ]
 
 
-dateGridRow : SidebarModel.SidebarModel -> Int -> Response.DateGridRow -> Html Msg
+dateGridRow : SidebarModel.SidebarModel -> Int -> DateGridTypes.DateGridRow -> Html Msg
 dateGridRow model rowIndex row =
     tr [] <|
         List.indexedMap (displayCell model rowIndex) row.cells
 
 
-displayCell : SidebarModel.SidebarModel -> Int -> Int -> Maybe Response.DateGridCell -> Html Msg
+displayCell : SidebarModel.SidebarModel -> Int -> Int -> Maybe DateGridTypes.DateGridCell -> Html Msg
 displayCell model rowIndex cellIndex cell =
     case cell of
         Nothing ->

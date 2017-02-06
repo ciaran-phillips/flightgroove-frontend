@@ -4,7 +4,8 @@ import Explorer.Filters.Types exposing (FilterCriteria)
 import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Types exposing (RemoteData(..))
 import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
-import API.Response as Response
+import API.LocationTypes as LocationTypes
+import API.DateGridTypes as DateGridTypes
 import Material
 import Http
 import Dict
@@ -12,9 +13,9 @@ import Dict
 
 type alias Model =
     { mapActive : Bool
-    , mapData : RemoteData Http.Error Response.Routes
-    , airports : Dict.Dict String Response.Airport
-    , quotes : Response.Quotes
+    , mapData : RemoteData Http.Error LocationTypes.Routes
+    , airports : Dict.Dict String LocationTypes.Airport
+    , quotes : DateGridTypes.Quotes
     , criteria : FilterCriteria
     , selectedDestination : Maybe String
     , sidebar : Maybe SidebarModel.SidebarModel
@@ -37,7 +38,7 @@ initialModel =
     }
 
 
-defaultMapData : Response.Routes
+defaultMapData : LocationTypes.Routes
 defaultMapData =
     []
 

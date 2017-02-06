@@ -3,8 +3,8 @@ module Explorer.Commands exposing (..)
 import Explorer.Filters.Types as FiltersTypes
 import Explorer.Ports as Ports
 import Explorer.Messages exposing (..)
-import API.Response as Response
-import API.Skyscanner as API
+import API.GetRoutes.Action as Routes
+import API.LocationTypes as LocationTypes
 import Http
 import Task
 import String
@@ -12,20 +12,20 @@ import String
 
 getApiData : FiltersTypes.FilterCriteria -> Cmd Msg
 getApiData criteria =
-    Task.perform FetchFail FetchSuccess <|
+    Task.perform GetRoutesFailure GetRoutesSuccess <|
         if String.isEmpty criteria.locationId then
             getRoutes criteria
         else
             getRoutes criteria
 
 
-createPopups : Response.Routes -> Cmd Msg
+createPopups : LocationTypes.Routes -> Cmd Msg
 createPopups routes =
     List.map popupFromRoute routes
         |> Cmd.batch
 
 
-popupFromRoute : Response.Route -> Cmd msg
+popupFromRoute : LocationTypes.Route -> Cmd msg
 popupFromRoute route =
     Ports.popup
         ( route.destination.airportCode
@@ -35,9 +35,9 @@ popupFromRoute route =
         )
 
 
-getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error Response.Response
+getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error LocationTypes.Routes
 getRoutes criteria =
-    API.callRoutes
+    Routes.get
         { origin = criteria.locationId
         , destination = "anywhere"
         , outboundDate = criteria.outboundDate

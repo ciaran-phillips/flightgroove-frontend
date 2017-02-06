@@ -13,7 +13,6 @@ import Explorer.Sidebar.SidebarCommands as SidebarCommands
 import Explorer.Model as Model
 import Explorer.Types exposing (RemoteData(..))
 import Http
-import API.Response as Response
 import API.GetCostOfLiving.Types as CostOfLivingTypes
 import API.GetActivities.Types as ActivitiesTypes
 

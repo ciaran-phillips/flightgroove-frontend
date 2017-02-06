@@ -1,13 +1,13 @@
 module API.GetUserLocation.Action exposing (get)
 
-import API.Response as Response
-import API.ResponseDecoder exposing (locationsDecoder)
+import API.LocationTypes exposing (LocationSuggestions)
+import API.LocationDecoders as Decoders
 import Http
 import Task
 
 
-get : Task.Task Http.Error Response.Response
+get : Task.Task Http.Error LocationSuggestions
 get =
     Http.get
-        locationsDecoder
+        Decoders.locationSuggestions
         "/api/get-user-origin/"

@@ -31,8 +31,8 @@ import Autocomplete
 
 -- Custom Modules
 
-import API.Response as Response
-import API.Skyscanner as API
+import API.LocationTypes as LocationTypes
+import API.GetLocationSuggestions.Action as GetLocationSuggestions
 import API.GetUserLocation.Action as GetUserLocation
 import Explorer.Types as Types exposing (RemoteData(..))
 
@@ -42,8 +42,8 @@ type alias Model =
     , autocompleteState : Autocomplete.State
     , chosenLocationId : Maybe String
     , displayText : String
-    , locationList : Response.Locations
-    , userLocation : RemoteData Http.Error Response.LocationSuggestion
+    , locationList : LocationTypes.LocationSuggestions
+    , userLocation : RemoteData Http.Error LocationTypes.LocationSuggestion
     , maxLocationsDisplayed : Int
     , showLocationsDropdown : Bool
     }
@@ -52,10 +52,10 @@ type alias Model =
 type Msg
     = InputQuery String
     | SelectLocation String
-    | FetchSuccess Response.Response
+    | FetchSuccess LocationTypes.LocationSuggestions
     | FetchFail Http.Error
     | GetUserLocationFailure Http.Error
-    | GetUserLocationSuccess Response.Response
+    | GetUserLocationSuccess LocationTypes.LocationSuggestions
     | AutocompleteMsg Autocomplete.Msg
     | Mdl (Material.Msg Msg)
 
@@ -100,49 +100,36 @@ update msg model =
             , Cmd.none
             )
 
-        FetchSuccess response ->
-            case response of
-                Response.LocationsResponse locations ->
-                    ( { model
-                        | locationList = locations
-                        , autocompleteState =
-                            Autocomplete.resetToFirstItem
-                                updateConfig
-                                locations
-                                model.maxLocationsDisplayed
-                                model.autocompleteState
-                      }
-                    , Cmd.none
-                    )
-
-                Response.RoutesResponse routes ->
-                    model ! []
-
-                Response.DateGridResponse result ->
-                    model ! []
+        FetchSuccess locations ->
+            ( { model
+                | locationList = locations
+                , autocompleteState =
+                    Autocomplete.resetToFirstItem
+                        updateConfig
+                        locations
+                        model.maxLocationsDisplayed
+                        model.autocompleteState
+              }
+            , Cmd.none
+            )
 
         FetchFail error ->
             model ! []
 
-        GetUserLocationSuccess response ->
-            case response of
-                Response.LocationsResponse locations ->
-                    ( { model
-                        | locationList = locations
-                        , displayText = Maybe.withDefault "default" <| firstLocationName locations
-                        , chosenLocationId = firstLocationId locations
-                        , autocompleteState =
-                            Autocomplete.resetToFirstItem
-                                updateConfig
-                                locations
-                                model.maxLocationsDisplayed
-                                model.autocompleteState
-                      }
-                    , Cmd.none
-                    )
-
-                _ ->
-                    model ! []
+        GetUserLocationSuccess locations ->
+            ( { model
+                | locationList = locations
+                , displayText = Maybe.withDefault "default" <| firstLocationName locations
+                , chosenLocationId = firstLocationId locations
+                , autocompleteState =
+                    Autocomplete.resetToFirstItem
+                        updateConfig
+                        locations
+                        model.maxLocationsDisplayed
+                        model.autocompleteState
+              }
+            , Cmd.none
+            )
 
         GetUserLocationFailure err ->
             ( { model | userLocation = Failure <| Debug.log "failed to load user location" err }, Cmd.none )
@@ -201,10 +188,10 @@ updateAutocomplete msg model =
 updateAirportList : String -> Cmd Msg
 updateAirportList query =
     Task.perform FetchFail FetchSuccess <|
-        API.callLocations { query = query }
+        GetLocationSuggestions.get { query = query }
 
 
-formattedLocationNameFromId : Response.Locations -> String -> String
+formattedLocationNameFromId : LocationTypes.LocationSuggestions -> String -> String
 formattedLocationNameFromId airportList chosenId =
     let
         chosenLocation =
@@ -219,7 +206,7 @@ formattedLocationNameFromId airportList chosenId =
                 formatLocationName chosenLocation
 
 
-firstLocationName : Response.Locations -> Maybe String
+firstLocationName : LocationTypes.LocationSuggestions -> Maybe String
 firstLocationName locations =
     case List.head locations of
         Nothing ->
@@ -229,7 +216,7 @@ firstLocationName locations =
             Just <| formatLocationName location
 
 
-firstLocationId : Response.Locations -> Maybe String
+firstLocationId : LocationTypes.LocationSuggestions -> Maybe String
 firstLocationId locations =
     case List.head locations of
         Nothing ->
@@ -239,7 +226,7 @@ firstLocationId locations =
             Just location.placeId
 
 
-formatLocationName : Response.LocationSuggestion -> String
+formatLocationName : LocationTypes.LocationSuggestion -> String
 formatLocationName location =
     location.placeName
         ++ ", "
@@ -276,7 +263,7 @@ viewAutocomplete model =
             div [] []
 
 
-filterLocations : String -> Response.Locations -> Response.Locations
+filterLocations : String -> LocationTypes.LocationSuggestions -> LocationTypes.LocationSuggestions
 filterLocations query locations =
     let
         transformedQuery =
@@ -288,13 +275,13 @@ filterLocations query locations =
         List.filter filterFunction locations
 
 
-matchesLocation : String -> Response.LocationSuggestion -> Bool
+matchesLocation : String -> LocationTypes.LocationSuggestion -> Bool
 matchesLocation lowercaseQuery location =
     String.toLower location.placeName
         |> String.contains lowercaseQuery
 
 
-updateConfig : Autocomplete.UpdateConfig Msg Response.LocationSuggestion
+updateConfig : Autocomplete.UpdateConfig Msg LocationTypes.LocationSuggestion
 updateConfig =
     Autocomplete.updateConfig
         { onKeyDown =
@@ -315,7 +302,7 @@ updateConfig =
         }
 
 
-viewConfig : Autocomplete.ViewConfig Response.LocationSuggestion
+viewConfig : Autocomplete.ViewConfig LocationTypes.LocationSuggestion
 viewConfig =
     Autocomplete.viewConfig
         { toId = \airport -> airport.placeId
@@ -327,7 +314,7 @@ viewConfig =
 listItem :
     Autocomplete.KeySelected
     -> Autocomplete.MouseSelected
-    -> Response.LocationSuggestion
+    -> LocationTypes.LocationSuggestion
     -> Autocomplete.HtmlDetails Never
 listItem keySelected mouseSelected location =
     if keySelected then

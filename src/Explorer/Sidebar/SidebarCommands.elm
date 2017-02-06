@@ -1,6 +1,6 @@
 module Explorer.Sidebar.SidebarCommands exposing (..)
 
-import API.Skyscanner as API
+import API.GetDateGrid.Action as GetDateGrid
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Messages exposing (Msg(SidebarTag))
 import Explorer.Model exposing (Model)
@@ -21,7 +21,7 @@ getFullMonthData model =
                     dest
     in
         Task.perform (SidebarTag << GridFetchFail) (SidebarTag << GridFetchSuccess) <|
-            API.callDates
+            GetDateGrid.get
                 { origin = model.criteria.locationId
                 , destination = dest
                 , outboundDate = "2016-10"

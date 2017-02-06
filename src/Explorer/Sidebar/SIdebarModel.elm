@@ -1,19 +1,20 @@
 module Explorer.Sidebar.SidebarModel exposing (..)
 
-import API.Response as Response
 import Explorer.Types as Types exposing (RemoteData(..))
 import API.GetCostOfLiving.Types as CostOfLivingTypes
 import API.GetActivities.Types as ActivitiesTypes
+import API.LocationTypes as LocationTypes
+import API.DateGridTypes as DateGridTypes
 import Maybe
 import Array
 import Http
 
 
 type alias SidebarModel =
-    { dateGrid : RemoteData Http.Error Response.DateGrid
+    { dateGrid : RemoteData Http.Error DateGridTypes.DateGrid
     , gridPosition : GridPosition
     , gridSize : GridSize
-    , destination : Response.Airport
+    , destination : LocationTypes.Airport
     , lowestPrice : String
     , selectedOutboundDate : String
     , selectedInboundDate : String
@@ -44,7 +45,7 @@ type alias CellData =
     }
 
 
-newSidebarModel : Response.Airport -> String -> String -> String -> SidebarModel
+newSidebarModel : LocationTypes.Airport -> String -> String -> String -> SidebarModel
 newSidebarModel destination outboundDate inboundDate lowestPrice =
     { dateGrid = Loading
     , gridPosition = { x = 0, y = 0 }
@@ -60,14 +61,14 @@ newSidebarModel destination outboundDate inboundDate lowestPrice =
     }
 
 
-getGridSize : Response.DateGrid -> GridSize
+getGridSize : DateGridTypes.DateGrid -> GridSize
 getGridSize grid =
     { rows = List.length grid.columnHeaders
     , columns = List.length grid.rows
     }
 
 
-getTripDatesFromGrid : Int -> Int -> Response.DateGrid -> ( Maybe String, Maybe String )
+getTripDatesFromGrid : Int -> Int -> DateGridTypes.DateGrid -> ( Maybe String, Maybe String )
 getTripDatesFromGrid row col grid =
     let
         outboundDate =
@@ -79,7 +80,7 @@ getTripDatesFromGrid row col grid =
         ( outboundDate, inboundDate )
 
 
-getInboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
+getInboundDateFromGrid : Int -> DateGridTypes.DateGrid -> Maybe String
 getInboundDateFromGrid rowIndex grid =
     let
         inboundRow =
@@ -93,7 +94,7 @@ getInboundDateFromGrid rowIndex grid =
                 Just row.rowHeader
 
 
-getOutboundDateFromGrid : Int -> Response.DateGrid -> Maybe String
+getOutboundDateFromGrid : Int -> DateGridTypes.DateGrid -> Maybe String
 getOutboundDateFromGrid colIndex grid =
     Maybe.withDefault Nothing <|
         Array.get colIndex (Array.fromList grid.columnHeaders)

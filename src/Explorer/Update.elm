@@ -13,7 +13,8 @@ import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.MapComp.MapMessages exposing (..)
-import API.Response as Response
+import API.GetRoutes.Action as Routes
+import API.LocationTypes as LocationTypes
 import Material
 import Process
 import Dict
@@ -40,23 +41,15 @@ update msg model =
                     ]
                 )
 
-        FetchFail error ->
+        GetRoutesFailure error ->
             let
                 model' =
                     always model <| Debug.log "error is: " error
             in
                 ( { model' | mapData = Failure error }, Cmd.none )
 
-        FetchSuccess response ->
-            case response of
-                Response.RoutesResponse routes ->
-                    ( { model | mapData = Success routes, airports = getAirports routes }, Commands.createPopups routes )
-
-                Response.DateGridResponse result ->
-                    model ! []
-
-                Response.LocationsResponse locations ->
-                    model ! []
+        GetRoutesSuccess routes ->
+            ( { model | mapData = Success routes, airports = getAirports routes }, Commands.createPopups routes )
 
         MapTag msg ->
             updateMap model msg
@@ -177,20 +170,12 @@ updateSidebar sidebarModel msg =
             }
                 ! []
 
-        GridFetchSuccess response ->
-            case response of
-                Response.DateGridResponse grid ->
-                    { sidebarModel
-                        | dateGrid = Success grid
-                        , gridSize = SidebarModel.getGridSize grid
-                    }
-                        ! []
-
-                Response.RoutesResponse routes ->
-                    sidebarModel ! []
-
-                Response.LocationsResponse locations ->
-                    sidebarModel ! []
+        GridFetchSuccess grid ->
+            { sidebarModel
+                | dateGrid = Success grid
+                , gridSize = SidebarModel.getGridSize grid
+            }
+                ! []
 
         GridFetchFail err ->
             sidebarModel ! []
@@ -219,13 +204,13 @@ updateSidebar sidebarModel msg =
 
 {-| Create a new sidebar model for the given destination
 -}
-newSidebar : Response.Airport -> Model -> SidebarModel.SidebarModel
+newSidebar : LocationTypes.Airport -> Model -> SidebarModel.SidebarModel
 newSidebar destination model =
     let
         cheapestRoute =
             case model.mapData of
                 Success data ->
-                    Response.getCheapestRouteForDestination data destination.airportCode
+                    Routes.getCheapestRouteForDestination data destination.airportCode
 
                 _ ->
                     Nothing
@@ -248,7 +233,7 @@ newLiveFlightSearch model config =
             config.inboundDate
 
 
-getAirports : Response.Routes -> Dict.Dict String Response.Airport
+getAirports : LocationTypes.Routes -> Dict.Dict String LocationTypes.Airport
 getAirports routes =
     Dict.fromList <|
         List.map

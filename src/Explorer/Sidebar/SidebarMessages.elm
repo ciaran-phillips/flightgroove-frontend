@@ -1,9 +1,9 @@
 module Explorer.Sidebar.SidebarMessages exposing (..)
 
-import API.Response as Response
 import Http
 import API.GetCostOfLiving.Types as CostOfLivingTypes
 import API.GetActivities.Types as ActivitiesTypes
+import API.DateGridTypes as DateGridTypes
 
 
 -- Custom Modules
@@ -14,7 +14,7 @@ import Explorer.Sidebar.SidebarModel as SidebarModel
 type SidebarMsg
     = SelectTab Int
     | MoveGrid MoveGridMsg
-    | GridFetchSuccess Response.Response
+    | GridFetchSuccess DateGridTypes.DateGrid
     | GridFetchFail Http.Error
     | SelectGridItem SidebarModel.CellData
     | ShowFlights FlightSearchConfig
