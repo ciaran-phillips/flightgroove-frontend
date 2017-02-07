@@ -1,3 +1,4 @@
+
 * {
   line-height: 1.5em;
   font-weight: bold;
@@ -14,7 +15,7 @@ body {
 /************
 * Mobile drawers
 ************/
-@media (max-width: 767px) {
+@media (max-width: 979px) {
   .drawer__body {
     position: absolute;
     width: 360px;
@@ -52,6 +53,10 @@ body {
   .drawer--right.is-open > .drawer__overlay {
     transform: translateX(0px);
   }
+
+  .drawer__body .mdl-cell {
+    width: 100%;
+  }
 }
 
 /*********************
@@ -65,11 +70,11 @@ body {
 .filter-bar__logo {
   display: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 980px) {
   .filter-bar {
     background-color: #de392e;
     color: #fbfbfb;
-    padding: 0px 12px;
+    padding: 0;
   }
   .filter-bar__logo {
     display: block;
@@ -86,7 +91,7 @@ body {
   cursor: pointer;
   line-height:34px;
 }
-@media (min-width: 768px) {
+@media (min-width: 980px) {
   .header-mobile {
     display: none;
   }
@@ -653,6 +658,11 @@ label {
     top: 0;
     padding: 0;
     background-color: #526b98;
+}
+@media (max-width: 979px) {
+  .skyscanner-logo {
+    width: 180px;
+  }
 }
 .attribution {
   text-align: center;

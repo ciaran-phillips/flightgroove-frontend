@@ -49,22 +49,22 @@ basePage model =
 
 topBarRows : Model -> List (Html Msg)
 topBarRows model =
-    [ div [ class "mdl-cell mdl-cell--3-col filter-bar__logo" ]
+    [ div [ class "mdl-cell mdl-cell--2-col filter-bar__logo" ]
         [ div [ class "logo--part" ] [ img [ src "assets/img/logo.png" ] [] ]
         , div [ class "logo--part" ]
             [ div [ class "logo--heading" ] [ text "flightgroove" ]
             , div [ class "logo--tagline" ] [ text "your trip, your way" ]
             ]
         ]
-    , div [ class "mdl-cell mdl-cell--3-col mdl-cell--6-col-tablet" ] [ searchBox model ]
-    , div [ class "mdl-cell mdl-cell--3-col mdl-cell--6-col-tablet" ]
+    , div [ class "mdl-cell mdl-cell--3-col-desktop mdl-cell--6-col-tablet" ] [ searchBox model ]
+    , div [ class "mdl-cell mdl-cell--4-col-desktop mdl-cell--6-col-tablet" ]
         [ label [] [ text "departure / return dates" ]
         , div [ class "date-inputs form-control" ]
             [ outboundDate model
             , inboundDate model
             ]
         ]
-    , div [ class "mdl-cell mdl-cell--2-col mdl-cell--6-col-tablet" ] [ dateToggle model, originsToggle model ]
+    , div [ class "mdl-cell mdl-cell--3-col-desktop mdl-cell--6-col-tablet" ] [ dateToggle model, originsToggle model ]
     ]
 
 
