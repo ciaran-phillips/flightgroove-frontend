@@ -26,6 +26,7 @@ init =
         ( { route = ""
           , mapModel = Map.initialModel
           , filtersModel = filtersModel
+          , filterDrawerOpen = False
           }
         , Cmd.batch
             [ Cmd.map MapMsg Map.initialCmd
@@ -66,6 +67,9 @@ update message model =
                     , Cmd.map FilterMsg newFiltersCmd
                     ]
                 )
+
+        ToggleFilterDrawer ->
+            { model | filterDrawerOpen = not model.filterDrawerOpen } ! []
 
 
 subscriptions : Model -> Sub Msg

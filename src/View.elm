@@ -24,31 +24,47 @@ view model =
 basePage : Model -> Html Msg
 basePage model =
     div [ class "wrapper" ]
-        [ div []
-            [ div [ class "mdl-grid header" ] <| topBarRows model
+        [ div [ class "header-mobile" ]
+            [ div [ class "header-mobile__logo" ] [ text "flightgroove" ]
+            , div [ onClick ToggleFilterDrawer, class "header-mobile__menu" ]
+                [ text "Options "
+                , i [ class "material-icons" ] [ text "menu" ]
+                ]
+            , div [ class "clearing" ] []
             ]
-        , mapContainer model
+        , div
+            [ classList
+                [ ( "filter-bar drawer drawer--right", True )
+                , ( "is-open", model.filterDrawerOpen )
+                ]
+            ]
+            [ div [ class "drawer__overlay", onClick ToggleFilterDrawer ] []
+            , div [ class "drawer__body" ]
+                [ div [ class "mdl-grid" ] <| topBarRows model
+                ]
+            ]
+        , div [ class "body" ] [ mapContainer model ]
         ]
 
 
 topBarRows : Model -> List (Html Msg)
 topBarRows model =
-    [ div [ class "mdl-cell mdl-cell--3-col logo" ]
+    [ div [ class "mdl-cell mdl-cell--3-col filter-bar__logo" ]
         [ div [ class "logo--part" ] [ img [ src "assets/img/logo.png" ] [] ]
         , div [ class "logo--part" ]
             [ div [ class "logo--heading" ] [ text "flightgroove" ]
             , div [ class "logo--tagline" ] [ text "your trip, your way" ]
             ]
         ]
-    , div [ class "mdl-cell mdl-cell--3-col" ] [ searchBox model ]
-    , div [ class "mdl-cell mdl-cell--3-col" ]
+    , div [ class "mdl-cell mdl-cell--3-col mdl-cell--6-col-tablet" ] [ searchBox model ]
+    , div [ class "mdl-cell mdl-cell--3-col mdl-cell--6-col-tablet" ]
         [ label [] [ text "departure / return dates" ]
         , div [ class "date-inputs form-control" ]
             [ outboundDate model
             , inboundDate model
             ]
         ]
-    , div [ class "mdl-cell mdl-cell--2-col" ] [ dateToggle model, originsToggle model ]
+    , div [ class "mdl-cell mdl-cell--2-col mdl-cell--6-col-tablet" ] [ dateToggle model, originsToggle model ]
     ]
 
 

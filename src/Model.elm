@@ -8,4 +8,5 @@ type alias Model =
     { route : String
     , mapModel : Map.Model
     , filtersModel : Filters.Model
+    , filterDrawerOpen : Bool
     }

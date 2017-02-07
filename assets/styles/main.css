@@ -10,11 +10,108 @@ body {
   display: table;
   clear: both;
 }
-.header {
-  background-color: #de392e;
-  color: #fbfbfb;
+
+/************
+* Mobile drawers
+************/
+@media (max-width: 767px) {
+  .drawer__body {
+    position: absolute;
+    width: 360px;
+    height: 100%;
+    box-sizing: border-box;
+    z-index: 1;
+    transition: 0.5s;
+    background-color: inherit;
+  }
+  .drawer__overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    transition: 0.5s;
+  }
+  .drawer--left > .drawer__body {
+    transform: translateX(-360px);
+  }
+  .drawer--left > .drawer__overlay {
+    transform: translateX(-100%);
+    width: 100%;
+  }
+  .drawer--right > .drawer__body {
+    right: 0;
+    transform: translateX(360px);
+  }
+  .drawer--right > .drawer__overlay {
+    right: 0;
+    transform: translateX(100%);
+  }
+  .drawer--left.is-open > .drawer__body,
+  .drawer--left.is-open > .drawer__overlay,
+  .drawer--right.is-open > .drawer__body,
+  .drawer--right.is-open > .drawer__overlay {
+    transform: translateX(0px);
+  }
+}
+
+/*********************
+ * Header filters block - turns into a RHS drawer on mobile
+ *********************/
+.filter-bar {
+  background-color: #fff;
+  color: #444;
   padding: 0px 12px;
 }
+.filter-bar__logo {
+  display: none;
+}
+@media (min-width: 768px) {
+  .filter-bar {
+    background-color: #de392e;
+    color: #fbfbfb;
+    padding: 0px 12px;
+  }
+  .filter-bar__logo {
+    display: block;
+  }
+}
+
+
+/*********************
+* Mobile Header, takes the place of the filter bar on small screens
+*********************/
+.header-mobile {
+  background-color: #de392e;
+  color: #fbfbfb;
+  cursor: pointer;
+  line-height:34px;
+}
+@media (min-width: 768px) {
+  .header-mobile {
+    display: none;
+  }
+}
+.header-mobile__logo {
+  float: left;
+  padding: 10px;
+  line-height: 34px;
+}
+.header-mobile__menu {
+  float: right;
+  padding: 10px;
+  line-height: 34px;
+}
+.header-mobile__menu .material-icons {
+  vertical-align: top;
+  line-height: 34px;
+}
+.header-mobile__menu:hover {
+  background: #f13c2f;
+}
+
+/*************
+ *
+ ***************/
 .logo {
   font-size: 18px;
 }
@@ -34,12 +131,6 @@ body {
 }
 .logo--tagline {
   font-size: 14px;
-}
-.filterbar {
-  background-color: #ca3329;
-  color: #fbfbfb;
-  padding: 0;
-  height: 4px;
 }
 .dropdown-container {
   position: relative;
@@ -545,7 +636,7 @@ label {
     overflow: auto;
 }
 
-.header .mdl-switch {
+.filter-bar .mdl-switch {
   margin-top: 10px;
 }
 .mdl-switch.is-checked .mdl-switch__thumb {
