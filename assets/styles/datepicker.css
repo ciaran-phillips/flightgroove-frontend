@@ -2,6 +2,8 @@
   position: relative;
   padding: 0px 0;
   background: transparent;
+  float: left;
+  z-index: 2;
   }
 
 .elm-datepicker--input:focus {
@@ -11,8 +13,16 @@
   position: absolute;
   border: 1px solid #CCC;
   background-color: #fff;
-  z-index: 10; }
+  max-width: 400px;
+  z-index: 1;
+  top: 34px; }
 
+@media (max-width: 979px) {
+
+  .elm-datepicker--container:nth-child(2n) .elm-datepicker--picker {
+    right: -20px;
+  }
+}
 .elm-datepicker--picker-header,
 .elm-datepicker--weekdays {
   background: #FFF; }

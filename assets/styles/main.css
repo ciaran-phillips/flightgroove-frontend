@@ -25,7 +25,6 @@ body {
 }
 .drawer--right {
   float: right;
-  overflow: hidden;
 }
 .drawer.is-open {
   overflow: visible;
@@ -73,6 +72,11 @@ body {
 
 .mdl-tabs__tab {
     padding: 0 12px
+}
+@media (max-width: 979px) {
+  .drawer--right {
+    overflow: hidden;
+  }
 }
 @media (min-width: 980px) {
   .drawer.filter-bar {
@@ -234,7 +238,7 @@ body, .wrapper, .map-wrapper {
 }
 
 .dropdown-container {
-  z-index: 2;
+  z-index: 3;
   height: 50px;
 }
 .autocomplete-item--key, .autocomplete-item--mouse {
@@ -616,10 +620,12 @@ label {
   margin-bottom: 10px;
   display: block;
 }
+.date-inputs select {
+  float: left;
+}
 .date-inputs select,
 .date-inputs input {
   width: 120px;
-  float: left;
   margin-right: 20px;
 }
 .mapboxgl-popup {
