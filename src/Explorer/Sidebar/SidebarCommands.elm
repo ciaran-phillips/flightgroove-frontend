@@ -24,8 +24,8 @@ getFullMonthData model =
             GetDateGrid.get
                 { origin = model.criteria.locationId
                 , destination = dest
-                , outboundDate = "2016-10"
-                , inboundDate = "2016-10"
+                , outboundDate = model.criteria.outboundDate
+                , inboundDate = model.criteria.inboundDate
                 }
 
 
