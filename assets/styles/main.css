@@ -29,7 +29,7 @@ body {
 }
 .drawer.is-open {
   overflow: visible;
-  width: 100%;
+  width: inherit;
 }
 .drawer__body {
   position: absolute;
