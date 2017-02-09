@@ -1,7 +1,10 @@
 
 (function (Elm, mapboxgl) {
     var map;
-    var app = Elm.Main.fullscreen();
+    var flags = {
+        currentMonth : getYearAndMonth()
+    };
+    var app = Elm.Main.fullscreen(flags);
     var popups = [];
     setupPorts(app);
 
@@ -92,5 +95,18 @@
             }
             return id;
         }
+    }
+
+    function getYearAndMonth() {
+        let date = new Date();
+        let res = "";
+        res += date.getYear() + 1900;
+        res += "-";
+
+        let month = date.getMonth() + 1;
+        if (month < 10) {
+            month = "" + "0" + month;
+        }
+        return res + month;
     }
 })(Elm, mapboxgl);

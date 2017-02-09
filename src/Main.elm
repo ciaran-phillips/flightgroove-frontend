@@ -17,14 +17,19 @@ import Explorer.Messages as MapMessages
 import Explorer.Filters.Filters as Filters
 
 
-init : ( Model, Cmd Msg )
-init =
+type alias Flags =
+    { currentMonth : String
+    }
+
+
+init : Flags -> ( Model, Cmd Msg )
+init flags =
     let
         ( filtersModel, filtersCmd ) =
-            Filters.init
+            Filters.init flags.currentMonth
     in
         ( { route = ""
-          , mapModel = Map.initialModel
+          , mapModel = Map.initialModel flags.currentMonth
           , filtersModel = filtersModel
           , filterDrawerOpen = False
           }
@@ -80,9 +85,9 @@ subscriptions model =
         ]
 
 
-main : Program Never
+main : Program Flags
 main =
-    Html.App.program
+    Html.App.programWithFlags
         { init = init
         , view = view
         , update = update

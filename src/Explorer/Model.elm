@@ -24,12 +24,12 @@ type alias Model =
     }
 
 
-initialModel : Model
-initialModel =
+initialModel : String -> Model
+initialModel initialMonth =
     { mapActive = False
     , mapData = Empty
     , airports = Dict.empty
-    , criteria = defaultCriteria
+    , criteria = defaultCriteria initialMonth
     , quotes = []
     , selectedDestination = Nothing
     , sidebar = Nothing
@@ -43,10 +43,10 @@ defaultMapData =
     []
 
 
-defaultCriteria : FilterCriteria
-defaultCriteria =
+defaultCriteria : String -> FilterCriteria
+defaultCriteria initialMonth =
     { locationId = "DUB-sky"
     , secondOriginId = Nothing
-    , inboundDate = "2016-10"
-    , outboundDate = "2016-10"
+    , inboundDate = initialMonth
+    , outboundDate = initialMonth
     }

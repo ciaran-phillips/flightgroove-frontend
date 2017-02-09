@@ -17,9 +17,9 @@ type alias Msg =
     Messages.Msg
 
 
-initialModel : Model
-initialModel =
-    Model.initialModel
+initialModel : String -> Model
+initialModel initialMonth =
+    Model.initialModel initialMonth
 
 
 initialCmd : Cmd Msg

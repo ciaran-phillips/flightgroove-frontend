@@ -34,11 +34,11 @@ type Msg
     | ToggleOriginDropdown
 
 
-init : ( Model, Cmd Msg )
-init =
+init : String -> ( Model, Cmd Msg )
+init currentDate =
     let
         ( dateFieldModel, dateFieldCmd ) =
-            DateField.init
+            DateField.init currentDate
     in
         ( { firstOrigin = Location.model
           , secondOrigin = Disabled Location.model

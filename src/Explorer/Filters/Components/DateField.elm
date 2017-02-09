@@ -46,19 +46,23 @@ type alias PartialDate =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+init : String -> ( Model, Cmd Msg )
+init currentMonth =
     let
         ( datePickerModel, datePickerFx ) =
             DatePicker.init DatePicker.defaultSettings
+
+        initialMonth =
+            Maybe.withDefault defaultDate <|
+                decodeMonthSelection currentMonth
     in
         ( { isReturn = True
           , outboundDate = Nothing
           , outboundPicker = datePickerModel
           , inboundDate = Nothing
           , inboundPicker = datePickerModel
-          , outboundMonth = PartialDate 2016 Nov
-          , inboundMonth = PartialDate 2016 Nov
+          , outboundMonth = initialMonth
+          , inboundMonth = initialMonth
           , useExactDates = False
           , mdl = Material.model
           , currentDate = Date.fromTime 0
@@ -171,7 +175,7 @@ update msg model =
         SelectOutboundMonth month ->
             let
                 newOutbound =
-                    Maybe.withDefault (PartialDate 2016 Nov) <| decodeMonthSelection month
+                    Maybe.withDefault defaultDate <| decodeMonthSelection month
 
                 newInbound =
                     limitInboundMonth newOutbound model.inboundMonth
@@ -181,7 +185,7 @@ update msg model =
         SelectInboundMonth month ->
             let
                 partialDate =
-                    Maybe.withDefault (PartialDate 2016 Nov) <| decodeMonthSelection month
+                    Maybe.withDefault defaultDate <| decodeMonthSelection month
             in
                 { model | inboundMonth = partialDate } ! []
 
@@ -272,7 +276,7 @@ formatDate : Maybe Date -> String
 formatDate date =
     case date of
         Nothing ->
-            "2016-10"
+            "2017-10"
 
         Just date ->
             (toString <| Date.year date)
@@ -459,3 +463,8 @@ earlierMonthThan earlyDate dateToTest =
             False
         else
             (monthToTestIndex < earlyMonthIndex)
+
+
+defaultDate : PartialDate
+defaultDate =
+    PartialDate 2017 Mar
