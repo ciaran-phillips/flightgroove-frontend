@@ -135,15 +135,14 @@ displayFlight fullFlightData itinerary =
             List.sortBy (.price) itinerary.pricingOptions
     in
         li [ class "flight-result mdl-grid" ]
-            [ displayPrice sortedPriceOptions
-            , displayCarrier fullFlightData itinerary
+            [ displayPrice sortedPriceOptions fullFlightData itinerary
             , displayItineraryDetails fullFlightData itinerary
             , displayBookingLink sortedPriceOptions
             ]
 
 
-displayPrice : List PricingOption -> Html Msg
-displayPrice pricingOptions =
+displayPrice : List PricingOption -> PollLivePricingResponse -> Itinerary -> Html Msg
+displayPrice pricingOptions fullFlightData itinerary =
     let
         priceDisplay =
             case (List.head pricingOptions) of
@@ -154,7 +153,7 @@ displayPrice pricingOptions =
                     text <| formatPrice <| toString pricingOption.price
     in
         div [ class "flight-result__price mdl-cell mdl-cell--2-col" ]
-            [ priceDisplay ]
+            [ priceDisplay, displayCarrier fullFlightData itinerary ]
 
 
 formatPrice : String -> String
@@ -197,7 +196,7 @@ displayCarrier fullFlightData itinerary =
                 x :: xs :: _ ->
                     text "Multiple Airlines"
     in
-        div [ class "flight-result__carrier mdl-cell mdl-cell--2-col" ]
+        div [ class "flight-result__carrier" ]
             [ carrierText ]
 
 
@@ -213,7 +212,7 @@ displayItineraryDetails fullFlightData itinerary =
         inboundLeg =
             getLeg PollLivePricingTypes.Inbound
     in
-        div [ class "flight-result__details mdl-cell--6-col" ]
+        div [ class "flight-result__details mdl-cell--7-col" ]
             [ table []
                 [ displayLegDetails fullFlightData.places outboundLeg
                 , displayLegDetails fullFlightData.places inboundLeg
@@ -274,7 +273,7 @@ displayBookingLink pricingOptions =
                 Just pricingOption ->
                     pricingOption.deeplink
     in
-        div [ class "flight-result__action mdl-cell mdl-cell--2-col" ]
+        div [ class "flight-result__action mdl-cell mdl-cell--2-col mdl-cell--4-col-phone mdl-cell--8-col-tablet" ]
             [ a
                 [ class "mdl-button mdl-button--raised mdl-button--accent"
                 , href bookingLink

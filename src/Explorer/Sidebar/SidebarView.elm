@@ -1,7 +1,7 @@
 module Explorer.Sidebar.SidebarView exposing (view)
 
 import Html exposing (..)
-import Html.Attributes exposing (class, style, src)
+import Html.Attributes exposing (class, classList, style, src)
 import Html.Events exposing (onClick)
 
 
@@ -24,17 +24,19 @@ import API.DateGridTypes as DateGridTypes
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg
 view mdl model =
-    let
-        displaySidebarClass =
-            if model.sidebarVisible then
-                " "
-            else
-                " is-hidden"
-    in
-        div [ class <| "sidebar" ++ displaySidebarClass ]
+    div
+        [ classList
+            [ ( "drawer drawer--left", True )
+            , ( "is-open", model.sidebarVisible )
+            ]
+        ]
+        [ div
+            [ class "sidebar drawer__body"
+            ]
             [ toggleDisplayButton model.sidebarVisible
             , tabs mdl model
             ]
+        ]
 
 
 
@@ -43,26 +45,32 @@ view mdl model =
 
 tabs : Material.Model -> SidebarModel.SidebarModel -> Html Msg
 tabs mdl model =
-    Tabs.render Mdl
-        [ 0 ]
-        mdl
-        [ Tabs.activeTab model.activeTab
-        , Tabs.onSelectTab <| SidebarTag << SelectTab
-        ]
-        [ Tabs.label [] [ icon "flight", text "Flights" ]
-        , Tabs.label [] [ icon "euro_symbol", text "Cost of Living" ]
-        , Tabs.label [] [ icon "place", text "Attractions" ]
-        ]
-        [ case model.activeTab of
-            0 ->
-                div [ class "sidebar--block" ] <| flightsTab model
+    let
+        mobileCloseButton =
+            button [ class "sidebar__close--mobile", onClick <| SidebarTag CloseSidebar ]
+                [ i [ class "material-icons" ] [ text "chevron_left" ]
+                ]
+    in
+        Tabs.render Mdl
+            [ 0 ]
+            mdl
+            [ Tabs.activeTab model.activeTab
+            , Tabs.onSelectTab <| SidebarTag << SelectTab
+            ]
+            [ Tabs.label [] [ icon "flight", text "Flights" ]
+            , Tabs.label [] [ icon "euro_symbol", text "Cost of Living" ]
+            , Tabs.label [] [ icon "place", text "Attractions" ]
+            ]
+            [ case model.activeTab of
+                0 ->
+                    div [ class "sidebar--block" ] <| [ mobileCloseButton, flightsTab model ]
 
-            1 ->
-                div [ class "sidebar--block" ] <| [ CostOfLivingView.view mdl model ]
+                1 ->
+                    div [ class "sidebar--block" ] <| [ mobileCloseButton, CostOfLivingView.view mdl model ]
 
-            _ ->
-                div [ class "sidebar--block" ] [ ActivitiesView.view mdl model ]
-        ]
+                _ ->
+                    div [ class "sidebar--block" ] [ mobileCloseButton, ActivitiesView.view mdl model ]
+            ]
 
 
 icon : String -> Html Msg
@@ -70,7 +78,7 @@ icon iconName =
     i [ class "material-icons" ] [ text iconName ]
 
 
-flightsTab : SidebarModel.SidebarModel -> List (Html Msg)
+flightsTab : SidebarModel.SidebarModel -> Html Msg
 flightsTab model =
     let
         grid =
@@ -80,11 +88,10 @@ flightsTab model =
             else
                 text ""
     in
-        [ div []
+        div []
             [ selectedDateView model
             , grid
             ]
-        ]
 
 
 selectedDateView : SidebarModel.SidebarModel -> Html Msg

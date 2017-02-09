@@ -15,47 +15,105 @@ body {
 /************
 * Mobile drawers
 ************/
-@media (max-width: 979px) {
-  .drawer__body {
-    position: absolute;
-    width: 360px;
-    height: 100%;
-    box-sizing: border-box;
-    z-index: 1;
-    transition: 0.5s;
-    background-color: inherit;
-  }
-  .drawer__overlay {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    z-index: 1;
-    transition: 0.5s;
-  }
-  .drawer--left > .drawer__body {
-    transform: translateX(-360px);
-  }
-  .drawer--left > .drawer__overlay {
-    transform: translateX(-100%);
-    width: 100%;
-  }
-  .drawer--right > .drawer__body {
-    right: 0;
-    transform: translateX(360px);
-  }
-  .drawer--right > .drawer__overlay {
-    right: 0;
-    transform: translateX(100%);
-  }
-  .drawer--left.is-open > .drawer__body,
-  .drawer--left.is-open > .drawer__overlay,
-  .drawer--right.is-open > .drawer__body,
-  .drawer--right.is-open > .drawer__overlay {
-    transform: translateX(0px);
-  }
+.drawer {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+.drawer--left {
+  float: left;
+}
+.drawer--right {
+  float: right;
+  overflow: hidden;
+}
+.drawer.is-open {
+  overflow: visible;
+  width: 100%;
+}
+.drawer__body {
+  position: absolute;
+  width: 320px;
+  height: 100%;
+  box-sizing: border-box;
+  z-index: 1;
+  transition: 0.5s;
+  background-color: #fff;
+  box-shadow: 0 0 5px #ccc;
+}
+.drawer__overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+  transition: 0.5s;
+}
+.drawer--left > .drawer__body {
+  transform: translateX(-320px);
+}
+.drawer--left > .drawer__overlay {
+  transform: translateX(-100%);
+  width: 100%;
+}
+.drawer--right > .drawer__body {
+  right: 0;
+  transform: translateX(320px);
+}
+.drawer--right > .drawer__overlay {
+  right: 0;
+  transform: translateX(100%);
+}
+.drawer--left.is-open > .drawer__body,
+.drawer--left.is-open > .drawer__overlay,
+.drawer--right.is-open > .drawer__body,
+.drawer--right.is-open > .drawer__overlay {
+  transform: translateX(0px);
+}
 
-  .drawer__body .mdl-cell {
+
+.mdl-tabs__tab {
+    padding: 0 12px
+}
+@media (min-width: 980px) {
+  .drawer.filter-bar {
+    height: auto;
+  }
+  .drawer--mobile > .drawer__body{
+    position: static;
+    transform: translateX(0);
+  }
+  .drawer.drawer--mobile > .drawer__body {
+    background: transparent;
+    width: auto;
+    height: auto;
+  }
+  .drawer--mobile.drawer--right,
+  .drawer--mobile.drawer--left {
+    float: none;
+  }
+}
+@media (max-width: 979px) {
+  .filter-bar .mdl-cell {
     width: 100%;
+  }
+}
+.sidebar__close--mobile {
+  display:none;
+}
+@media (max-width: 320px) {
+  .sidebar__close--mobile {
+    display: block;
+    position: absolute;
+    right: 20px;
+    margin-top: 10px;
+    width: 24px;
+    border-radius: 50%;
+    padding: 0px 0;
+    right:15px;
+    background-color: #de392e;
+    color: white;
+    border:0;
+    box-sizing: border-box;
   }
 }
 
@@ -63,9 +121,8 @@ body {
  * Header filters block - turns into a RHS drawer on mobile
  *********************/
 .filter-bar {
-  background-color: #fff;
   color: #444;
-  padding: 0px 12px;
+  z-index: 1;
 }
 .filter-bar__logo {
   display: none;
@@ -164,8 +221,6 @@ body, .wrapper, .map-wrapper {
 .mapboxgl-popup-close-button {
   display: none;
 }
-
-
 .autocomplete-item {
     list-style: none;
     padding: 6px;
@@ -179,7 +234,7 @@ body, .wrapper, .map-wrapper {
 }
 
 .dropdown-container {
-  z-index:1;
+  z-index: 2;
   height: 50px;
 }
 .autocomplete-item--key, .autocomplete-item--mouse {
@@ -298,7 +353,8 @@ body, .wrapper, .map-wrapper {
 
 .search-overlay__content {
     height: 95%;
-    width: 1000px;
+    width: 100%;
+    max-width: 900px;
     position: absolute;
     top: 0;
     left: 0;
@@ -339,7 +395,7 @@ body, .wrapper, .map-wrapper {
 }
 
 .location-background {
-    background-image: url("/assets/img/banner-sml.jpg");
+    background-color: #526b98;
     background-position: center;
     background-size: cover;
     position: absolute;
@@ -350,7 +406,7 @@ body, .wrapper, .map-wrapper {
 
 .background-overlay {
     background: #000;
-    opacity: 0.5;
+    opacity: 0;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -405,13 +461,13 @@ ul {}
 .flight-result__carrier {
     text-align: center;
     display: block;
-    margin-top: 10px;
+    margin-top: 0px;
     font-weight: lighter;
+    font-size: 12px;
 }
-
 .flight-result__price {
     font-size: 21px;
-    line-height: 42px;
+    line-height: 32px;
     vertical-align: middle;
     text-align: center;
     font-weight: lighter;
@@ -421,7 +477,7 @@ ul {}
     line-height: 24px;
     height: 24px;
     font-size: 16px;
-    width: 100px;
+    width: 80px;
     vertical-align: top;
 }
 
@@ -432,7 +488,7 @@ ul {}
 .flight-result__details i.material-icons {
     font-size: 16px;
     margin-left: 5px;
-    margin: 0 10px;
+    margin: 0 6px;
 }
 
 .flight-result__duration {
@@ -463,6 +519,41 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
     border-left-color: #ef3f34;
     border-left-width: 4px;
 }
+@media (max-width: 979px) {
+  .flight-result__carrier {
+    display:none;
+  }
+}
+
+@media (max-width: 839px) {
+  .search-overlay__title {
+    font-size: 21px;
+    padding-top: 5px;
+    font-weight: normal;
+  }
+  .flight-result {
+    padding: 10px 4px ;
+  }
+  .flight-result__details i {
+    display:none;
+  }
+  .flight-result__action > .mdl-button {
+    display:block;
+    margin-top: 20px;
+  }
+  .flight-result .flight-result__duration {
+    font-size: 11px;
+    padding-left: 10px;
+  }
+  .flight-search__close {
+    font-size: 11px;
+  }
+  .flight-result__price,
+  .flight-result__details,
+  .flight-result__details > table {
+    width: 100%;
+  }
+}
 
 .loading-spinner {
   margin-left: auto;
@@ -473,15 +564,9 @@ button.mdl-button.mdl-button--raised.mdl-button--colored {}
 }
 
 .sidebar {
-    position: absolute;
     background: #fff;
     height: 100%;
     z-index: 1;
-    left: -430px;
-    width: 430px;
-    z-index:1;
-    transform: translateX(430px);
-    transition: 0.5s;
 }
 
 .sidebar--block > div {
@@ -578,7 +663,12 @@ label {
   font-size: 12px;
   font-weight: normal;
 }
-.activity__img {width: 140px;padding: 5px;float: left;}
+.activity__img {
+  width: 240px;
+  padding: 5px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 .activity__content {
     float: left;
@@ -653,7 +743,7 @@ label {
 }
 .skyscanner-logo {
     position: absolute;
-    z-index: 100;
+    z-index: 1;
     right: 0;
     top: 0;
     padding: 0;

@@ -34,7 +34,7 @@ basePage model =
             ]
         , div
             [ classList
-                [ ( "filter-bar drawer drawer--right", True )
+                [ ( "filter-bar drawer drawer--right drawer--mobile", True )
                 , ( "is-open", model.filterDrawerOpen )
                 ]
             ]

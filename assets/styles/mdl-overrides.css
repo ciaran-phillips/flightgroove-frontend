@@ -2,10 +2,11 @@
     height: 30px;
     min-width: 30px;
     width: 30px;
+    text-transform: none;
 }
 .mdl-button--accent.mdl-button--accent.mdl-button--raised, 
 .mdl-button--accent.mdl-button--accent.mdl-button--fab {
-    background-color: #526b98;
+    background-color: #ef3f34;
 }
 label.mdl-checkbox {
     margin: 24px 0;

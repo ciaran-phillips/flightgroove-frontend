@@ -67,11 +67,11 @@ itemGroup list =
 colItem : ItemDisplay -> Html Msg
 colItem item =
     div [ class "cost-item mdl-grid" ]
-        [ div [ class "cost-item__column mdl-cell mdl-cell--4-col" ]
+        [ div [ class "cost-item__column mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone" ]
             [ i [ class "material-icons" ] [ text item.icon ] ]
-        , div [ class "cost-item__column mdl-cell mdl-cell--4-col" ]
+        , div [ class "cost-item__column mdl-cell mdl-cell--4-col mdl-cell--4-col-tablet mdl-cell--2-col-phone" ]
             [ span [ class "cost-item__name" ] [ text item.name ] ]
-        , div [ class "cost-item__column mdl-cell mdl-cell--4-col" ]
+        , div [ class "cost-item__column mdl-cell mdl-cell--4-col mdl-cell--2-col-tablet mdl-cell--1-col-phone" ]
             [ span [ class "cost-item__column" ] [ text <| "€" ++ item.cost ] ]
         ]
 
