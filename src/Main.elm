@@ -12,7 +12,10 @@ import Html.App
 import View exposing (view)
 import Messages exposing (Msg(..), Route(..))
 import Model exposing (Model)
-import Explorer.Map as Map
+import Explorer.Commands as ExplorerCommands
+import Explorer.Subscriptions as ExplorerSubscriptions
+import Explorer.Model as ExplorerModel
+import Explorer.Update as ExplorerUpdate
 import Explorer.Messages as MapMessages
 import Explorer.Filters.Filters as Filters
 
@@ -29,12 +32,12 @@ init flags =
             Filters.init flags.currentMonth
     in
         ( { route = ""
-          , mapModel = Map.initialModel flags.currentMonth
+          , mapModel = ExplorerModel.initialModel flags.currentMonth
           , filtersModel = filtersModel
           , filterDrawerOpen = False
           }
         , Cmd.batch
-            [ Cmd.map MapMsg Map.initialCmd
+            [ Cmd.map MapMsg ExplorerCommands.initialCmd
             , Cmd.map FilterMsg filtersCmd
             ]
         )
@@ -46,7 +49,7 @@ update message model =
         MapMsg msg ->
             let
                 ( newModel, newCmd ) =
-                    Map.update msg model.mapModel
+                    ExplorerUpdate.update msg model.mapModel
             in
                 ( { model | mapModel = newModel }, Cmd.map MapMsg newCmd )
 
@@ -64,7 +67,7 @@ update message model =
                             model.mapModel ! []
 
                         Just criteria ->
-                            Map.update (MapMessages.ChangeCriteria criteria) model.mapModel
+                            ExplorerUpdate.update (MapMessages.ChangeCriteria criteria) model.mapModel
             in
                 ( { model | filtersModel = newFiltersModel, mapModel = newMapModel }
                 , Cmd.batch
@@ -80,7 +83,7 @@ update message model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Sub.map MapMsg (Map.subscriptions model.mapModel)
+        [ Sub.map MapMsg (ExplorerSubscriptions.subscriptions model.mapModel)
         , Sub.map FilterMsg (Filters.subscriptions model.filtersModel)
         ]
 

@@ -11,6 +11,12 @@ import Task
 import String
 
 
+initialCmd : Cmd Msg
+initialCmd =
+    Ports.map
+        "map"
+
+
 getApiData : FiltersTypes.FilterCriteria -> Cmd Msg
 getApiData criteria =
     Task.perform GetRoutesFailure GetRoutesSuccess <|

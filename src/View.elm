@@ -12,7 +12,7 @@ import Html.Events exposing (onClick)
 
 import Messages exposing (Msg(..))
 import Model exposing (Model)
-import Explorer.Map as Map
+import Explorer.View as ExplorerView
 import Explorer.Filters.Filters as Filters
 
 
@@ -108,5 +108,5 @@ filterWrapper labelText filterHtml =
 
 mapContainer : Model -> Html Msg
 mapContainer model =
-    Map.view model.mapModel
+    ExplorerView.view model.mapModel
         |> Html.App.map MapMsg
