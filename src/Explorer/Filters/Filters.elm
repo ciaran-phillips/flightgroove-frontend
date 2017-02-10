@@ -125,7 +125,7 @@ subscriptions model =
             ]
 
 
-getCriteria : Model -> Maybe FilterCriteria
+getCriteria : Model -> FilterCriteria
 getCriteria model =
     let
         originId =
@@ -141,15 +141,14 @@ getCriteria model =
     in
         case originId of
             Nothing ->
-                Nothing
+                defaultCriteria <| DateField.getOutboundDate model.dateField
 
             Just originId' ->
-                Just <|
-                    FilterCriteria
-                        originId'
-                        secondOriginId
-                        (DateField.getOutboundDate model.dateField)
-                        (DateField.getInboundDate model.dateField)
+                FilterCriteria
+                    originId'
+                    secondOriginId
+                    (DateField.getOutboundDate model.dateField)
+                    (DateField.getInboundDate model.dateField)
 
 
 multipleOriginsEnabled : Model -> Bool
@@ -261,3 +260,12 @@ viewToggle : Model -> Html Msg
 viewToggle model =
     Html.App.map DateFieldMsg <|
         DateField.viewToggle model.dateField
+
+
+defaultCriteria : String -> FilterCriteria
+defaultCriteria initialMonth =
+    { locationId = "DUB-sky"
+    , secondOriginId = Nothing
+    , inboundDate = initialMonth
+    , outboundDate = initialMonth
+    }

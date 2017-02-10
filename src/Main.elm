@@ -17,7 +17,6 @@ import Explorer.Subscriptions as ExplorerSubscriptions
 import Explorer.Model as ExplorerModel
 import Explorer.Update as ExplorerUpdate
 import Explorer.Messages as ExplorerMessages
-import Explorer.Filters.Filters as Filters
 
 
 type alias Flags =
@@ -28,17 +27,13 @@ type alias Flags =
 init : Flags -> ( Model, Cmd Msg )
 init flags =
     let
-        ( filtersModel, filtersCmd ) =
-            Filters.init flags.currentMonth
+        ( model, cmd ) =
+            ExplorerModel.init flags.currentMonth
     in
-        ( { explorerModel = ExplorerModel.initialModel flags.currentMonth
-          , filtersModel = filtersModel
-          , filterDrawerOpen = False
+        ( { explorerModel = model
+          , menuDrawerOpen = False
           }
-        , Cmd.batch
-            [ Cmd.map ExplorerMsg ExplorerCommands.initialCmd
-            , Cmd.map FilterMsg filtersCmd
-            ]
+        , Cmd.map ExplorerMsg cmd
         )
 
 
@@ -52,39 +47,13 @@ update message model =
             in
                 ( { model | explorerModel = newModel }, Cmd.map ExplorerMsg newCmd )
 
-        FilterMsg msg ->
-            let
-                ( newFiltersModel, newFiltersCmd ) =
-                    Filters.update msg model.filtersModel
-
-                filterCriteria =
-                    Filters.getCriteria newFiltersModel
-
-                ( newExplorerModel, newMapCmd ) =
-                    case filterCriteria of
-                        Nothing ->
-                            model.explorerModel ! []
-
-                        Just criteria ->
-                            ExplorerUpdate.update (ExplorerMessages.ChangeCriteria criteria) model.explorerModel
-            in
-                ( { model | filtersModel = newFiltersModel, explorerModel = newExplorerModel }
-                , Cmd.batch
-                    [ Cmd.map ExplorerMsg newMapCmd
-                    , Cmd.map FilterMsg newFiltersCmd
-                    ]
-                )
-
-        ToggleFilterDrawer ->
-            { model | filterDrawerOpen = not model.filterDrawerOpen } ! []
+        ToggleMenuDrawer ->
+            { model | menuDrawerOpen = not model.menuDrawerOpen } ! []
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Sub.map ExplorerMsg (ExplorerSubscriptions.subscriptions model.explorerModel)
-        , Sub.map FilterMsg (Filters.subscriptions model.filtersModel)
-        ]
+    Sub.map ExplorerMsg (ExplorerSubscriptions.subscriptions model.explorerModel)
 
 
 main : Program Flags

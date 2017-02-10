@@ -2,6 +2,7 @@ module Explorer.Messages exposing (..)
 
 import Http
 import Explorer.Filters.Types exposing (FilterCriteria)
+import Explorer.Filters.Filters as Filters
 import Material
 import Explorer.Sidebar.SidebarMessages exposing (SidebarMsg)
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg)
@@ -17,3 +18,4 @@ type Msg
     | SidebarTag SidebarMsg
     | FlightSearchTag FlightSearchMsg
     | MapTag MapMsg
+    | FilterTag Filters.Msg

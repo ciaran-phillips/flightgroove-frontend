@@ -14,6 +14,7 @@ import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.FlightSearch.FlightSearchUpdate as FlightSearchUpdate
 import Explorer.Map.MapMessages exposing (..)
+import Explorer.Filters.Filters as Filters
 import API.GetRoutes.Action as Routes
 import API.LocationTypes as LocationTypes
 import Material
@@ -27,6 +28,27 @@ update msg model =
         -- MDL Boilerplate
         Mdl msg' ->
             Material.update msg' model
+
+        FilterTag msg ->
+            let
+                ( newFiltersModel, newFiltersCmd ) =
+                    Filters.update msg model.filtersModel
+
+                filterCriteria =
+                    Filters.getCriteria newFiltersModel
+
+                newCmd =
+                    if filterCriteria == model.criteria then
+                        Cmd.none
+                    else
+                        Cmd.batch
+                            [ Ports.clearPopups True
+                            , Commands.getApiData filterCriteria
+                            ]
+            in
+                ( { model | filtersModel = newFiltersModel, criteria = filterCriteria }
+                , newCmd
+                )
 
         ChangeCriteria newCriteria ->
             if newCriteria == model.criteria then
