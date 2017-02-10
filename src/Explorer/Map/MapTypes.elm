@@ -1,4 +1,4 @@
-module Explorer.MapComp.MapTypes exposing (PopupDefinition)
+module Explorer.Map.MapTypes exposing (PopupDefinition)
 
 
 type alias PopupDefinition =

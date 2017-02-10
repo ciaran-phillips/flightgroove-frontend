@@ -1,6 +1,6 @@
 port module Explorer.Ports exposing (..)
 
-import Explorer.MapComp.MapTypes exposing (PopupDefinition)
+import Explorer.Map.MapTypes exposing (PopupDefinition)
 
 
 -- Commands

@@ -13,7 +13,7 @@ import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel exposing (Fl
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.FlightSearch.FlightSearchUpdate as FlightSearchUpdate
-import Explorer.MapComp.MapMessages exposing (..)
+import Explorer.Map.MapMessages exposing (..)
 import API.GetRoutes.Action as Routes
 import API.LocationTypes as LocationTypes
 import Material

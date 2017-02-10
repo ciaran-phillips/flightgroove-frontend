@@ -2,7 +2,7 @@ module Explorer.Subscriptions exposing (subscriptions)
 
 import Explorer.Model exposing (Model)
 import Explorer.Messages as Messages
-import Explorer.MapComp.MapMessages as MapMessages
+import Explorer.Map.MapMessages as MapMessages
 import Explorer.Ports as Ports
 
 
