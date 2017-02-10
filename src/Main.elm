@@ -10,13 +10,13 @@ import Html.App
 -- Custom Packages
 
 import View exposing (view)
-import Messages exposing (Msg(..), Route(..))
+import Messages exposing (Msg(..))
 import Model exposing (Model)
 import Explorer.Commands as ExplorerCommands
 import Explorer.Subscriptions as ExplorerSubscriptions
 import Explorer.Model as ExplorerModel
 import Explorer.Update as ExplorerUpdate
-import Explorer.Messages as MapMessages
+import Explorer.Messages as ExplorerMessages
 import Explorer.Filters.Filters as Filters
 
 
@@ -31,13 +31,12 @@ init flags =
         ( filtersModel, filtersCmd ) =
             Filters.init flags.currentMonth
     in
-        ( { route = ""
-          , mapModel = ExplorerModel.initialModel flags.currentMonth
+        ( { explorerModel = ExplorerModel.initialModel flags.currentMonth
           , filtersModel = filtersModel
           , filterDrawerOpen = False
           }
         , Cmd.batch
-            [ Cmd.map MapMsg ExplorerCommands.initialCmd
+            [ Cmd.map ExplorerMsg ExplorerCommands.initialCmd
             , Cmd.map FilterMsg filtersCmd
             ]
         )
@@ -46,12 +45,12 @@ init flags =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update message model =
     case message of
-        MapMsg msg ->
+        ExplorerMsg msg ->
             let
                 ( newModel, newCmd ) =
-                    ExplorerUpdate.update msg model.mapModel
+                    ExplorerUpdate.update msg model.explorerModel
             in
-                ( { model | mapModel = newModel }, Cmd.map MapMsg newCmd )
+                ( { model | explorerModel = newModel }, Cmd.map ExplorerMsg newCmd )
 
         FilterMsg msg ->
             let
@@ -61,17 +60,17 @@ update message model =
                 filterCriteria =
                     Filters.getCriteria newFiltersModel
 
-                ( newMapModel, newMapCmd ) =
+                ( newExplorerModel, newMapCmd ) =
                     case filterCriteria of
                         Nothing ->
-                            model.mapModel ! []
+                            model.explorerModel ! []
 
                         Just criteria ->
-                            ExplorerUpdate.update (MapMessages.ChangeCriteria criteria) model.mapModel
+                            ExplorerUpdate.update (ExplorerMessages.ChangeCriteria criteria) model.explorerModel
             in
-                ( { model | filtersModel = newFiltersModel, mapModel = newMapModel }
+                ( { model | filtersModel = newFiltersModel, explorerModel = newExplorerModel }
                 , Cmd.batch
-                    [ Cmd.map MapMsg newMapCmd
+                    [ Cmd.map ExplorerMsg newMapCmd
                     , Cmd.map FilterMsg newFiltersCmd
                     ]
                 )
@@ -83,7 +82,7 @@ update message model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Sub.map MapMsg (ExplorerSubscriptions.subscriptions model.mapModel)
+        [ Sub.map ExplorerMsg (ExplorerSubscriptions.subscriptions model.explorerModel)
         , Sub.map FilterMsg (Filters.subscriptions model.filtersModel)
         ]
 

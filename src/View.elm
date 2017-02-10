@@ -108,5 +108,5 @@ filterWrapper labelText filterHtml =
 
 mapContainer : Model -> Html Msg
 mapContainer model =
-    ExplorerView.view model.mapModel
-        |> Html.App.map MapMsg
+    ExplorerView.view model.explorerModel
+        |> Html.App.map ExplorerMsg

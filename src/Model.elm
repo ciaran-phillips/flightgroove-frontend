@@ -5,8 +5,7 @@ import Explorer.Filters.Filters as Filters
 
 
 type alias Model =
-    { route : String
-    , mapModel : ExplorerModel.Model
+    { explorerModel : ExplorerModel.Model
     , filtersModel : Filters.Model
     , filterDrawerOpen : Bool
     }

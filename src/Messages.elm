@@ -5,6 +5,6 @@ import Explorer.Filters.Filters as Filters
 
 
 type Msg
-    = MapMsg ExplorerMessages.Msg
+    = ExplorerMsg ExplorerMessages.Msg
     | FilterMsg Filters.Msg
     | ToggleFilterDrawer
