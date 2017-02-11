@@ -19,7 +19,7 @@ import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Types exposing (RemoteData(..))
 import Explorer.Sidebar.CostOfLivingView as CostOfLivingView
 import Explorer.Sidebar.ActivitiesView as ActivitiesView
-import API.DateGridTypes as DateGridTypes
+import API.Types.DateGrid as DateGridTypes
 
 
 view : Material.Model -> SidebarModel.SidebarModel -> Html Msg

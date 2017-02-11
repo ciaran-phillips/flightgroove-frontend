@@ -9,7 +9,7 @@ import Material.Spinner as Loading
 import Material.Options as Options
 import Html exposing (..)
 import Html.Attributes exposing (class, href)
-import API.GetCostOfLiving.Types as CostOfLivingTypes
+import API.Types.CostOfLiving as CostOfLivingTypes
 
 
 type alias ItemDisplay =

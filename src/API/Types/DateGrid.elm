@@ -1,4 +1,4 @@
-module API.DateGridTypes exposing (..)
+module API.Types.DateGrid exposing (..)
 
 
 type alias DateGrid =

@@ -31,9 +31,8 @@ import Autocomplete
 
 -- Custom Modules
 
-import API.LocationTypes as LocationTypes
-import API.GetLocationSuggestions.Action as GetLocationSuggestions
-import API.GetUserLocation.Action as GetUserLocation
+import API.Types.Location as LocationTypes
+import API.Calls as API
 import Explorer.Types as Types exposing (RemoteData(..))
 
 
@@ -75,7 +74,7 @@ model =
 
 initialCmd : Cmd Msg
 initialCmd =
-    Task.perform GetUserLocationFailure GetUserLocationSuccess GetUserLocation.get
+    Task.perform GetUserLocationFailure GetUserLocationSuccess API.getUserLocation
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -114,7 +113,7 @@ update msg model =
             )
 
         FetchFail error ->
-            model ! []
+            (Debug.log ("failed because of " ++ toString error) model) ! []
 
         GetUserLocationSuccess locations ->
             ( { model
@@ -188,7 +187,7 @@ updateAutocomplete msg model =
 updateAirportList : String -> Cmd Msg
 updateAirportList query =
     Task.perform FetchFail FetchSuccess <|
-        GetLocationSuggestions.get { query = query }
+        API.getLocationSuggestions { query = query }
 
 
 formattedLocationNameFromId : LocationTypes.LocationSuggestions -> String -> String

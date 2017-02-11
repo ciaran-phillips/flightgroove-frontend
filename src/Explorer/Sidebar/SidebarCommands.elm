@@ -1,12 +1,10 @@
 module Explorer.Sidebar.SidebarCommands exposing (..)
 
-import API.GetDateGrid.Action as GetDateGrid
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Messages exposing (Msg(SidebarTag))
 import Explorer.Model exposing (Model)
 import Task
-import API.GetCostOfLiving.Action as GetCostOfLiving
-import API.GetActivities.Action as GetActivities
+import API.Calls as API
 
 
 getFullMonthData : Model -> Cmd Msg
@@ -21,7 +19,7 @@ getFullMonthData model =
                     dest
     in
         Task.perform (SidebarTag << GridFetchFail) (SidebarTag << GridFetchSuccess) <|
-            GetDateGrid.get
+            API.getDateGrid
                 { origin = model.criteria.locationId
                 , destination = dest
                 , outboundDate = model.criteria.outboundDate
@@ -32,10 +30,10 @@ getFullMonthData model =
 getCostOfLivingData : String -> Cmd Msg
 getCostOfLivingData cityId =
     Task.perform (SidebarTag << CostOfLivingFetchFailure) (SidebarTag << CostOfLivingFetchSuccess) <|
-        GetCostOfLiving.get { cityId = cityId }
+        API.getCostOfLiving { cityId = cityId }
 
 
 getActivities : String -> Cmd Msg
 getActivities query =
     Task.perform (SidebarTag << ActivitiesFetchFailure) (SidebarTag << ActivitiesFetchSuccess) <|
-        GetActivities.get { locationQuery = query }
+        API.getActivities { locationQuery = query }

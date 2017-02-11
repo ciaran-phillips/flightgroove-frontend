@@ -3,9 +3,8 @@ module Explorer.Commands exposing (..)
 import Explorer.Filters.Types as FiltersTypes
 import Explorer.Ports as Ports
 import Explorer.Messages exposing (..)
-import API.GetRoutes.Action as Routes
-import API.LocationTypes as LocationTypes
-import API.GetRoutesMultipleOrigins.Action as GetRoutesMultipleOrigins
+import API.Types.Location as LocationTypes
+import API.Calls as API
 import Http
 import Task
 import String
@@ -46,7 +45,7 @@ getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error LocationTypes.Ro
 getRoutes criteria =
     case criteria.secondOriginId of
         Nothing ->
-            Routes.get
+            API.getRoutes
                 { origin = criteria.locationId
                 , destination = "anywhere"
                 , outboundDate = criteria.outboundDate
@@ -54,7 +53,7 @@ getRoutes criteria =
                 }
 
         Just originId ->
-            GetRoutesMultipleOrigins.get
+            API.getRoutesMultipleOrigins
                 { origin = criteria.locationId
                 , secondOrigin = originId
                 , destination = "anywhere"

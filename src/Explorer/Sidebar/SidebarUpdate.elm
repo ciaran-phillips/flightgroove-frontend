@@ -13,8 +13,8 @@ import Explorer.Sidebar.SidebarCommands as SidebarCommands
 import Explorer.Model as Model
 import Explorer.Types exposing (RemoteData(..))
 import Http
-import API.GetCostOfLiving.Types as CostOfLivingTypes
-import API.GetActivities.Types as ActivitiesTypes
+import API.Types.CostOfLiving as CostOfLivingTypes
+import API.Types.Activities as ActivitiesTypes
 
 
 {-| Move the grid to display the given X and Y coordinates.

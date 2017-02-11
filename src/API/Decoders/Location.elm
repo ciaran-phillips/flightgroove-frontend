@@ -1,7 +1,7 @@
-module API.LocationDecoders exposing (routes, locationSuggestions)
+module API.Decoders.Location exposing (routes, locationSuggestions)
 
 import Json.Decode exposing (Decoder, maybe, int, oneOf, succeed, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
-import API.LocationTypes exposing (LocationSuggestions, LocationSuggestion, Airport, Routes, Route)
+import API.Types.Location exposing (LocationSuggestions, LocationSuggestion, Airport, Routes, Route)
 
 
 routes : Decoder Routes

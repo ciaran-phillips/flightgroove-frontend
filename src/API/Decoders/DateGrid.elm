@@ -1,7 +1,7 @@
-module API.DateGridDecoders exposing (dateGrid)
+module API.Decoders.DateGrid exposing (dateGrid)
 
 import Json.Decode exposing (Decoder, maybe, int, string, list, object2, object4, (:=))
-import API.DateGridTypes exposing (DateGrid, DateGridRow, DateGridCell)
+import API.Types.DateGrid exposing (DateGrid, DateGridRow, DateGridCell)
 
 
 dateGrid : Decoder DateGrid

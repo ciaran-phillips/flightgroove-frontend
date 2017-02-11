@@ -1,12 +1,16 @@
-module API.PollLivePricing.Decoder exposing (decoder)
+module API.Decoders.LivePricing
+    exposing
+        ( pollLivePricingResponse
+        , startLivePricingResponse
+        )
 
 import Json.Decode as Decode exposing (..)
 import Json.Decode.Extra exposing ((|:))
-import API.PollLivePricing.Types exposing (..)
+import API.Types.LivePricing exposing (..)
 
 
-decoder : Decode.Decoder PollLivePricingResponse
-decoder =
+pollLivePricingResponse : Decode.Decoder PollLivePricingResponse
+pollLivePricingResponse =
     Decode.object6 PollLivePricingResponse
         (("status" := Decode.string) `Decode.andThen` statusDecoder)
         ("itineraries" := list itineraryDecoder)
@@ -14,6 +18,12 @@ decoder =
         ("legs" := list legDecoder)
         ("segments" := list segmentDecoder)
         ("carriers" := list carrierDecoder)
+
+
+startLivePricingResponse : Decode.Decoder StartLivePricingResponse
+startLivePricingResponse =
+    Decode.object1 StartLivePricingResponse
+        ("location" := Decode.string)
 
 
 statusDecoder : String -> Decode.Decoder Bool

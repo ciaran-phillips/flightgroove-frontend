@@ -9,8 +9,8 @@ module Explorer.FlightSearch.FlightSearchModel
 
 import Explorer.Messages exposing (..)
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
-import API.PollLivePricing.Types as PollLivePricingTypes
-import API.StartLivePricing.Action as StartLivePricing
+import API.Types.LivePricing as LivePricingTypes
+import API.Calls as API
 import Task
 
 
@@ -32,7 +32,7 @@ type alias Origin =
 
 
 type alias FlightData =
-    Maybe PollLivePricingTypes.PollLivePricingResponse
+    Maybe LivePricingTypes.PollLivePricingResponse
 
 
 type alias FlightSearchModel =
@@ -122,9 +122,9 @@ startSessionForOrigin model numberTag originAndFlights =
         (FlightSearchTag << StartLivePricingFailure numberTag)
         (FlightSearchTag << StartLivePricingSuccess numberTag)
     <|
-        StartLivePricing.start <|
-            StartLivePricing.StartLivePricingParams
-                originAndFlights.origin
-                model.destination
-                model.outboundDate
-                model.inboundDate
+        API.startLivePricing <|
+            { origin = originAndFlights.origin
+            , destination = model.destination
+            , outboundDate = model.outboundDate
+            , inboundDate = model.inboundDate
+            }

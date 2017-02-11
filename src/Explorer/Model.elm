@@ -6,8 +6,8 @@ import Explorer.Types exposing (RemoteData(..))
 import Explorer.Commands as Commands
 import Explorer.Messages as Messages
 import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
-import API.LocationTypes as LocationTypes
-import API.DateGridTypes as DateGridTypes
+import API.Types.Location as LocationTypes
+import API.Types.DateGrid as DateGridTypes
 import Explorer.Filters.Filters as Filters
 import Material
 import Http

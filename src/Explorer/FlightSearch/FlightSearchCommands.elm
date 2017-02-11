@@ -1,7 +1,7 @@
 module Explorer.FlightSearch.FlightSearchCommands exposing (..)
 
-import API.PollLivePricing.Types exposing (PollLivePricingParams, PollLivePricingResponse)
-import API.PollLivePricing.Action as PollLivePricing
+import API.Types.LivePricing exposing (PollLivePricingResponse)
+import API.Calls as API
 import Explorer.FlightSearch.FlightSearchModel exposing (FlightSearchModel, FlightsForOrigin(..), OriginFlights)
 import Explorer.Messages exposing (Msg(..))
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..), OriginNumber(..))
@@ -60,11 +60,11 @@ pollOrigin model numberTag originAndFlights =
                         model.pollingIncrement
 
 
-delayedPoll : String -> PollLivePricingParams -> Int -> Task.Task Http.Error PollLivePricingResponse
+delayedPoll : String -> API.PollLivePricingParams -> Int -> Task.Task Http.Error PollLivePricingResponse
 delayedPoll url params timeDelay =
     let
         pollTask =
-            PollLivePricing.poll (Debug.log "poll url is: " url) (Debug.log "params are" params)
+            API.pollLivePricing (Debug.log "poll url is: " url) (Debug.log "params are" params)
 
         sleepTask =
             Process.sleep <| toFloat <| Debug.log "time delay is" timeDelay
@@ -72,10 +72,10 @@ delayedPoll url params timeDelay =
         sleepTask `Task.andThen` (\n -> pollTask)
 
 
-createParams : FlightSearchModel -> String -> PollLivePricingParams
+createParams : FlightSearchModel -> String -> API.PollLivePricingParams
 createParams model origin =
-    PollLivePricingParams
-        origin
-        model.destination
-        model.outboundDate
-        model.inboundDate
+    { origin = origin
+    , destination = model.destination
+    , outboundDate = model.outboundDate
+    , inboundDate = model.inboundDate
+    }

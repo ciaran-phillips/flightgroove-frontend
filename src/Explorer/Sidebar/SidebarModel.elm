@@ -1,10 +1,10 @@
 module Explorer.Sidebar.SidebarModel exposing (..)
 
 import Explorer.Types as Types exposing (RemoteData(..))
-import API.GetCostOfLiving.Types as CostOfLivingTypes
-import API.GetActivities.Types as ActivitiesTypes
-import API.LocationTypes as LocationTypes
-import API.DateGridTypes as DateGridTypes
+import API.Types.DateGrid as DateGridTypes
+import API.Types.CostOfLiving as CostOfLivingTypes
+import API.Types.Activities as ActivitiesTypes
+import API.Types.Location as LocationTypes
 import Maybe
 import Array
 import Http

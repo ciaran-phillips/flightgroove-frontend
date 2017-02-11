@@ -1,4 +1,4 @@
-module API.GetActivities.Types exposing (..)
+module API.Types.Activities exposing (..)
 
 
 type alias Params =

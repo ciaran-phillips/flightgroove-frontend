@@ -5,7 +5,7 @@ import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Messages exposing (..)
 import Explorer.Types exposing (RemoteData(..))
-import API.GetActivities.Types exposing (Activities, Activity)
+import API.Types.Activities exposing (Activities, Activity)
 import Html exposing (..)
 import Html.Attributes exposing (class, src, colspan)
 import Material.Spinner as Loading

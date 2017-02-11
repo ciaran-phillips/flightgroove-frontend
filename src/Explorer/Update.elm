@@ -15,8 +15,8 @@ import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.FlightSearch.FlightSearchUpdate as FlightSearchUpdate
 import Explorer.Map.MapMessages exposing (..)
 import Explorer.Filters.Filters as Filters
-import API.GetRoutes.Action as Routes
-import API.LocationTypes as LocationTypes
+import API.Calls as API
+import API.Types.Location as LocationTypes
 import Material
 import Process
 import Dict
@@ -37,7 +37,7 @@ update msg model =
                 filterCriteria =
                     Filters.getCriteria newFiltersModel
 
-                newCmd =
+                criteriaChangedCmd =
                     if filterCriteria == model.criteria then
                         Cmd.none
                     else
@@ -47,7 +47,7 @@ update msg model =
                             ]
             in
                 ( { model | filtersModel = newFiltersModel, criteria = filterCriteria }
-                , newCmd
+                , Cmd.batch [ Cmd.map FilterTag newFiltersCmd, criteriaChangedCmd ]
                 )
 
         ChangeCriteria newCriteria ->
@@ -211,7 +211,7 @@ newSidebar destination model =
         cheapestRoute =
             case model.mapData of
                 Success data ->
-                    Routes.getCheapestRouteForDestination data destination.airportCode
+                    LocationTypes.getCheapestRouteForDestination data destination.airportCode
 
                 _ ->
                     Nothing

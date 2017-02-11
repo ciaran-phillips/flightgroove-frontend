@@ -1,13 +1,13 @@
-module API.GetCostOfLiving.Decoder exposing (..)
+module API.Decoders.CostOfLiving exposing (costOfLiving)
 
 import Json.Encode
 import Json.Decode exposing ((:=))
 import Json.Decode.Extra exposing ((|:))
-import API.GetCostOfLiving.Types exposing (..)
+import API.Types.CostOfLiving exposing (..)
 
 
-decoder : Json.Decode.Decoder CostOfLiving
-decoder =
+costOfLiving : Json.Decode.Decoder CostOfLiving
+costOfLiving =
     ("costOfLiving" := costOfLivingDecoder)
 
 

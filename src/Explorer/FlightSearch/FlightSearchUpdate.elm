@@ -4,8 +4,7 @@ import Explorer.FlightSearch.FlightSearchModel exposing (FlightSearchModel, Flig
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.Messages exposing (Msg)
-import API.PollLivePricing.Types exposing (PollLivePricingResponse)
-import API.StartLivePricing.Action exposing (StartLivePricingResponse)
+import API.Types.LivePricing exposing (PollLivePricingResponse, StartLivePricingResponse)
 
 
 update : FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel, Cmd Msg )

@@ -1,4 +1,4 @@
-module API.LocationTypes exposing (..)
+module API.Types.Location exposing (..)
 
 
 type alias Airport =
@@ -38,3 +38,19 @@ type alias Route =
     , secondOrigin : Maybe Airport
     , destination : Airport
     }
+
+
+getRoutesForLocation : Routes -> String -> Routes
+getRoutesForLocation routes locationId =
+    let
+        filterFunc =
+            \n -> n.destination.airportCode == locationId
+    in
+        List.filter filterFunc routes
+
+
+getCheapestRouteForDestination : Routes -> String -> Maybe Route
+getCheapestRouteForDestination routes destination =
+    getRoutesForLocation routes destination
+        |> List.sortBy .priceCredits
+        |> List.head

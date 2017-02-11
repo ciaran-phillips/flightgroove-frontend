@@ -1,4 +1,4 @@
-module API.GetCostOfLiving.Types exposing (..)
+module API.Types.CostOfLiving exposing (..)
 
 
 type alias Params =

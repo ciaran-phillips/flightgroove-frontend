@@ -1,9 +1,9 @@
 module Explorer.Sidebar.SidebarMessages exposing (..)
 
 import Http
-import API.GetCostOfLiving.Types as CostOfLivingTypes
-import API.GetActivities.Types as ActivitiesTypes
-import API.DateGridTypes as DateGridTypes
+import API.Types.DateGrid as DateGridTypes
+import API.Types.CostOfLiving as CostOfLivingTypes
+import API.Types.Activities as ActivitiesTypes
 
 
 -- Custom Modules

@@ -7,7 +7,7 @@ import Material
 import Explorer.Sidebar.SidebarMessages exposing (SidebarMsg)
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg)
 import Explorer.Map.MapMessages exposing (MapMsg)
-import API.LocationTypes as LocationTypes
+import API.Types.Location as LocationTypes
 
 
 type Msg

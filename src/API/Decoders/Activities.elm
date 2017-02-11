@@ -1,11 +1,11 @@
-module API.GetActivities.Decoder exposing (decoder)
+module API.Decoders.Activities exposing (activities)
 
 import Json.Decode as Decode exposing ((:=), object3, object7, string, list)
-import API.GetActivities.Types as Types
+import API.Types.Activities as Types
 
 
-decoder : Decode.Decoder Types.Activities
-decoder =
+activities : Decode.Decoder Types.Activities
+activities =
     object3 Types.Activities
         ("destination" := string)
         ("fullName" := string)

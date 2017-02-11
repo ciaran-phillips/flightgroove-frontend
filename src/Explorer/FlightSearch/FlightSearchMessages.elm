@@ -1,7 +1,6 @@
 module Explorer.FlightSearch.FlightSearchMessages exposing (..)
 
-import API.StartLivePricing.Action exposing (StartLivePricingResponse)
-import API.PollLivePricing.Types exposing (PollLivePricingResponse)
+import API.Types.LivePricing exposing (StartLivePricingResponse, PollLivePricingResponse)
 import Http
 
 

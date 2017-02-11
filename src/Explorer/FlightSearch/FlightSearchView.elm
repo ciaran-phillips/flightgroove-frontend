@@ -20,8 +20,8 @@ import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel
         )
 import Explorer.Messages exposing (Msg(FlightSearchTag, Mdl))
 import Explorer.FlightSearch.FlightSearchMessages exposing (FlightSearchMsg(..))
-import API.PollLivePricing.Action as PollLivePricing
-import API.PollLivePricing.Types as PollLivePricingTypes
+import API.Calls as API
+import API.Types.LivePricing as LivePricingTypes
     exposing
         ( PollLivePricingResponse
         , Itinerary
@@ -180,7 +180,7 @@ displayCarrier : PollLivePricingResponse -> Itinerary -> Html Msg
 displayCarrier fullFlightData itinerary =
     let
         carriers =
-            PollLivePricing.getCarriersFromItinerary fullFlightData itinerary
+            LivePricingTypes.getCarriersFromItinerary fullFlightData itinerary
 
         carrierText =
             case carriers of
@@ -204,13 +204,13 @@ displayItineraryDetails : PollLivePricingResponse -> Itinerary -> Html Msg
 displayItineraryDetails fullFlightData itinerary =
     let
         getLeg =
-            PollLivePricing.getLeg fullFlightData.legs itinerary
+            LivePricingTypes.getLeg fullFlightData.legs itinerary
 
         outboundLeg =
-            getLeg PollLivePricingTypes.Outbound
+            getLeg LivePricingTypes.Outbound
 
         inboundLeg =
-            getLeg PollLivePricingTypes.Inbound
+            getLeg LivePricingTypes.Inbound
     in
         div [ class "flight-result__details mdl-cell--7-col" ]
             [ table []
@@ -220,7 +220,7 @@ displayItineraryDetails fullFlightData itinerary =
             ]
 
 
-displayLegDetails : List PollLivePricingTypes.Place -> Maybe PollLivePricingTypes.Leg -> Html Msg
+displayLegDetails : List LivePricingTypes.Place -> Maybe LivePricingTypes.Leg -> Html Msg
 displayLegDetails places leg =
     case leg of
         Nothing ->
@@ -245,17 +245,17 @@ displayLegDetails places leg =
                 ]
 
 
-displayAirport : List PollLivePricingTypes.Place -> Int -> Html Msg
+displayAirport : List LivePricingTypes.Place -> Int -> Html Msg
 displayAirport places placeId =
     let
         place =
-            PollLivePricing.getPlace places placeId
+            LivePricingTypes.getPlace places placeId
     in
         case place of
             Nothing ->
                 text ""
 
-            Just (PollLivePricingTypes.AirportTag airport) ->
+            Just (LivePricingTypes.AirportTag airport) ->
                 text airport.name
 
             _ ->
