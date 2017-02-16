@@ -47,8 +47,8 @@
     }
 
     function clearPopups() {
-        const len = popups.length;
-        for (let i = 0; i < len; i++) {
+        var len = popups.length;
+        for (var i = 0; i < len; i++) {
             popups[i].remove();
         }
         popups = [];
@@ -56,7 +56,7 @@
 
     function addPopup(popupData) {
         var x = popupData;
-        const options = {
+        var options = {
             closeOnClick : false
         };
         var popup = new mapboxgl.Popup(options)
@@ -68,9 +68,9 @@
     }
 
     function getAirportCode(elem) {
-        const airportAttr = 'data-airport-code';
-        const elemClass = elem.getAttribute('class');
-        let id = null;
+        var airportAttr = 'data-airport-code';
+        var elemClass = elem.getAttribute('class');
+        var id = null, contentDiv = null;
         if (elemClass === 'js-popup') {
             id = elem.getAttribute(airportAttr);
         }
@@ -78,7 +78,7 @@
             id = getIdFromContentDiv(elem, airportAttr);
         }
         else if (elemClass == 'mapboxgl-popup-tip') {
-            const contentDiv = elem.nextSibling();
+            contentDiv = elem.nextSibling();
             if (contentDiv) {
                 id = getIdFromContentDiv(contentDiv)
             }
@@ -86,9 +86,9 @@
         return id;
 
         function getIdFromContentDiv(elem, attr) {
-            let id = null;
+            var id = null;
             var children = elem.children;
-            for (let i = 0; i < children.length; i++) {
+            for (var i = 0; i < children.length; i++) {
                 if (children[i].getAttribute('class') == 'js-popup') {
                     id = children[i].getAttribute(attr);
                 }
@@ -98,12 +98,12 @@
     }
 
     function getYearAndMonth() {
-        let date = new Date();
-        let res = "";
+        var date = new Date();
+        var res = "";
         res += date.getYear() + 1900;
         res += "-";
 
-        let month = date.getMonth() + 1;
+        var month = date.getMonth() + 1;
         if (month < 10) {
             month = "" + "0" + month;
         }
