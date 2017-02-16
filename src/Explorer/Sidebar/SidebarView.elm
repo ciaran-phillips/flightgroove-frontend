@@ -83,8 +83,7 @@ flightsTab model =
     let
         grid =
             if not model.multipleOrigins then
-                always (text "") <|
-                    dateGrid model model.gridPosition
+                dateGrid model model.gridPosition
             else
                 text ""
     in

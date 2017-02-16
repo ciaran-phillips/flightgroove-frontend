@@ -5,12 +5,17 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "elm make src/Main.elm --output=index.js; mv npm-debug.log.* ./logs/",
+    "build_assets": "node_modules/node-sass/bin/node-sass assets/styles/style.scss | node_modules/cssmin/bin/cssmin > assets/styles/style.min.css",
+    "build_app": "elm make src/Main.elm --output=index.js; mv npm-debug.log.* ./logs/",
     "serve": "node_modules/http-server/bin/http-server --p 8000"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "http-server": "^0.9.0"
+  },
+  "dependencies": {
+    "cssmin": "^0.4.3",
+    "node-sass": "^4.5.0"
   }
 }

@@ -22,11 +22,13 @@ obviously still rather buggy and missing many features.
 
 If for some reason you want to, you can easily build the frontend locally and mess around with some of the features. 
 The backend unfortunately requires API keys for Skyscanner and Expedia to be placed in config.json.
-The frontend can be built/ran using:
+The frontend can be built/ran using the commands below. It should be easy to see what's going on, I didn't reach a point where
+this needed Grunt/Gulp etc, so you can see the entire build process by taking a look at the script commands in package.json.
 
 ```
 npm install
-npm run build
+npm run build_assets
+npm run build_app
 npm run serve
 ```
 
