@@ -10,9 +10,8 @@ import Explorer.Map.MapMessages exposing (MapMsg)
 import API.Types.Location as LocationTypes
 
 
-type Msg
-    = GetRoutesSuccess LocationTypes.Routes
-    | GetRoutesFailure Http.Error
+type Msg =
+    UpdateRoutes (Result Http.Error LocationTypes.Routes)
     | ChangeCriteria FilterCriteria
     | Mdl (Material.Msg Msg)
     | SidebarTag SidebarMsg

@@ -10,7 +10,6 @@ import API.Decoders.CostOfLiving as CostOfLivingDecoder
 import API.Decoders.DateGrid as DateGridDecoder
 import API.Decoders.LivePricing as LivePricingDecoder
 import API.Decoders.Location as LocationDecoder
-import Task exposing (Task)
 import Http exposing (Error)
 
 
@@ -18,22 +17,24 @@ type alias GetActivitiesParams =
     { locationQuery : String }
 
 
-getActivities : GetActivitiesParams -> Task Error ActivitiesTypes.Activities
+getActivities : GetActivitiesParams -> Http.Request ActivitiesTypes.Activities
 getActivities params =
-    Http.get ActivitiesDecoder.activities <|
-        "/api/activities/"
+    let url = "/api/activities/"
             ++ (Http.encodeUri params.locationQuery)
+    in
+      Http.get url ActivitiesDecoder.activities
 
 
 type alias GetCostOfLivingParams =
     { cityId : String }
 
 
-getCostOfLiving : GetCostOfLivingParams -> Task Error CostOfLivingTypes.CostOfLiving
+getCostOfLiving : GetCostOfLivingParams -> Http.Request CostOfLivingTypes.CostOfLiving
 getCostOfLiving params =
-    Http.get CostOfLivingDecoder.costOfLiving <|
-        "/api/costofliving/"
+    let url = "/api/costofliving/"
             ++ params.cityId
+    in
+      Http.get url CostOfLivingDecoder.costOfLiving
 
 
 type alias GetDateGridParams =
@@ -44,10 +45,9 @@ type alias GetDateGridParams =
     }
 
 
-getDateGrid : GetDateGridParams -> Task Error DateGridTypes.DateGrid
+getDateGrid : GetDateGridParams -> Http.Request DateGridTypes.DateGrid
 getDateGrid params =
-    Http.get DateGridDecoder.dateGrid <|
-        "api/dategrid/"
+    let url = "api/dategrid/"
             ++ params.origin
             ++ "/"
             ++ params.destination
@@ -55,19 +55,20 @@ getDateGrid params =
             ++ params.outboundDate
             ++ "/"
             ++ params.inboundDate
+    in
+      Http.get url DateGridDecoder.dateGrid
 
 
 type alias GetLocationSuggestionsParams =
     { query : String }
 
 
-getLocationSuggestions : GetLocationSuggestionsParams -> Task Error LocationTypes.LocationSuggestions
+getLocationSuggestions : GetLocationSuggestionsParams -> Http.Request LocationTypes.LocationSuggestions
 getLocationSuggestions params =
-    Http.get
-        LocationDecoder.locationSuggestions
-    <|
-        "/api/origin/"
+    let url = "/api/origin/"
             ++ params.query
+    in
+      Http.get url LocationDecoder.locationSuggestions
 
 
 type alias GetRoutesParams =
@@ -78,10 +79,9 @@ type alias GetRoutesParams =
     }
 
 
-getRoutes : GetRoutesParams -> Task Error LocationTypes.Routes
+getRoutes : GetRoutesParams -> Http.Request LocationTypes.Routes
 getRoutes params =
-    Http.get LocationDecoder.routes <|
-        "/api/routes/"
+    let url = "/api/routes/"
             ++ params.origin
             ++ "/"
             ++ params.destination
@@ -89,6 +89,8 @@ getRoutes params =
             ++ params.outboundDate
             ++ "/"
             ++ params.inboundDate
+    in
+      Http.get url LocationDecoder.routes
 
 
 type alias GetRoutesMultipleOriginsParams =
@@ -100,22 +102,21 @@ type alias GetRoutesMultipleOriginsParams =
     }
 
 
-getRoutesMultipleOrigins : GetRoutesMultipleOriginsParams -> Task Error LocationTypes.Routes
+getRoutesMultipleOrigins : GetRoutesMultipleOriginsParams ->  Http.Request LocationTypes.Routes
 getRoutesMultipleOrigins params =
-    Http.get LocationDecoder.routes <|
-        "/api/routes-multiple-origins/"
+    let url = "/api/routes-multiple-origins/"
             ++ (Http.encodeUri params.origin ++ "/")
             ++ (Http.encodeUri params.secondOrigin ++ "/")
             ++ (Http.encodeUri params.destination ++ "/")
             ++ (Http.encodeUri params.outboundDate ++ "/")
             ++ (Http.encodeUri params.inboundDate ++ "/")
+    in
+      Http.get url LocationDecoder.routes
 
 
-getUserLocation : Task Error LocationTypes.LocationSuggestions
+getUserLocation : Http.Request LocationTypes.LocationSuggestions
 getUserLocation =
-    Http.get
-        LocationDecoder.locationSuggestions
-        "/api/get-user-origin/"
+    Http.get "/api/get-user-origin/" LocationDecoder.locationSuggestions
 
 
 type alias PollLivePricingParams =
@@ -126,16 +127,17 @@ type alias PollLivePricingParams =
     }
 
 
-pollLivePricing : LivePricingTypes.PollingUrl -> PollLivePricingParams -> Task Error LivePricingTypes.PollLivePricingResponse
+pollLivePricing : LivePricingTypes.PollingUrl -> PollLivePricingParams -> Http.Request LivePricingTypes.PollLivePricingResponse
 pollLivePricing url params =
-    Http.get LivePricingDecoder.pollLivePricingResponse <|
-        "/api/livepricing/poll/"
+    let urlToFetch = "/api/livepricing/poll/"
             ++ (Http.encodeUri url)
             ++ "?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
             ++ ("&originplace=" ++ params.origin)
             ++ ("&destinationplace=" ++ params.destination)
             ++ ("&outbounddate=" ++ params.outboundDate)
             ++ ("&inbounddate=" ++ params.inboundDate)
+    in
+      Http.get urlToFetch LivePricingDecoder.pollLivePricingResponse
 
 
 type alias StartLivePricingParams =
@@ -146,11 +148,12 @@ type alias StartLivePricingParams =
     }
 
 
-startLivePricing : StartLivePricingParams -> Task Error LivePricingTypes.StartLivePricingResponse
+startLivePricing : StartLivePricingParams -> Http.Request LivePricingTypes.StartLivePricingResponse
 startLivePricing params =
-    Http.get LivePricingDecoder.startLivePricingResponse <|
-        "/api/livepricing/start?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
+    let url = "/api/livepricing/start?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
             ++ ("&originplace=" ++ params.origin)
             ++ ("&destinationplace=" ++ params.destination)
             ++ ("&outbounddate=" ++ params.outboundDate)
             ++ ("&inbounddate=" ++ params.inboundDate)
+    in
+      Http.get url LivePricingDecoder.startLivePricingResponse

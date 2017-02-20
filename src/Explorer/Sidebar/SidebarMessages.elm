@@ -14,16 +14,13 @@ import Explorer.Sidebar.SidebarModel as SidebarModel
 type SidebarMsg
     = SelectTab Int
     | MoveGrid MoveGridMsg
-    | GridFetchSuccess DateGridTypes.DateGrid
-    | GridFetchFail Http.Error
+    | GridFetchUpdate (Result Http.Error DateGridTypes.DateGrid)
     | SelectGridItem SidebarModel.CellData
     | ShowFlights FlightSearchConfig
     | CloseSidebar
     | OpenSidebar
-    | CostOfLivingFetchSuccess CostOfLivingTypes.CostOfLiving
-    | CostOfLivingFetchFailure Http.Error
-    | ActivitiesFetchSuccess ActivitiesTypes.Activities
-    | ActivitiesFetchFailure Http.Error
+    | CostOfLivingFetchUpdate (Result Http.Error CostOfLivingTypes.CostOfLiving)
+    | ActivitiesFetchUpdate (Result Http.Error ActivitiesTypes.Activities)
 
 
 type MoveGridMsg

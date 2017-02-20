@@ -26,8 +26,8 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         -- MDL Boilerplate
-        Mdl msg' ->
-            Material.update msg' model
+        Mdl mdlMsg ->
+            Material.update Mdl mdlMsg model
 
         FilterTag msg ->
             let
@@ -64,14 +64,14 @@ update msg model =
                     ]
                 )
 
-        GetRoutesFailure error ->
+        UpdateRoutes (Err error) ->
             let
-                model' =
+                newModel =
                     always model <| Debug.log "error is: " error
             in
-                ( { model' | mapData = Failure error }, Cmd.none )
+                ( { newModel | mapData = Failure error }, Cmd.none )
 
-        GetRoutesSuccess routes ->
+        UpdateRoutes (Ok routes) ->
             ( { model | mapData = Success routes, airports = getAirports routes }, Commands.createPopups routes )
 
         MapTag msg ->
@@ -130,8 +130,8 @@ updateMap model msg =
                     Nothing ->
                         model ! []
 
-                    Just airport' ->
-                        ( { model | selectedDestination = Just dest, sidebar = Just (newSidebar airport' model) }
+                    Just justAirport ->
+                        ( { model | selectedDestination = Just dest, sidebar = Just (newSidebar justAirport model) }
                         , SidebarCommands.getFullMonthData model
                         )
 
@@ -171,14 +171,14 @@ updateSidebar sidebarModel msg =
             }
                 ! []
 
-        GridFetchSuccess grid ->
+        GridFetchUpdate (Ok grid) ->
             { sidebarModel
                 | dateGrid = Success grid
                 , gridSize = SidebarModel.getGridSize grid
             }
                 ! []
 
-        GridFetchFail err ->
+        GridFetchUpdate (Err err) ->
             sidebarModel ! []
 
         ShowFlights config ->
@@ -190,16 +190,16 @@ updateSidebar sidebarModel msg =
         OpenSidebar ->
             { sidebarModel | sidebarVisible = True } ! []
 
-        CostOfLivingFetchSuccess data ->
+        CostOfLivingFetchUpdate (Ok data) ->
             ( { sidebarModel | costOfLivingData = Success data }, Cmd.none )
 
-        CostOfLivingFetchFailure err ->
+        CostOfLivingFetchUpdate (Err err) ->
             ( { sidebarModel | costOfLivingData = Failure err }, Cmd.none )
 
-        ActivitiesFetchSuccess data ->
+        ActivitiesFetchUpdate (Ok data) ->
             ( { sidebarModel | activities = Success data }, Cmd.none )
 
-        ActivitiesFetchFailure err ->
+        ActivitiesFetchUpdate (Err err) ->
             ( { sidebarModel | activities = Failure err }, Cmd.none )
 
 

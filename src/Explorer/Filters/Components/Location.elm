@@ -50,10 +50,8 @@ type alias Model =
 type Msg
     = InputQuery String
     | SelectLocation String
-    | FetchSuccess LocationTypes.LocationSuggestions
-    | FetchFail Http.Error
-    | GetUserLocationFailure Http.Error
-    | GetUserLocationSuccess LocationTypes.LocationSuggestions
+    | AirportListUpdate (Result Http.Error LocationTypes.LocationSuggestions)
+    | GetUserLocationUpdate (Result Http.Error LocationTypes.LocationSuggestions)
     | AutocompleteMsg Autocomplete.Msg
     | Mdl (Material.Msg Msg)
 
@@ -73,15 +71,15 @@ model =
 
 initialCmd : Cmd Msg
 initialCmd =
-    Task.perform GetUserLocationFailure GetUserLocationSuccess API.getUserLocation
+    Http.send GetUserLocationUpdate API.getUserLocation
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         -- MDL Boilerplate
-        Mdl msg' ->
-            Material.update msg' model
+        Mdl mdlMsg ->
+            Material.update Mdl mdlMsg model
 
         InputQuery txt ->
             if String.isEmpty txt then
@@ -98,7 +96,7 @@ update msg model =
             , Cmd.none
             )
 
-        FetchSuccess locations ->
+        AirportListUpdate (Ok locations) ->
             ( { model
                 | locationList = locations
                 , autocompleteState =
@@ -111,10 +109,10 @@ update msg model =
             , Cmd.none
             )
 
-        FetchFail error ->
+        AirportListUpdate (Err error) ->
             (Debug.log ("failed because of " ++ toString error) model) ! []
 
-        GetUserLocationSuccess locations ->
+        GetUserLocationUpdate (Ok locations) ->
             ( { model
                 | locationList = locations
                 , displayText = Maybe.withDefault "default" <| firstLocationName locations
@@ -129,7 +127,7 @@ update msg model =
             , Cmd.none
             )
 
-        GetUserLocationFailure err ->
+        GetUserLocationUpdate (Err err) ->
             ( { model | userLocation = Failure <| Debug.log "failed to load user location" err }, Cmd.none )
 
         AutocompleteMsg msg ->
@@ -185,8 +183,7 @@ updateAutocomplete msg model =
 
 updateAirportList : String -> Cmd Msg
 updateAirportList query =
-    Task.perform FetchFail FetchSuccess <|
-        API.getLocationSuggestions { query = query }
+    Http.send AirportListUpdate (API.getLocationSuggestions { query = query })
 
 
 formattedLocationNameFromId : LocationTypes.LocationSuggestions -> String -> String

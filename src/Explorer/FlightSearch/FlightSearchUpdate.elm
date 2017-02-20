@@ -10,7 +10,7 @@ import API.Types.LivePricing exposing (PollLivePricingResponse, StartLivePricing
 update : FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel, Cmd Msg )
 update model msg =
     case msg of
-        StartLivePricingSuccess originNum response ->
+        StartLivePricingUpdate originNum (Ok response) ->
             let
                 newModel =
                     startLivePricingUpdateModel model originNum response
@@ -19,10 +19,10 @@ update model msg =
                 , FlightSearchCommands.pollPrices originNum newModel
                 )
 
-        StartLivePricingFailure originNum err ->
+        StartLivePricingUpdate originNum (Err err) ->
             startLivePricingFailure model originNum err
 
-        PollLivePricingSuccess originNum response ->
+        PollLivePricingUpdate originNum (Ok response) ->
             let
                 newModel =
                     pollLivePricingUpdateModel model originNum response
@@ -31,7 +31,7 @@ update model msg =
                 , FlightSearchCommands.pollPrices originNum newModel
                 )
 
-        PollLivePricingFailure originNum err ->
+        PollLivePricingUpdate originNum (Err err) ->
             ( always model <| Debug.log "Polling error is " err, Cmd.none )
 
         SelectFlightsTab tab ->

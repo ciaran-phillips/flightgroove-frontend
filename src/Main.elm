@@ -55,7 +55,7 @@ subscriptions model =
     Sub.map ExplorerMsg (ExplorerSubscriptions.subscriptions model.explorerModel)
 
 
-main : Program Flags
+main : Program Flags Model Msg
 main =
     programWithFlags
         { init = init

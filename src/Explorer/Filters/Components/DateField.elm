@@ -10,7 +10,6 @@ import Html.Events
 import Material
 import Material.Toggles as Toggles
 import Material.Options
-import Array
 import Task
 import Result
 
@@ -36,7 +35,6 @@ type Msg
     | SelectInboundMonth String
     | MaterialMsg (Material.Msg Msg)
     | ToggleExactDates
-    | GetCurrentDateFailure Result.Result
     | GetCurrentDateSuccess Date
 
 
@@ -75,7 +73,7 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         MaterialMsg msg ->
-            Material.update msg model
+            Material.update MaterialMsg msg model
 
         ToggleExactDates ->
             ( { model | useExactDates = not model.useExactDates }, Cmd.none )
@@ -168,9 +166,6 @@ update msg model =
                     , Cmd.map InboundMsg inboundPickerCmd
                     ]
                 )
-
-        GetCurrentDateFailure err ->
-            model ! []
 
         SelectOutboundMonth month ->
             let
@@ -424,7 +419,7 @@ padDigits txt =
 
 getCurrentDate : Cmd Msg
 getCurrentDate =
-    Task.perform GetCurrentDateFailure GetCurrentDateSuccess Date.now
+    Task.perform GetCurrentDateSuccess Date.now
 
 
 addDaysToDate : Int -> Date.Date -> Date.Date
@@ -434,7 +429,7 @@ addDaysToDate numDays date =
         seconds =
             numDays * 86400 * 1000
     in
-        date |> Date.toTime |> (+) seconds |> Date.fromTime
+        date |> Date.toTime |> (+) (toFloat seconds) |> Date.fromTime
 
 
 earlierThan : Date -> Date -> Bool

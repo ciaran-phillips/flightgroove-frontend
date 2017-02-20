@@ -18,7 +18,7 @@ initialCmd =
 
 getApiData : FiltersTypes.FilterCriteria -> Cmd Msg
 getApiData criteria =
-    Task.perform GetRoutesFailure GetRoutesSuccess <|
+    Http.send UpdateRoutes <|
         if String.isEmpty criteria.locationId then
             getRoutes criteria
         else
@@ -41,7 +41,7 @@ popupFromRoute route =
         )
 
 
-getRoutes : FiltersTypes.FilterCriteria -> Task.Task Http.Error LocationTypes.Routes
+getRoutes : FiltersTypes.FilterCriteria -> Http.Request LocationTypes.Routes
 getRoutes criteria =
     case criteria.secondOriginId of
         Nothing ->

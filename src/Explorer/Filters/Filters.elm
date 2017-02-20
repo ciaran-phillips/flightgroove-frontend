@@ -101,7 +101,7 @@ update msg model =
                 )
 
         MaterialMsg msg ->
-            Material.update msg model
+            Material.update MaterialMsg msg model
 
 
 subscriptions : Model -> Sub Msg
@@ -143,9 +143,9 @@ getCriteria model =
             Nothing ->
                 defaultCriteria <| DateField.getOutboundDate model.dateField
 
-            Just originId' ->
+            Just justOriginId ->
                 FilterCriteria
-                    originId'
+                    justOriginId
                     secondOriginId
                     (DateField.getOutboundDate model.dateField)
                     (DateField.getInboundDate model.dateField)

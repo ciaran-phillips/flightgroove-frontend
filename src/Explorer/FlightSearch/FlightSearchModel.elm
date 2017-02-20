@@ -11,6 +11,7 @@ import Explorer.Messages exposing (..)
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import API.Types.LivePricing as LivePricingTypes
 import API.Calls as API
+import Http
 import Task
 
 
@@ -118,9 +119,8 @@ initialCmd model =
 
 startSessionForOrigin : FlightSearchModel -> OriginNumber -> OriginFlights -> Cmd Msg
 startSessionForOrigin model numberTag originAndFlights =
-    Task.perform
-        (FlightSearchTag << StartLivePricingFailure numberTag)
-        (FlightSearchTag << StartLivePricingSuccess numberTag)
+    Http.send
+        (FlightSearchTag << StartLivePricingUpdate numberTag)
     <|
         API.startLivePricing <|
             { origin = originAndFlights.origin

@@ -5,6 +5,7 @@ import Explorer.Messages exposing (Msg(SidebarTag))
 import Explorer.Model exposing (Model)
 import Task
 import API.Calls as API
+import Http
 
 
 getFullMonthData : Model -> Cmd Msg
@@ -18,7 +19,7 @@ getFullMonthData model =
                 Just dest ->
                     dest
     in
-        Task.perform (SidebarTag << GridFetchFail) (SidebarTag << GridFetchSuccess) <|
+        Http.send (SidebarTag << GridFetchUpdate) <|
             API.getDateGrid
                 { origin = model.criteria.locationId
                 , destination = dest
@@ -29,11 +30,11 @@ getFullMonthData model =
 
 getCostOfLivingData : String -> Cmd Msg
 getCostOfLivingData cityId =
-    Task.perform (SidebarTag << CostOfLivingFetchFailure) (SidebarTag << CostOfLivingFetchSuccess) <|
+    Http.send (SidebarTag << CostOfLivingFetchUpdate) <|
         API.getCostOfLiving { cityId = cityId }
 
 
 getActivities : String -> Cmd Msg
 getActivities query =
-    Task.perform (SidebarTag << ActivitiesFetchFailure) (SidebarTag << ActivitiesFetchSuccess) <|
+    Http.send (SidebarTag << ActivitiesFetchUpdate) <|
         API.getActivities { locationQuery = query }

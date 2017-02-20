@@ -50,9 +50,8 @@ pollOrigin model numberTag originAndFlights =
             if Debug.log "polling finished is " originAndFlights.pollingFinished then
                 Cmd.none
             else
-                Task.perform
-                    (FlightSearchTag << PollLivePricingFailure numberTag)
-                    (FlightSearchTag << PollLivePricingSuccess numberTag)
+                Task.attempt
+                    (FlightSearchTag << PollLivePricingUpdate numberTag)
                 <|
                     delayedPoll
                         url
@@ -64,7 +63,7 @@ delayedPoll : String -> API.PollLivePricingParams -> Int -> Task.Task Http.Error
 delayedPoll url params timeDelay =
     let
         pollTask =
-            API.pollLivePricing (Debug.log "poll url is: " url) (Debug.log "params are" params)
+            API.pollLivePricing (Debug.log "poll url is: " url) (Debug.log "params are" params) |> Http.toTask
 
         sleepTask =
             Process.sleep <| toFloat <| Debug.log "time delay is" timeDelay

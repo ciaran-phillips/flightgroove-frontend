@@ -4,11 +4,9 @@ import API.Types.LivePricing exposing (StartLivePricingResponse, PollLivePricing
 import Http
 
 
-type FlightSearchMsg
-    = StartLivePricingSuccess OriginNumber StartLivePricingResponse
-    | StartLivePricingFailure OriginNumber Http.Error
-    | PollLivePricingSuccess OriginNumber PollLivePricingResponse
-    | PollLivePricingFailure OriginNumber Http.Error
+type FlightSearchMsg =
+    StartLivePricingUpdate OriginNumber (Result Http.Error StartLivePricingResponse)
+    | PollLivePricingUpdate OriginNumber (Result Http.Error PollLivePricingResponse)
     | CloseFlightSearch
     | SelectFlightsTab Int
 
