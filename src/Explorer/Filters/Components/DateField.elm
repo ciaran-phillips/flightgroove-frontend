@@ -9,6 +9,7 @@ import Json.Decode
 import Html.Events
 import Material
 import Material.Toggles as Toggles
+import Material.Options
 import Array
 import Task
 import Result
@@ -220,7 +221,7 @@ viewToggle model =
     Toggles.switch MaterialMsg
         [ 0 ]
         model.mdl
-        [ Toggles.onClick ToggleExactDates
+        [ Material.Options.onToggle ToggleExactDates
         , Toggles.ripple
         , Toggles.value model.useExactDates
         ]

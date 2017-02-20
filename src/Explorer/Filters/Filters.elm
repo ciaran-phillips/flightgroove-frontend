@@ -8,6 +8,7 @@ import Html.Events exposing (onClick)
 import Html.Attributes exposing (class, classList)
 import Material
 import Material.Toggles as Toggles
+import Material.Options
 
 
 type alias Model =
@@ -236,7 +237,7 @@ viewOriginsToggle model =
         Toggles.switch MaterialMsg
             [ 0 ]
             model.mdl
-            [ Toggles.onClick ToggleSecondOrigin
+            [ Material.Options.onToggle ToggleSecondOrigin
             , Toggles.ripple
             , Toggles.value isEnabled
             ]
