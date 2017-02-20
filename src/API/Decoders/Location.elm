@@ -1,6 +1,6 @@
 module API.Decoders.Location exposing (routes, locationSuggestions)
 
-import Json.Decode exposing (Decoder, maybe, int, oneOf, succeed, bool, string, float, list, object1, object2, object4, object6, object5, object7, (:=))
+import Json.Decode exposing (Decoder, maybe, int, oneOf, succeed, bool, string, float, list, map, map2, map4, map6, map5, map7, field)
 import API.Types.Location exposing (LocationSuggestions, LocationSuggestion, Airport, Routes, Route)
 
 
@@ -11,38 +11,38 @@ routes =
 
 locationSuggestions : Decoder LocationSuggestions
 locationSuggestions =
-    ("Places" := list suggestionDecoder)
+    (field "Places" (list suggestionDecoder))
 
 
 routeDecoder : Decoder Route
 routeDecoder =
-    object7 Route
-        ("departureDate" := string)
-        ("returnDate" := string)
-        ("priceCredits" := int)
-        ("priceDisplay" := string)
-        ("origin" := airportDecoder)
-        (maybe ("secondOrigin" := airportDecoder))
-        ("destination" := airportDecoder)
+    map7 Route
+        (field "departureDate" string)
+        (field "returnDate" string)
+        (field "priceCredits" int)
+        (field "priceDisplay" string)
+        (field "origin" airportDecoder)
+        (maybe (field "secondOrigin" airportDecoder))
+        (field "destination" airportDecoder)
 
 
 airportDecoder : Decoder Airport
 airportDecoder =
-    object6 Airport
-        ("name" := string)
-        ("country" := string)
-        ("cityId" := string)
-        ("code" := string)
-        ("latitude" := float)
-        ("longitude" := float)
+    map6 Airport
+        (field "name" string)
+        (field "country" string)
+        (field "cityId" string)
+        (field "code" string)
+        (field "latitude" float)
+        (field "longitude" float)
 
 
 suggestionDecoder : Decoder LocationSuggestion
 suggestionDecoder =
-    object6 LocationSuggestion
-        ("CityId" := string)
-        ("CountryId" := string)
-        ("CountryName" := string)
-        ("PlaceId" := string)
-        ("PlaceName" := string)
-        (oneOf [ "RegionId" := string, succeed "" ])
+    map6 LocationSuggestion
+        (field "CityId" string)
+        (field "CountryId" string)
+        (field "CountryName" string)
+        (field "PlaceId" string)
+        (field "PlaceName" string)
+        (field "RegionId" (oneOf [ string, succeed "" ]))

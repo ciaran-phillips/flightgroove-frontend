@@ -11,19 +11,19 @@ import API.Types.LivePricing exposing (..)
 
 pollLivePricingResponse : Decode.Decoder PollLivePricingResponse
 pollLivePricingResponse =
-    Decode.object6 PollLivePricingResponse
-        (("status" := Decode.string) `Decode.andThen` statusDecoder)
-        ("itineraries" := list itineraryDecoder)
-        ("places" := list placeDecoder)
-        ("legs" := list legDecoder)
-        ("segments" := list segmentDecoder)
-        ("carriers" := list carrierDecoder)
+    Decode.map6 PollLivePricingResponse
+        ((field "status" Decode.string) |> Decode.andThen statusDecoder)
+        (field "itineraries" (list itineraryDecoder))
+        (field "places" (list placeDecoder))
+        (field "legs" (list legDecoder))
+        (field "segments" (list segmentDecoder))
+        (field "carriers" (list carrierDecoder))
 
 
 startLivePricingResponse : Decode.Decoder StartLivePricingResponse
 startLivePricingResponse =
-    Decode.object1 StartLivePricingResponse
-        ("location" := Decode.string)
+    Decode.map StartLivePricingResponse
+        (field "location" Decode.string)
 
 
 statusDecoder : String -> Decode.Decoder Bool
@@ -41,10 +41,10 @@ statusDecoder status =
 
 itineraryDecoder : Decode.Decoder Itinerary
 itineraryDecoder =
-    Decode.object3 Itinerary
-        ("outboundLegId" := string)
-        ("inboundLegId" := string)
-        ("pricingOptions" := list pricingOptionDecoder)
+    Decode.map3 Itinerary
+        (field "outboundLegId" string)
+        (field "inboundLegId" string)
+        (field "pricingOptions" (list pricingOptionDecoder))
 
 
 placeDecoder : Decode.Decoder Place
@@ -54,77 +54,77 @@ placeDecoder =
 
 countryDecoder : Decode.Decoder Place
 countryDecoder =
-    Decode.object3
+    Decode.map3
         ((\a b c -> CountryTag <| Country a b c))
-        ("id" := int)
-        ("code" := string)
-        ("name" := string)
+        (field "id" int)
+        (field "code" string)
+        (field "name" string)
 
 
 cityDecoder : Decode.Decoder Place
 cityDecoder =
-    Decode.object4
+    Decode.map4
         ((\a b c d -> CityTag <| City a b c d))
-        ("id" := int)
-        ("parentId" := int)
-        ("code" := string)
-        ("name" := string)
+        (field "id" int)
+        (field "parentId" int)
+        (field "code" string)
+        (field "name" string)
 
 
 airportDecoder : Decode.Decoder Place
 airportDecoder =
-    Decode.object4
+    Decode.map4
         ((\a b c d -> AirportTag <| Airport a b c d))
-        ("id" := int)
-        ("parentId" := int)
-        ("code" := string)
-        ("name" := string)
+        (field "id" int)
+        (field "parentId" int)
+        (field "code" string)
+        (field "name" string)
 
 
 pricingOptionDecoder : Decode.Decoder PricingOption
 pricingOptionDecoder =
-    Decode.object2 PricingOption
-        ("price" := float)
-        (oneOf [ ("deeplinkUrl" := string), (succeed "") ])
+    Decode.map2 PricingOption
+        (field "price" float)
+        (oneOf [ (field "deeplinkUrl" string), (succeed "") ])
 
 
 legDecoder : Decode.Decoder Leg
 legDecoder =
     Decode.succeed Leg
-        |: ("id" := string)
-        |: ("segmentIds" := list int)
-        |: ("originStation" := int)
-        |: ("destinationStation" := int)
-        |: ("departure" := string)
-        |: ("arrival" := string)
-        |: ("duration" := int)
-        |: ("stops" := list int)
-        |: ("carriers" := list int)
-        |: (("directionality" := string) `Decode.andThen` directionDecoder)
+        |: (field "id" string)
+        |: (field "segmentIds" (list int))
+        |: (field "originStation" int)
+        |: (field "destinationStation" int)
+        |: (field "departure" string)
+        |: (field "arrival" string)
+        |: (field "duration" int)
+        |: (field "stops" (list int))
+        |: (field "carriers" (list int))
+        |: ((field "directionality" string) |> Decode.andThen directionDecoder)
 
 
 segmentDecoder : Decode.Decoder Segment
 segmentDecoder =
     Decode.succeed Segment
-        |: ("id" := int)
-        |: ("originStation" := int)
-        |: ("destinationStation" := int)
-        |: ("departureDateTime" := string)
-        |: ("arrivalDateTime" := string)
-        |: ("carrier" := int)
-        |: ("duration" := int)
-        |: ("flightNumber" := string)
-        |: (("directionality" := string) `Decode.andThen` directionDecoder)
+        |: (field "id" int)
+        |: (field "originStation" int)
+        |: (field "destinationStation" int)
+        |: (field "departureDateTime" string)
+        |: (field "arrivalDateTime" string)
+        |: (field "carrier" int)
+        |: (field "duration" int)
+        |: (field "flightNumber" string)
+        |: ((field "directionality" string) `Decode.andThen` directionDecoder)
 
 
 carrierDecoder : Decode.Decoder Carrier
 carrierDecoder =
-    Decode.object5 Carrier
-        ("id" := int)
-        ("code" := string)
-        ("name" := string)
-        ("imageUrl" := string)
-        ("displayCode" := string)
+    Decode.map5 Carrier
+        (field "id" int)
+        (field "code" string)
+        (field "name" string)
+        (field "imageUrl" string)
+        (field "displayCode" string)
 
 
 directionDecoder : String -> Decode.Decoder Direction

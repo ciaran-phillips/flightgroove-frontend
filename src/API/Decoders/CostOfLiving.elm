@@ -1,62 +1,62 @@
 module API.Decoders.CostOfLiving exposing (costOfLiving)
 
 import Json.Encode
-import Json.Decode exposing ((:=))
+import Json.Decode exposing (field)
 import Json.Decode.Extra exposing ((|:))
 import API.Types.CostOfLiving exposing (..)
 
 
 costOfLiving : Json.Decode.Decoder CostOfLiving
 costOfLiving =
-    ("costOfLiving" := costOfLivingDecoder)
+    (field "costOfLiving" costOfLivingDecoder)
 
 
 costOfLivingDecoder : Json.Decode.Decoder CostOfLiving
 costOfLivingDecoder =
     Json.Decode.succeed CostOfLiving
-        |: ("city" := Json.Decode.string)
-        |: ("cityId" := Json.Decode.string)
-        |: ("summary" := decodeTravelCosts)
-        |: ("prices" := decodePrices)
+        |: (field "city" Json.Decode.string)
+        |: (field "cityId" Json.Decode.string)
+        |: (field "summary" decodeTravelCosts)
+        |: (field "prices" decodePrices)
 
 
 decodeTravelCosts : Json.Decode.Decoder TravelCosts
 decodeTravelCosts =
     Json.Decode.succeed TravelCosts
-        |: ("hostelIndex" := Json.Decode.string)
-        |: ("hotelIndex" := Json.Decode.string)
-        |: ("backpackerTravelCostIndex" := Json.Decode.string)
-        |: ("travelCostsIndex" := Json.Decode.string)
-        |: ("backpackerCostPerDay" := Json.Decode.string)
-        |: ("travelCostPerDay" := Json.Decode.string)
+        |: (field "hostelIndex" Json.Decode.string)
+        |: (field "hotelIndex" Json.Decode.string)
+        |: (field "backpackerTravelCostIndex" Json.Decode.string)
+        |: (field "travelCostsIndex" Json.Decode.string)
+        |: (field "backpackerCostPerDay" Json.Decode.string)
+        |: (field "travelCostPerDay" Json.Decode.string)
 
 
 decodePrices : Json.Decode.Decoder Prices
 decodePrices =
     Json.Decode.succeed Prices
-        |: ("inexpensiveMeal" := Json.Decode.string)
-        |: ("midRangeTwoPersonMeal" := Json.Decode.string)
-        |: ("comboMeal" := Json.Decode.string)
-        |: ("domesticBeerDraught" := Json.Decode.string)
-        |: ("importedBeerBottleRestaurant" := Json.Decode.string)
-        |: ("waterBottleRestaurant" := Json.Decode.string)
-        |: ("oneLitreMilk" := Json.Decode.string)
-        |: ("loafBread" := Json.Decode.string)
-        |: ("kiloCheese" := Json.Decode.string)
-        |: ("bottleWineShop" := Json.Decode.string)
-        |: ("domesticBeerBottleShop" := Json.Decode.string)
-        |: ("importedBeerBottleShop" := Json.Decode.string)
-        |: ("publicTransportOneWay" := Json.Decode.string)
-        |: ("publicTransportMonthlyPass" := Json.Decode.string)
-        |: ("litreGasoline" := Json.Decode.string)
-        |: ("oneBedCityCentre" := Json.Decode.string)
-        |: ("oneBedOutsideCentre" := Json.Decode.string)
-        |: ("monthlyInternet" := Json.Decode.string)
-        |: ("averageNetSalary" := Json.Decode.string)
-        |: ("taxiStart" := Json.Decode.string)
-        |: ("taxiOneKm" := Json.Decode.string)
-        |: ("taxiOneHr" := Json.Decode.string)
-        |: ("kiloBeef" := Json.Decode.string)
+        |: (field "inexpensiveMeal" Json.Decode.string)
+        |: (field "midRangeTwoPersonMeal" Json.Decode.string)
+        |: (field "comboMeal" Json.Decode.string)
+        |: (field "domesticBeerDraught" Json.Decode.string)
+        |: (field "importedBeerBottleRestaurant" Json.Decode.string)
+        |: (field "waterBottleRestaurant" Json.Decode.string)
+        |: (field "oneLitreMilk" Json.Decode.string)
+        |: (field "loafBread" Json.Decode.string)
+        |: (field "kiloCheese" Json.Decode.string)
+        |: (field "bottleWineShop" Json.Decode.string)
+        |: (field "domesticBeerBottleShop" Json.Decode.string)
+        |: (field "importedBeerBottleShop" Json.Decode.string)
+        |: (field "publicTransportOneWay" Json.Decode.string)
+        |: (field "publicTransportMonthlyPass" Json.Decode.string)
+        |: (field "litreGasoline" Json.Decode.string)
+        |: (field "oneBedCityCentre" Json.Decode.string)
+        |: (field "oneBedOutsideCentre" Json.Decode.string)
+        |: (field "monthlyInternet" Json.Decode.string)
+        |: (field "averageNetSalary" Json.Decode.string)
+        |: (field "taxiStart" Json.Decode.string)
+        |: (field "taxiOneKm" Json.Decode.string)
+        |: (field "taxiOneHr" Json.Decode.string)
+        |: (field "kiloBeef" Json.Decode.string)
 
 
 encodeCostOfLiving : CostOfLiving -> Json.Encode.Value
