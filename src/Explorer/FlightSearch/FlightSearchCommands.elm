@@ -69,7 +69,7 @@ delayedPoll url params timeDelay =
         sleepTask =
             Process.sleep <| toFloat <| Debug.log "time delay is" timeDelay
     in
-        sleepTask `Task.andThen` (\n -> pollTask)
+        sleepTask |> Task.andThen (\n -> pollTask)
 
 
 createParams : FlightSearchModel -> String -> API.PollLivePricingParams

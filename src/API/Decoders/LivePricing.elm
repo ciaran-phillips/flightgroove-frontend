@@ -114,7 +114,7 @@ segmentDecoder =
         |: (field "carrier" int)
         |: (field "duration" int)
         |: (field "flightNumber" string)
-        |: ((field "directionality" string) `Decode.andThen` directionDecoder)
+        |: ((field "directionality" string) |> Decode.andThen directionDecoder)
 
 
 carrierDecoder : Decode.Decoder Carrier
