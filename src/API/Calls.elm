@@ -22,7 +22,7 @@ getActivities : GetActivitiesParams -> Task Error ActivitiesTypes.Activities
 getActivities params =
     Http.get ActivitiesDecoder.activities <|
         "/api/activities/"
-            ++ (Http.uriEncode params.locationQuery)
+            ++ (Http.encodeUri params.locationQuery)
 
 
 type alias GetCostOfLivingParams =
@@ -104,11 +104,11 @@ getRoutesMultipleOrigins : GetRoutesMultipleOriginsParams -> Task Error Location
 getRoutesMultipleOrigins params =
     Http.get LocationDecoder.routes <|
         "/api/routes-multiple-origins/"
-            ++ (Http.uriEncode params.origin ++ "/")
-            ++ (Http.uriEncode params.secondOrigin ++ "/")
-            ++ (Http.uriEncode params.destination ++ "/")
-            ++ (Http.uriEncode params.outboundDate ++ "/")
-            ++ (Http.uriEncode params.inboundDate ++ "/")
+            ++ (Http.encodeUri params.origin ++ "/")
+            ++ (Http.encodeUri params.secondOrigin ++ "/")
+            ++ (Http.encodeUri params.destination ++ "/")
+            ++ (Http.encodeUri params.outboundDate ++ "/")
+            ++ (Http.encodeUri params.inboundDate ++ "/")
 
 
 getUserLocation : Task Error LocationTypes.LocationSuggestions
@@ -130,7 +130,7 @@ pollLivePricing : LivePricingTypes.PollingUrl -> PollLivePricingParams -> Task E
 pollLivePricing url params =
     Http.get LivePricingDecoder.pollLivePricingResponse <|
         "/api/livepricing/poll/"
-            ++ (Http.uriEncode url)
+            ++ (Http.encodeUri url)
             ++ "?country=GB-sky&currency=GBP&locale=en-GB&adults=1&locationschema=Sky"
             ++ ("&originplace=" ++ params.origin)
             ++ ("&destinationplace=" ++ params.destination)
