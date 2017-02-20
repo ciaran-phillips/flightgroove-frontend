@@ -125,8 +125,8 @@ update msg model =
                         Nothing ->
                             model.inboundDate
 
-                        Just date' ->
-                            Just date'
+                        Just newDate ->
+                            Just newDate
             in
                 ( { model | inboundDate = date, inboundPicker = newModel }
                 , Cmd.map InboundMsg newCmd
@@ -309,7 +309,7 @@ decodeMonthSelection yearAndMonth =
 
         month =
             List.head <|
-                List.filter (\( i, month' ) -> i == monthNum)
+                List.filter (\( i, monthName ) -> i == monthNum)
                     listOfMonths
     in
         case month of
