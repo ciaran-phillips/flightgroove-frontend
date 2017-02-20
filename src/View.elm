@@ -4,7 +4,6 @@ module View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.App
 import Html.Events exposing (onClick)
 
 
@@ -40,12 +39,12 @@ basePage model =
             ]
             [ div [ class "drawer__overlay", onClick ToggleMenuDrawer ] []
             , div [ class "drawer__body" ]
-                [ Html.App.map ExplorerMsg <|
+                [ Html.map ExplorerMsg <|
                     ExplorerView.viewMenu model.explorerModel
                 ]
             ]
         , div [ class "body" ]
-            [ Html.App.map ExplorerMsg <|
+            [ Html.map ExplorerMsg <|
                 ExplorerView.viewFlightMap model.explorerModel
             ]
         ]

@@ -3,11 +3,10 @@ module Explorer.Filters.Components.DateField exposing (..)
 import Date exposing (Date, Day(..), Month(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings)
 import String
-import Html exposing (Html, select, text, option)
+import Html exposing (Html, select, text, option, map)
 import Html.Attributes exposing (value, class, selected)
 import Json.Decode
 import Html.Events
-import Html.App
 import Material
 import Material.Toggles as Toggles
 import Array
@@ -236,7 +235,7 @@ viewOutbound model =
     in
         if model.useExactDates then
             DatePicker.view model.outboundPicker
-                |> Html.App.map OutboundMsg
+                |> Html.map OutboundMsg
         else
             Html.select [ onChange SelectOutboundMonth ] <| getMonthOptions model currentPartialDate model.outboundMonth
 
@@ -245,7 +244,7 @@ viewInbound : Model -> Html Msg
 viewInbound model =
     if model.useExactDates then
         DatePicker.view model.inboundPicker
-            |> Html.App.map InboundMsg
+            |> Html.map InboundMsg
     else
         Html.select [ onChange SelectInboundMonth ] <|
             getMonthOptions model model.outboundMonth model.inboundMonth

@@ -14,7 +14,6 @@ module Explorer.Filters.Components.Location
 -- Core Imports
 
 import Html exposing (..)
-import Html.App
 import Html.Attributes exposing (class, placeholder, value)
 import Html.Events exposing (onInput)
 import Http
@@ -256,7 +255,7 @@ viewAutocomplete model =
             model.locationList
     in
         if model.showLocationsDropdown then
-            Html.App.map AutocompleteMsg <|
+            Html.map AutocompleteMsg <|
                 Autocomplete.view viewConfig model.maxLocationsDisplayed model.autocompleteState filteredList
         else
             div [] []

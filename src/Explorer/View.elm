@@ -2,7 +2,6 @@ module Explorer.View exposing (viewFlightMap, viewMenu)
 
 import Html exposing (..)
 import Html.Attributes exposing (id, class, classList, src, href, target)
-import Html.App
 import Explorer.Types exposing (RemoteData(..))
 import Explorer.Messages exposing (Msg(..))
 import Explorer.Model exposing (Model)
@@ -96,31 +95,31 @@ viewMenu model =
 
 searchBox : Model -> Html Msg
 searchBox model =
-    Html.App.map FilterTag <|
+    Html.map FilterTag <|
         Filters.viewOriginSearch model.filtersModel
 
 
 outboundDate : Model -> Html Msg
 outboundDate model =
-    Html.App.map FilterTag <|
+    Html.map FilterTag <|
         Filters.viewOutboundDate model.filtersModel
 
 
 inboundDate : Model -> Html Msg
 inboundDate model =
-    Html.App.map FilterTag <|
+    Html.map FilterTag <|
         Filters.viewInboundDate model.filtersModel
 
 
 dateToggle : Model -> Html Msg
 dateToggle model =
-    Html.App.map FilterTag <|
+    Html.map FilterTag <|
         Filters.viewToggle model.filtersModel
 
 
 originsToggle : Model -> Html Msg
 originsToggle model =
-    Html.App.map FilterTag <|
+    Html.map FilterTag <|
         Filters.viewOriginsToggle model.filtersModel
 
 

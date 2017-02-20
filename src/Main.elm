@@ -4,7 +4,6 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (class)
-import Html.App
 
 
 -- Custom Packages
@@ -58,7 +57,7 @@ subscriptions model =
 
 main : Program Flags
 main =
-    Html.App.programWithFlags
+    programWithFlags
         { init = init
         , view = view
         , update = update

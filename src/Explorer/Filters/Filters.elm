@@ -3,8 +3,7 @@ module Explorer.Filters.Filters exposing (..)
 import Explorer.Filters.Components.Location as Location
 import Explorer.Filters.Components.DateField as DateField
 import Explorer.Filters.Types exposing (FilterCriteria)
-import Html.App
-import Html exposing (Html, div, text, button, label, i)
+import Html exposing (Html, div, text, button, label, i, map)
 import Html.Events exposing (onClick)
 import Html.Attributes exposing (class, classList)
 import Material
@@ -210,7 +209,7 @@ dropdownWrapper active content =
 viewFirstOriginSearch : Model -> Html Msg
 viewFirstOriginSearch model =
     div [ class "form-control" ]
-        [ Html.App.map FirstOriginMsg <|
+        [ Html.map FirstOriginMsg <|
             Location.view model.firstOrigin
         ]
 
@@ -218,7 +217,7 @@ viewFirstOriginSearch model =
 viewSecondOrigin : Location.Model -> Html Msg
 viewSecondOrigin origin =
     div [ class "form-control" ]
-        [ Html.App.map SecondOriginMsg <|
+        [ Html.map SecondOriginMsg <|
             Location.view origin
         ]
 
@@ -246,19 +245,19 @@ viewOriginsToggle model =
 
 viewOutboundDate : Model -> Html Msg
 viewOutboundDate model =
-    Html.App.map DateFieldMsg <|
+    Html.map DateFieldMsg <|
         DateField.viewOutbound model.dateField
 
 
 viewInboundDate : Model -> Html Msg
 viewInboundDate model =
-    Html.App.map DateFieldMsg <|
+    Html.map DateFieldMsg <|
         DateField.viewInbound model.dateField
 
 
 viewToggle : Model -> Html Msg
 viewToggle model =
-    Html.App.map DateFieldMsg <|
+    Html.map DateFieldMsg <|
         DateField.viewToggle model.dateField
 
 
