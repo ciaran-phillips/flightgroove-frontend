@@ -5,6 +5,7 @@ import Explorer.FlightSearch.FlightSearchMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.Messages exposing (Msg)
 import API.Types.LivePricing exposing (PollLivePricingResponse, StartLivePricingResponse)
+import Http
 
 
 update : FlightSearchModel -> FlightSearchMsg -> ( FlightSearchModel, Cmd Msg )
@@ -75,6 +76,7 @@ startLivePricingUpdateModel model originNum response =
                     }
 
 
+startLivePricingFailure : FlightSearchModel -> OriginNumber -> Http.Error -> ( FlightSearchModel, Cmd Msg )
 startLivePricingFailure model originNum err =
     ( always model <| Debug.log "Start pricing error is " err, Cmd.none )
 
