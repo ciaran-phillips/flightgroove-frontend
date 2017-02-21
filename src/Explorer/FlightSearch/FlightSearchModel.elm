@@ -119,9 +119,7 @@ initialCmd model =
 
 startSessionForOrigin : FlightSearchModel -> OriginNumber -> OriginFlights -> Cmd Msg
 startSessionForOrigin model numberTag originAndFlights =
-    Http.send
-        (FlightSearchTag << StartLivePricingUpdate numberTag)
-    <|
+    Http.send (FlightSearchTag << StartLivePricingUpdate numberTag) <|
         API.startLivePricing <|
             { origin = originAndFlights.origin
             , destination = model.destination
