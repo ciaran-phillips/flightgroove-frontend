@@ -3,7 +3,6 @@ module Main exposing (..)
 -- Core and Third party packages
 
 import Html exposing (..)
-import Html.Attributes exposing (class)
 
 
 -- Custom Packages
@@ -11,11 +10,9 @@ import Html.Attributes exposing (class)
 import View exposing (view)
 import Messages exposing (Msg(..))
 import Model exposing (Model)
-import Explorer.Commands as ExplorerCommands
 import Explorer.Subscriptions as ExplorerSubscriptions
 import Explorer.Model as ExplorerModel
 import Explorer.Update as ExplorerUpdate
-import Explorer.Messages as ExplorerMessages
 
 
 type alias Flags =

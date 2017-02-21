@@ -11,14 +11,11 @@ import Explorer.Sidebar.SidebarModel as SidebarModel
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.FlightSearch.FlightSearchModel as FlightSearchModel exposing (FlightsForOrigin(..))
 import Explorer.FlightSearch.FlightSearchMessages exposing (..)
-import Explorer.FlightSearch.FlightSearchCommands as FlightSearchCommands
 import Explorer.FlightSearch.FlightSearchUpdate as FlightSearchUpdate
 import Explorer.Map.MapMessages exposing (..)
 import Explorer.Filters.Filters as Filters
-import API.Calls as API
 import API.Types.Location as LocationTypes
 import Material
-import Process
 import Dict
 
 

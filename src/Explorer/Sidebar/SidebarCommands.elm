@@ -3,7 +3,6 @@ module Explorer.Sidebar.SidebarCommands exposing (..)
 import Explorer.Sidebar.SidebarMessages exposing (..)
 import Explorer.Messages exposing (Msg(SidebarTag))
 import Explorer.Model exposing (Model)
-import Task
 import API.Calls as API
 import Http
 
